@@ -1,0 +1,23 @@
+﻿@model NetworkCommunicationMonitor.Models.User
+
+@{
+    ViewBag.Title = "Question";
+}
+
+<h2>Question</h2>
+
+@using (Html.BeginForm("ValidateQuestion", "User", FormMethod.Post))
+{
+    @Html.ValidationSummary(false);
+    <div>
+        <fieldset>
+            <h1>Security Question:</h1>
+            <div class="editor-label">
+                @ViewData["Question"]
+                @Html.TextBoxFor(u => u.answerProvided)
+                @Html.ValidationMessageFor(u => u.answerProvided)
+            </div>
+            <input type="submit" value="Submit Answer" />
+        </fieldset>
+    </div>
+}
