@@ -29,12 +29,8 @@ namespace NetworkCommunicationMonitor.Models
 
         public bool isBlocked;
 
-        public int[] questionIDs;
 
-        public Stack<string> questions;
-        public Stack<string> correctAnswers;
-
-        public string answerProvided;
+        public string answerProvided { get; set; }
 
         // This validates whether or not the password matches what the database has for the user
         // It will also retrieve the question IDs associated with the administrator's account.
@@ -42,6 +38,7 @@ namespace NetworkCommunicationMonitor.Models
         // randomized initially. It will also set the values for the questions and correct answers.
         public bool IsValid(string _username, string _password)
         {
+
             var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
             using (cn)
             {
@@ -81,16 +78,16 @@ namespace NetworkCommunicationMonitor.Models
                     // Randomly choose the first ID and assign it
                     Random rand = new Random((int)DateTime.Now.Ticks);
                     int value = rand.Next(0, 2);
-                    questionIDs[0] = IDs[value];
+                    Global.questionIDs[0] = IDs[value];
                     IDs.Remove(IDs[value]);
 
                     // Randomly choose the second ID and assign it
                     value = rand.Next(0, 1);
-                    questionIDs[1] = IDs[value];
+                    Global.questionIDs[1] = IDs[value];
                     IDs.Remove(IDs[value]);
 
                     // Assign the last ID remaining
-                    questionIDs[2] = IDs[0];
+                    Global.questionIDs[2] = IDs[0];
 
                     reader.Dispose();
                     cmd.Dispose();
@@ -119,7 +116,7 @@ namespace NetworkCommunicationMonitor.Models
                 DataTable questionTable = new DataTable();
                 DataRowCollection rows;
                 string _sql = @"SELECT question_question FROM Question " +
-                       "WHERE question_id IN (" + questionIDs[0] + ", " + questionIDs[1] + ", " + questionIDs[2] + ")";
+                       "WHERE question_id IN (" + Global.questionIDs[0] + ", " + Global.questionIDs[1] + ", " + Global.questionIDs[2] + ")";
                 var cmd = new SqlCommand(_sql, cn);
 
                 cn.Open();
@@ -127,10 +124,9 @@ namespace NetworkCommunicationMonitor.Models
                 questionTable.Load(cmd.ExecuteReader());
                 rows = questionTable.Rows;
 
-                questions = new Stack<string>();
-                questions.Push(Convert.ToString(rows[0]["question_question"]));
-                questions.Push(Convert.ToString(rows[1]["question_question"]));
-                questions.Push(Convert.ToString(rows[2]["question_question"]));
+                Global.questions.Push(Convert.ToString(rows[0]["question_question"]));
+                Global.questions.Push(Convert.ToString(rows[1]["question_question"]));
+                Global.questions.Push(Convert.ToString(rows[2]["question_question"]));
             }
         }
 
@@ -143,8 +139,8 @@ namespace NetworkCommunicationMonitor.Models
             {
                 DataTable questionTable = new DataTable();
                 DataRowCollection rows;
-                string _sql = @"SELECT answer FROM Answer " +
-                       "WHERE question_id IN (" + questionIDs[0] + ", " + questionIDs[1] + ", " + questionIDs[2] + ")";
+                string _sql = @"SELECT answer FROM Question " +
+                       "WHERE question_id IN (" + Global.questionIDs[0] + ", " + Global.questionIDs[1] + ", " + Global.questionIDs[2] + ")";
                 var cmd = new SqlCommand(_sql, cn);
 
                 cn.Open();
@@ -152,10 +148,9 @@ namespace NetworkCommunicationMonitor.Models
                 questionTable.Load(cmd.ExecuteReader());
                 rows = questionTable.Rows;
 
-                correctAnswers = new Stack<string>();
-                correctAnswers.Push(Convert.ToString(rows[0]["answer"]));
-                correctAnswers.Push(Convert.ToString(rows[1]["answer"]));
-                correctAnswers.Push(Convert.ToString(rows[2]["answer"]));
+                Global.correctAnswers.Push(Convert.ToString(rows[0]["answer"]));
+                Global.correctAnswers.Push(Convert.ToString(rows[1]["answer"]));
+                Global.correctAnswers.Push(Convert.ToString(rows[2]["answer"]));
             }
         }
 
@@ -165,7 +160,7 @@ namespace NetworkCommunicationMonitor.Models
             var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
             using (cn)
             {
-                string _sql = @"UPDATE Administrator SET admin_isBlocked = '1' WHERE id = '" + adminID + "'";
+                string _sql = @"UPDATE Administrator SET admin_isBlocked = '1' WHERE dmin_id = '" + adminID + "'";
                 var cmd = new SqlCommand(_sql, cn);
                 cn.Open();
                 cmd.ExecuteNonQuery();

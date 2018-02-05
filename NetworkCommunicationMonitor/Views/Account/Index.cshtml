@@ -1,0 +1,44 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<div>
+    @{     
+        List<NetworkCommunicationMonitor.Models.Account> accounts = (List<NetworkCommunicationMonitor.Models.Account>)ViewData["Accounts"];
+        if (accounts.Count == 0)
+        {
+           <h3>There are no accounts in the database.</h3>
+        }
+        else
+        {
+            <table style="width:100%">
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Address</th>
+                    <th>Phone Number</th>
+                    <th>Card Number</th>
+                    <th>Account Limit</th>
+                    <th>Account Balance</th>
+                </tr>
+                @{ 
+                    foreach (NetworkCommunicationMonitor.Models.Account account in accounts)
+                    {
+                        <tr>
+                            <td>@account.firstName</td>
+                            <td>@account.lastName</td>
+                            <td>@account.accountAddress</td>
+                            <td>@account.phoneNumber</td>
+                            <td>@account.cardNumber</td>
+                            <td>@account.accountLimit</td>
+                            <td>@account.accountBalance</td>
+                        </tr>
+                    }
+                }
+            </table>
+        }
+    }
+</div>

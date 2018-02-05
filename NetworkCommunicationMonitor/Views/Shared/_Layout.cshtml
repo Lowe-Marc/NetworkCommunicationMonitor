@@ -21,7 +21,10 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("View Users", "ViewUsers", "User")</li>
+                    @if (Request.Cookies.AllKeys.Contains("LoggedIn"))
+                    {
+                        <li>@Html.ActionLink("View Accounts", "Index", "Account")</li>
+                    }
                 </ul>
             </div>
         </div>

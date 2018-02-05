@@ -12,8 +12,8 @@
     <div>
         <fieldset>
             <h1>Security Question:</h1>
-            @ViewData["Question"]
-            <div class="editor-field">
+            <div class="editor-label">
+                @ViewData["Question"]
                 @Html.TextBoxFor(u => u.answerProvided)
                 @Html.ValidationMessageFor(u => u.answerProvided)
             </div>
