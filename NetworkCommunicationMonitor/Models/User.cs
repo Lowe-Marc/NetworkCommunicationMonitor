@@ -70,24 +70,9 @@ namespace NetworkCommunicationMonitor.Models
                     adminID = Int32.Parse((string)row["admin_id"]);
 
                     // Collect the IDs
-                    List<int> IDs = new List<int>();
-                    IDs.Add(Int32.Parse((string)row["question_one_id"]));
-                    IDs.Add(Int32.Parse((string)row["question_two_id"]));
-                    IDs.Add(Int32.Parse((string)row["question_three_id"]));
-
-                    // Randomly choose the first ID and assign it
-                    Random rand = new Random((int)DateTime.Now.Ticks);
-                    int value = rand.Next(0, 2);
-                    Global.questionIDs[0] = IDs[value];
-                    IDs.Remove(IDs[value]);
-
-                    // Randomly choose the second ID and assign it
-                    value = rand.Next(0, 1);
-                    Global.questionIDs[1] = IDs[value];
-                    IDs.Remove(IDs[value]);
-
-                    // Assign the last ID remaining
-                    Global.questionIDs[2] = IDs[0];
+                    Global.questionIDs[0] = Int32.Parse((string)row["question_one_id"]);
+                    Global.questionIDs[1] = Int32.Parse((string)row["question_two_id"]);
+                    Global.questionIDs[2] = Int32.Parse((string)row["question_three_id"]);
 
                     reader.Dispose();
                     cmd.Dispose();
@@ -124,9 +109,23 @@ namespace NetworkCommunicationMonitor.Models
                 questionTable.Load(cmd.ExecuteReader());
                 rows = questionTable.Rows;
 
-                Global.questions.Push(Convert.ToString(rows[0]["question_question"]));
-                Global.questions.Push(Convert.ToString(rows[1]["question_question"]));
-                Global.questions.Push(Convert.ToString(rows[2]["question_question"]));
+                List<string> questions = new List<string>();
+                questions.Add(Convert.ToString(rows[0]["question_question"]));
+                questions.Add(Convert.ToString(rows[1]["question_question"]));
+                questions.Add(Convert.ToString(rows[2]["question_question"]));
+
+                // Randomly choose the first question and assign it
+                Random rand = new Random();
+                int value = rand.Next(3);
+                Global.questions.Push(questions[value]);
+                questions.Remove(questions[value]);
+
+                // Randomly choose the second question and assign it
+                value = rand.Next(2);
+                Global.questions.Push(questions[value]);
+                questions.Remove(questions[value]);
+
+                Global.questions.Push(questions[0]);
             }
         }
 
