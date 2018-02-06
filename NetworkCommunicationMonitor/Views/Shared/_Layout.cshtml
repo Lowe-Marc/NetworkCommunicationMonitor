@@ -21,7 +21,7 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    @if (Request.Cookies.AllKeys.Contains("LoggedIn"))
+                    @if(Session["user"] != null)
                     {
                         <li>@Html.ActionLink("View Accounts", "Index", "Account")</li>
                     }

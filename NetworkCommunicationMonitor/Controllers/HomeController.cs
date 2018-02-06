@@ -18,5 +18,12 @@ namespace NetworkCommunicationMonitor.Controllers
         {
             return View();
         }
+
+        [HttpGet]
+        public ActionResult Logout()
+        {
+            Session["user"] = null;
+            return RedirectToAction("Index", "Home");
+        }
     }
 }

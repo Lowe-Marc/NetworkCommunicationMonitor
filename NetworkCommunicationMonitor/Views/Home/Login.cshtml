@@ -6,6 +6,8 @@
 
 <h2>Login</h2>
 
+@ViewData["Warning"]
+
 @using (Html.BeginForm("Login", "User", FormMethod.Post))
 {
     @Html.ValidationSummary(false);

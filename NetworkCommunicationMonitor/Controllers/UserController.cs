@@ -29,7 +29,6 @@ namespace NetworkCommunicationMonitor.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Login credentials are incorrect!");
                     return RedirectToAction("Login", "Home");
                 }
             }
@@ -61,14 +60,12 @@ namespace NetworkCommunicationMonitor.Controllers
             string answer = Models.Global.correctAnswers.Pop();
             if (user.answerProvided.Equals(answer,StringComparison.Ordinal))
             {
-                //FormsAuthentication.SetAuthCookie(user.UserName, user.RememberMe);
-                HttpCookie loggedinCookie = new HttpCookie("LoggedIn", user.UserName);
-                loggedinCookie.Expires = DateTime.Now.AddHours(12); // TODO: Find a better way to do this
-                Response.Cookies.Add(loggedinCookie);
+                Session["user"] = user;
                 return RedirectToAction("Index", "Home");
             }
 
-            return Question(user);
+            Response.Write("Incorrect");
+            return RedirectToAction("Question", "User", user);
         }
 
         [HttpGet]

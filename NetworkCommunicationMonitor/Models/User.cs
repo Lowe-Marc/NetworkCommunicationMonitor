@@ -13,11 +13,11 @@ namespace NetworkCommunicationMonitor.Models
 {
     public class User
     {
-        [Required]
+        //[Required]
         [Display(Name = "User name")]
         public string UserName { get; set; }
 
-        [Required]
+        //[Required]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; }
@@ -78,8 +78,8 @@ namespace NetworkCommunicationMonitor.Models
                     cmd.Dispose();
 
                     // Set values for the questions and correct answers
-                    getQuestions();
-                    getCorrectAnswers();
+                    getQuestionsAndAnswers();
+                    //getCorrectAnswers();
                     return true;
                 }
                 else
@@ -93,14 +93,14 @@ namespace NetworkCommunicationMonitor.Models
 
         // This will get the questions from the database and set the values for the corresponding
         // fields in the user object.
-        public void getQuestions()
+        public void getQuestionsAndAnswers()
         {
             var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
             using (cn)
             {
                 DataTable questionTable = new DataTable();
                 DataRowCollection rows;
-                string _sql = @"SELECT question_question FROM Question " +
+                string _sql = @"SELECT question_question, answer FROM Question " +
                        "WHERE question_id IN (" + Global.questionIDs[0] + ", " + Global.questionIDs[1] + ", " + Global.questionIDs[2] + ")";
                 var cmd = new SqlCommand(_sql, cn);
 
@@ -114,42 +114,28 @@ namespace NetworkCommunicationMonitor.Models
                 questions.Add(Convert.ToString(rows[1]["question_question"]));
                 questions.Add(Convert.ToString(rows[2]["question_question"]));
 
+                List<string> correctAnswers = new List<string>();
+                correctAnswers.Add(Convert.ToString(rows[0]["answer"]));
+                correctAnswers.Add(Convert.ToString(rows[1]["answer"]));
+                correctAnswers.Add(Convert.ToString(rows[2]["answer"]));
+
                 // Randomly choose the first question and assign it
                 Random rand = new Random();
                 int value = rand.Next(3);
                 Global.questions.Push(questions[value]);
+                Global.correctAnswers.Push(correctAnswers[value]);
                 questions.Remove(questions[value]);
+                correctAnswers.Remove(correctAnswers[value]);
 
                 // Randomly choose the second question and assign it
                 value = rand.Next(2);
                 Global.questions.Push(questions[value]);
+                Global.correctAnswers.Push(correctAnswers[value]);
                 questions.Remove(questions[value]);
+                correctAnswers.Remove(correctAnswers[value]);
 
                 Global.questions.Push(questions[0]);
-            }
-        }
-
-        // This will get the answers for the user's questions from the database and set the values for the corresponding
-        // fields in the user object.
-        public void getCorrectAnswers()
-        {
-            var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
-            using (cn)
-            {
-                DataTable questionTable = new DataTable();
-                DataRowCollection rows;
-                string _sql = @"SELECT answer FROM Question " +
-                       "WHERE question_id IN (" + Global.questionIDs[0] + ", " + Global.questionIDs[1] + ", " + Global.questionIDs[2] + ")";
-                var cmd = new SqlCommand(_sql, cn);
-
-                cn.Open();
-
-                questionTable.Load(cmd.ExecuteReader());
-                rows = questionTable.Rows;
-
-                Global.correctAnswers.Push(Convert.ToString(rows[0]["answer"]));
-                Global.correctAnswers.Push(Convert.ToString(rows[1]["answer"]));
-                Global.correctAnswers.Push(Convert.ToString(rows[2]["answer"]));
+                Global.correctAnswers.Push(correctAnswers[0]);
             }
         }
 
