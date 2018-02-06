@@ -195,6 +195,7 @@
     <Content Include="Views\Account\Index.cshtml" />
     <Content Include="Views\User\Question.cshtml" />
     <Content Include="Views\User\ValidateQuestion.cshtml" />
+    <Content Include="Views\Home\Blocked.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

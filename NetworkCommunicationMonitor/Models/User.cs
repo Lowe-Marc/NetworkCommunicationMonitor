@@ -36,8 +36,12 @@ namespace NetworkCommunicationMonitor.Models
         // It will also retrieve the question IDs associated with the administrator's account.
         // The IDs will be put into the questionIDs array in a random order, so they only have to be
         // randomized initially. It will also set the values for the questions and correct answers.
-        public bool IsValid(string _username, string _password)
+        public string IsValid(string _username, string _password)
         {
+            // Reset these everytime
+            int[] questionIDs = new int[3];
+            Stack<string> questions = new Stack<string>();
+            Stack<string> correctAnswers = new Stack<string>();
 
             var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
             using (cn)
@@ -65,7 +69,7 @@ namespace NetworkCommunicationMonitor.Models
 
                     // If the user is blocked, skip all the other work and immediately return false
                     if (isBlocked)
-                        return false;
+                        return "blocked";
 
                     adminID = Int32.Parse((string)row["admin_id"]);
 
@@ -79,14 +83,13 @@ namespace NetworkCommunicationMonitor.Models
 
                     // Set values for the questions and correct answers
                     getQuestionsAndAnswers();
-                    //getCorrectAnswers();
-                    return true;
+                    return "true";
                 }
                 else
                 {
                     reader.Dispose();
                     cmd.Dispose();
-                    return false;
+                    return "false";
                 }
             }
         }
@@ -140,17 +143,36 @@ namespace NetworkCommunicationMonitor.Models
         }
 
         // This will flag the admin_isBlocked field in the database to true.
-        public void blockThisUser()
+        public void blockThisUser(int id)
         {
             var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
             using (cn)
             {
-                string _sql = @"UPDATE Administrator SET admin_isBlocked = '1' WHERE dmin_id = '" + adminID + "'";
+                string _sql = @"UPDATE Administrator SET admin_isBlocked = '1' WHERE admin_id = '" + id + "'";
                 var cmd = new SqlCommand(_sql, cn);
                 cn.Open();
                 cmd.ExecuteNonQuery();
                 cn.Close();
             }
+        }
+
+        public int getID()
+        {
+            int adminID = -1;
+            var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
+            using (cn)
+            {
+                DataTable table = new DataTable();
+                string _sql = @"SELECT admin_id FROM Administrator WHERE admin_username = '" + UserName + "'";
+                var cmd = new SqlCommand(_sql, cn);
+
+                cn.Open();
+
+                table.Load(cmd.ExecuteReader());
+                DataRow row = table.Rows[0];
+                adminID = Convert.ToInt32(row["admin_id"]);
+            }
+            return adminID;
         }
     }
 }

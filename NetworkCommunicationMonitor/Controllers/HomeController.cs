@@ -23,7 +23,15 @@ namespace NetworkCommunicationMonitor.Controllers
         public ActionResult Logout()
         {
             Session["user"] = null;
+            Session["adminID"] = null;
             return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet]
+        public ActionResult Blocked()
+        {
+            Session["user"] = null;
+            return View();
         }
     }
 }

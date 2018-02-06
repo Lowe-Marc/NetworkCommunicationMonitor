@@ -23,9 +23,15 @@ namespace NetworkCommunicationMonitor.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (user.IsValid(user.UserName, user.Password))
+                string valid = user.IsValid(user.UserName, user.Password);
+                if (valid.Equals("true", StringComparison.Ordinal))
                 {
+                    Session["adminID"] = user.getID();
                     return RedirectToAction("Question", "User", user);
+                }
+                else if (valid.Equals("blocked",StringComparison.Ordinal))
+                {
+                    return RedirectToAction("Blocked", "Home");
                 }
                 else
                 {
@@ -43,8 +49,9 @@ namespace NetworkCommunicationMonitor.Controllers
         {
             if (Models.Global.questions.Count == 0)
             {
-                user.blockThisUser();
-                return RedirectToAction("Index", "Home");
+                user.blockThisUser(Convert.ToInt32(Session["adminID"]));
+                Session["adminID"] = null;
+                return RedirectToAction("Blocked", "Home");
             }
             ViewData["Question"] = Models.Global.questions.Pop();
 
@@ -64,7 +71,6 @@ namespace NetworkCommunicationMonitor.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            Response.Write("Incorrect");
             return RedirectToAction("Question", "User", user);
         }
 
