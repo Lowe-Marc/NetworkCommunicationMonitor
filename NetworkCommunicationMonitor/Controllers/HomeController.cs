@@ -20,6 +20,7 @@ namespace NetworkCommunicationMonitor.Controllers
 
         public ActionResult Account()
         {
+            ViewData["Accounts"] = NetworkCommunicationMonitor.Models.Account.getAccounts();
             return View();
         }
 

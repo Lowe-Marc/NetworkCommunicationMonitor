@@ -179,64 +179,49 @@
                                 </div>
                             </div>
                             <div class="panel-body">
-                                <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                                    <thead>
-                                        <tr>
-                                            <th>Username</th>
-                                            <th>Fullname</th>
-                                            <th>Credit Cards</th>
-                                            <th>Address</th>
-                                            <th>Phone</th>
-                                            <th>Limit</th>
-                                            <th>Balance</th>
-                                        </tr>
-                                    </thead>
-                                    
-                                    <tbody>
-                                        <tr>
-                                        	<td>haleyysz</td>
-                                            <td>Shizheng Yang</td>
-                                            <td>	
-                                            	<select>
-                                            	<option>123456789101213</option>
-                                            	<option>389738923723821</option>
-                                            	</select>
-                                            </td>
-                                            <td>Reuter Hall, La crosse St., WI</td>
-                                            <td>608-615-8577</td>
-                                            <td>$5000</td>
-                                            <td>$3000</td>
-                                        </tr>
-                                        <tr>
-                                        	<td>Marcus</td>
-                                            <td>Marcus Lowe</td>
-                                            <td>	
-                                            	<select>
-                                            	<option>239432847328947</option>
-                                            	<option>438954839574893</option>
-                                            	</select>
-                                            </td>
-                                            <td>Off-campus, La crosse St., WI</td>
-                                            <td>666-666-6666</td>
-                                            <td>$10000</td>
-                                            <td>$6000</td>
-                                        </tr>
-                                        <tr>
-                                        	<td>Lu</td>
-                                            <td>Zijin Lu</td>
-                                            <td>	
-                                            	<select>
-                                            	<option>238732873282384</option>
-                                            	<option>843784978435783</option>
-                                            	</select>
-                                            </td>
-                                            <td>Reuter Hall, La crosse St., WI</td>
-                                            <td>111-666-2222</td>
-                                            <td>$1000</td>
-                                            <td>$100</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                @{
+                                    List<NetworkCommunicationMonitor.Models.Account> accounts = (List<NetworkCommunicationMonitor.Models.Account>)ViewData["Accounts"];
+                                    if (accounts.Count == 0)
+                                    {
+                                        <h3>There are no accounts in the database.</h3>
+                                    }
+                                    else
+                                    {
+                                        <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th>First Name</th>
+                                                <th>Last Name</th>
+                                                <th>Credit Cards</th>
+                                                <th>Address</th>
+                                                <th>Phone</th>
+                                                <th>Limit</th>
+                                                <th>Balance</th>
+                                            </tr>
+                                        </thead>
+                                            <tbody>
+                                        @{
+                                            foreach (NetworkCommunicationMonitor.Models.Account account in accounts)
+                                            {
+                                                <tr>
+                                                    <td>@account.firstName</td>
+                                                    <td>@account.lastName</td>
+                                                    <td>
+                                                        <select>
+                                                            <option>@account.cardNumber</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>@account.accountAddress</td>
+                                                    <td>@account.phoneNumber</td>
+                                                    <td>@account.accountLimit</td>
+                                                    <td>@account.accountBalance</td>
+                                                </tr>
+                                            }
+                                        }
+                                            </tbody>
+                                        </table>
+                                    }
+                                }
                             </div>
                         </div>
                     </div>

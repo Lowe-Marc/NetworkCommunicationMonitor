@@ -44,9 +44,9 @@ namespace NetworkCommunicationMonitor.Models
                 questionTable.Load(cmd.ExecuteReader());
                 rows = questionTable.Rows;
 
-                Account tempAccount = new Account();
                 foreach (DataRow row in rows )
                 {
+                    Account tempAccount = new Account();
                     tempAccount.cardNumber = (string)row["card_id"];
                     tempAccount.firstName = (string)row["account_holder_firstname"];
                     tempAccount.lastName = (string)row["account_holder_lastname"];
