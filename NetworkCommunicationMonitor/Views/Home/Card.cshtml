@@ -1,0 +1,363 @@
+﻿<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Network Communication Monitor</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="~/favicon.ico" media="screen" />
+    <link rel="Bookmark" href="~/favicon.ico" />
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="~/assets/plugins/bootstrap/css/bootstrap.min.css">
+    <!-- Fonts  -->
+    <link rel="stylesheet" href="~/assets/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/assets/css/simple-line-icons.css">
+    <!-- CSS Animate -->
+    <link rel="stylesheet" href="~/assets/css/animate.css">
+    <!-- Daterange Picker -->
+    <link rel="stylesheet" href="~/assets/plugins/daterangepicker/daterangepicker-bs3.css">
+    <!-- Calendar demo -->
+    <link rel="stylesheet" href="~/assets/css/clndr.css">
+    <!-- Switchery -->
+    <link rel="stylesheet" href="~/assets/plugins/switchery/switchery.min.css">
+    <!-- Custom styles for this theme -->
+    <link rel="stylesheet" href="~/assets/css/main.css">
+    <!-- Feature detection -->
+    <script src="~/assets/js/vendor/modernizr-2.6.2.min.js"></script>
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="assets/js/vendor/html5shiv.js"></script>
+    <script src="assets/js/vendor/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+    <section id="main-wrapper" class="theme-default">
+        <header id="header">
+            <!--logo start-->
+            <div class="brand">
+                <a href="~/Home/Homepage" class="logo">
+                    <i class="fa fa-desktop"></i>
+                    <span>Network</span>Monitor</a>
+            </div>
+            <!--logo end-->
+            <ul class="nav navbar-nav navbar-left">
+                <li class="toggle-navigation toggle-left">
+                    <button class="sidebar-toggle" id="toggle-left">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                </li>
+                <li class="hidden-xs hidden-sm">
+                    <input type="text" class="search" placeholder="Search project...">
+                    <button type="submit" class="btn btn-sm btn-search"><i class="fa fa-search"></i>
+                    </button>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown profile hidden-xs">
+                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
+                        <span class="meta">
+                        <span class="text">Yang</span>
+                        <span class="caret"></span>
+                        </span>
+                    </a>
+                    <ul class="dropdown-menu animated fadeInRight" role="menu">
+                    	<br />
+                        <li>
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-user"></i>
+                                </span>My Account</a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-cog"></i>
+                                </span>Settings</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-sign-out"></i>
+                                </span>Logout</a>
+                        </li>
+                    </ul>
+                </li>
+                 <li class="toggle-fullscreen hidden-xs">
+                    <button type="button" class="btn btn-default expand" id="toggle-fullscreen">
+                        <i class="fa fa-expand"></i>
+                    </button>
+                </li>
+            </ul>
+        </header>
+        <!--sidebar left start-->
+        <aside class="sidebar sidebar-left">
+            <div class="sidebar-profile">
+                <div class="profile-body dropdown">
+                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><h4>Yang <span class="caret"></span></h4></a>
+                    <small class="title">Administrator</small>
+                    <ul class="dropdown-menu animated fadeInRight" role="menu">
+                        <li>
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-user"></i>
+                                </span>My Account</a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-cog"></i>
+                                </span>Settings</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-sign-out"></i>
+                                </span>Logout</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <nav>
+                <h5 class="sidebar-header">Navigation</h5>
+                <ul class="nav nav-pills nav-stacked">
+                    <li class="nav-dropdown">
+                        <a href="Station" title="Network">
+                            <i class="fa  fa-fw fa-sitemap"></i> Network
+                        </a>
+                    </li>
+                    <li class="nav-dropdown">
+                        <a href="Account" title="Account">
+                            <i class="fa  fa-fw fa-user"></i> Account
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a href="#" title="Credit Card">
+                            <i class="fa  fa-fw fa-credit-card"></i> Credit Card
+                        </a>
+                    </li>
+                    <li class="nav-dropdown">
+                        <a href="Store" title="Stores">
+                            <i class="fa  fa-fw fa-home"></i> Stores
+                        </a>
+                    </li>
+                    <li class="nav-dropdown">
+                        <a href="Station" title="Relay Stations">
+                            <i class="fa  fa-fw fa-flag-checkered"></i> Relay Stations
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+        <!--sidebar left end-->
+        <!--main content start-->
+        <section class="main-content-wrapper">
+            <div class="pageheader">
+                <h1>Account Detail</h1>
+                <div class="breadcrumb-wrapper hidden-xs">
+                    <span class="label">You are here:</span>
+                    <ol class="breadcrumb">
+                        <li><a href="~/Home/Homepage">Network</a>
+                        </li>
+                        <li class="active">Account Detail</li>
+                    </ol>
+                </div>
+            </div>
+            <section id="main-content" class="animated fadeInUp">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Account Tables</h3>
+                                <div class="actions pull-right">
+                                    <i class="fa fa-expand"></i>
+                                    <i class="fa fa-chevron-down"></i>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Username</th>
+                                            <th>Fullname</th>
+                                            <th>Credit Cards</th>
+                                            <th>Address</th>
+                                            <th>Phone</th>
+                                            <th>Limit</th>
+                                            <th>Balance</th>
+                                        </tr>
+                                    </thead>
+                                    
+                                    <tbody>
+                                        <tr>
+                                        		<td>haleyysz</td>
+                                            <td>Shizheng Yang</td>
+                                            <td>	<select>
+                                            	<option>123456789101213</option>
+                                            	<option>389738923723821</option>
+                                            </select></td>
+                                            <td>Reuter Hall, La crosse St., WI</td>
+                                            <td>608-615-8577</td>
+                                            <td>$5000</td>
+                                            <td>$3000</td>
+                                        </tr>
+                                        <tr>
+                                        		<td>Marcus</td>
+                                            <td>Marcus Lowe</td>
+                                            <td>	<select>
+                                            	<option>239432847328947</option>
+                                            	<option>438954839574893</option>
+                                            </select></td>
+                                            <td>Off-campus, La crosse St., WI</td>
+                                            <td>666-666-6666</td>
+                                            <td>$10000</td>
+                                            <td>$6000</td>
+                                        </tr>
+                                        <tr>
+                                        		<td>Lu</td>
+                                            <td>Zijin Lu</td>
+                                            <td>	<select>
+                                            	<option>238732873282384</option>
+                                            	<option>843784978435783</option>
+                                            </select></td>
+                                            <td>Reuter Hall, La crosse St., WI</td>
+                                            <td>111-666-2222</td>
+                                            <td>$1000</td>
+                                            <td>$100</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </section>
+        <!--main content end-->
+    </section>
+    <!--Config demo-->
+    <div id="config" class="config hidden-xs">
+        <h4>Settings<a href="javascript:void(0)" class="config-link closed"><i class="icon-settings"></i></a></h4>
+        <div class="config-swatch-wrap">
+            <div class="row">
+                <div class="col-xs-6">
+                    <ul class="options">
+                        <li>
+                            <div class="theme-style-wrapper" data-theme="theme-default">
+                                <span class="header bg-white"></span>
+                                <span class="header bg-white"></span>
+                                <span class="nav bg-dark"></span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="theme-style-wrapper" data-theme="theme-dark">
+                                <span class="header bg-dark"></span>
+                                <span class="header bg-white"></span>
+                                <span class="nav bg-dark"></span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="theme-style-wrapper" data-theme="theme-blue">
+                                <span class="header bg-info"></span>
+                                <span class="header bg-white"></span>
+                                <span class="nav bg-dark"></span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="theme-style-wrapper" data-theme="theme-blue-full">
+                                <span class="header bg-info"></span>
+                                <span class="header bg-info"></span>
+                                <span class="nav bg-dark"></span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="theme-style-wrapper" data-theme="theme-grey">
+                                <span class="header bg-grey"></span>
+                                <span class="header bg-white"></span>
+                                <span class="nav bg-dark"></span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="theme-style-wrapper" data-theme="theme-grey-full">
+                                <span class="header bg-grey"></span>
+                                <span class="header bg-grey"></span>
+                                <span class="nav bg-dark"></span>
+                            </div>
+                        </li>
+
+                    </ul>
+                </div>
+                <div class="col-xs-6">
+                    <ul class="options">
+                        <li>
+                            <div class="theme-style-wrapper" data-theme="theme-dark-full">
+                                <span class="header bg-dark"></span>
+                                <span class="header bg-dark"></span>
+                                <span class="nav bg-dark"></span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="theme-style-wrapper" data-theme="theme-green">
+                                <span class="header bg-green"></span>
+                                <span class="header bg-white"></span>
+                                <span class="nav bg-dark"></span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="theme-style-wrapper" data-theme="theme-green-full">
+                                <span class="header bg-green"></span>
+                                <span class="header bg-green"></span>
+                                <span class="nav bg-dark"></span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="theme-style-wrapper" data-theme="theme-red">
+                                <span class="header bg-red"></span>
+                                <span class="header bg-white"></span>
+                                <span class="nav bg-dark"></span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="theme-style-wrapper" data-theme="theme-red-full">
+                                <span class="header bg-red"></span>
+                                <span class="header bg-red"></span>
+                                <span class="nav bg-dark"></span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="theme-style-wrapper" data-theme="theme-dark-blue-full">
+                                <span class="header bg-dark-blue"></span>
+                                <span class="header bg-dark-blue"></span>
+                                <span class="nav bg-dark"></span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/Config demo-->
+    <!--Global JS-->
+    <script src="assets/js/vendor/jquery-1.11.1.min.js"></script>
+    <script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/plugins/navgoco/jquery.navgoco.min.js"></script>
+    <script src="assets/plugins/switchery/switchery.min.js"></script>
+    <script src="assets/plugins/pace/pace.min.js"></script>
+    <script src="assets/plugins/fullscreen/jquery.fullscreen-min.js"></script>
+    <script src="assets/js/src/app.js"></script>
+    <!--Page Leve JS -->
+    <script src="assets/plugins/dataTables/js/jquery.dataTables.js"></script>
+    <script src="assets/plugins/dataTables/js/dataTables.bootstrap.js"></script>
+    <script>
+    $(document).ready(function() {
+        $('#example').dataTable();
+    });
+    </script>
+       
+</body>
+
+</html>

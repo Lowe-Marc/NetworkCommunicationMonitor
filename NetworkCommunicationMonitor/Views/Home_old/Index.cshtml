@@ -1,0 +1,15 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    <h1>Network Communication Monitor</h1>
+    @if (Session["user"] == null)
+    {
+        <p><a href="Home/Login" class="btn btn-primary btn-lg">Login &raquo;</a></p>
+    }
+    else
+    {
+        <p><a href="Home/Logout" class="btn btn-primary btn-lg">Logout &raquo;</a></p>
+    }
+</div>

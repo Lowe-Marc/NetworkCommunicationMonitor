@@ -13,6 +13,41 @@ namespace NetworkCommunicationMonitor.Controllers
             return View();
         }
 
+        public ActionResult Homepage()
+        {
+            return View();
+        }
+
+        public ActionResult Account()
+        {
+            return View();
+        }
+
+        public ActionResult Card()
+        {
+            return View();
+        }
+
+        public ActionResult Station()
+        {
+            return View();
+        }
+
+        public ActionResult Store()
+        {
+            return View();
+        }
+
+        public ActionResult Pages404()
+        {
+            return View();
+        }
+
+        public ActionResult Pages500()
+        {
+            return View();
+        }
+
         [HttpGet]
         public ActionResult Login()
         {

@@ -38,7 +38,7 @@ namespace NetworkCommunicationMonitor.Models
         // randomized initially. It will also set the values for the questions and correct answers.
         public string IsValid(string _username, string _password)
         {
-            // Reset these everytime
+            // Reset these everytime a login is attempted
             int[] questionIDs = new int[3];
             Stack<string> questions = new Stack<string>();
             Stack<string> correctAnswers = new Stack<string>();
@@ -143,7 +143,7 @@ namespace NetworkCommunicationMonitor.Models
         }
 
         // This will flag the admin_isBlocked field in the database to true.
-        public void blockThisUser(int id)
+        public static void blockThisUser(int id)
         {
             var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
             using (cn)
