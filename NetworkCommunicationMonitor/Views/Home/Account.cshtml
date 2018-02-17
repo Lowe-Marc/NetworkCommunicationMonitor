@@ -65,7 +65,7 @@
                 <li class="dropdown profile hidden-xs">
                     <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
                         <span class="meta">
-                        <span class="text">Yang</span>
+                        <span class="text">@Session["username"]</span>
                         <span class="caret"></span>
                         </span>
                     </a>
@@ -83,7 +83,7 @@
                         </li>
                         <li class="divider"></li>
                         <li>
-                            <a href="javascript:void(0);">
+                            <a href="Index">
                                 <span class="icon"><i class="fa fa-sign-out"></i>
                                 </span>Logout</a>
                         </li>
@@ -100,7 +100,7 @@
         <aside class="sidebar sidebar-left">
             <div class="sidebar-profile">
                 <div class="profile-body dropdown">
-                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><h4>Yang <span class="caret"></span></h4></a>
+                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><h4>@Session["username"] <span class="caret"></span></h4></a>
                     <small class="title">Administrator</small>
                     <ul class="dropdown-menu animated fadeInRight" role="menu">
                         <li>
@@ -115,7 +115,7 @@
                         </li>
                         <li class="divider"></li>
                         <li>
-                            <a href="javascript:void(0);">
+                            <a href="Index">
                                 <span class="icon"><i class="fa fa-sign-out"></i>
                                 </span>Logout</a>
                         </li>
@@ -208,7 +208,11 @@
                                                     <td>@account.lastName</td>
                                                     <td>
                                                         <select>
-                                                            <option>@account.cardNumber</option>
+                                                            @{ foreach (NetworkCommunicationMonitor.Models.Card card in account.cards)
+                                                                {
+                                                                    <option>@card.cardNumber</option>
+                                                                }
+                                                             }
                                                         </select>
                                                     </td>
                                                     <td>@account.accountAddress</td>
@@ -333,16 +337,16 @@
     </div>
     <!--/Config demo-->
     <!--Global JS-->
-    <script src="assets/js/vendor/jquery-1.11.1.min.js"></script>
-    <script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
-    <script src="assets/plugins/navgoco/jquery.navgoco.min.js"></script>
-    <script src="assets/plugins/switchery/switchery.min.js"></script>
-    <script src="assets/plugins/pace/pace.min.js"></script>
-    <script src="assets/plugins/fullscreen/jquery.fullscreen-min.js"></script>
-    <script src="assets/js/src/app.js"></script>
+    <script src="~/assets/js/vendor/jquery-1.11.1.min.js"></script>
+    <script src="~/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/assets/plugins/navgoco/jquery.navgoco.min.js"></script>
+    <script src="~/assets/plugins/switchery/switchery.min.js"></script>
+    <script src="~/assets/plugins/pace/pace.min.js"></script>
+    <script src="~/assets/plugins/fullscreen/jquery.fullscreen-min.js"></script>
+    <script src="~/assets/js/src/app.js"></script>
     <!--Page Leve JS -->
-    <script src="assets/plugins/dataTables/js/jquery.dataTables.js"></script>
-    <script src="assets/plugins/dataTables/js/dataTables.bootstrap.js"></script>
+    <script src="~/assets/plugins/dataTables/js/jquery.dataTables.js"></script>
+    <script src="~/assets/plugins/dataTables/js/dataTables.bootstrap.js"></script>
     <script>
     $(document).ready(function() {
         $('#example').dataTable();

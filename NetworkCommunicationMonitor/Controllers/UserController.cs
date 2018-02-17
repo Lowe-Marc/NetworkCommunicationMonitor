@@ -27,6 +27,8 @@ namespace NetworkCommunicationMonitor.Controllers
                 if (valid.Equals("true", StringComparison.Ordinal))
                 {
                     Session["adminID"] = user.getID();
+                    Session["user"] = user;
+                    Session["username"] = user.UserName;
                     return RedirectToAction("Question", "User");
                 }
                 else if (valid.Equals("blocked",StringComparison.Ordinal))
@@ -67,7 +69,6 @@ namespace NetworkCommunicationMonitor.Controllers
             string answer = Models.Global.correctAnswers.Pop();
             if (user.answerProvided.Equals(answer,StringComparison.Ordinal))
             {
-                Session["user"] = user;
                 return RedirectToAction("Homepage", "Home");
             }
 
