@@ -65,7 +65,7 @@
                 <li class="dropdown profile hidden-xs">
                     <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
                         <span class="meta">
-                        <span class="text">Yang</span>
+                            <span class="text">@Session["username"]</span>
                         <span class="caret"></span>
                         </span>
                     </a>
@@ -83,7 +83,7 @@
                         </li>
                         <li class="divider"></li>
                         <li>
-                            <a href="javascript:void(0);">
+                            <a href="Index">
                                 <span class="icon"><i class="fa fa-sign-out"></i>
                                 </span>Logout</a>
                         </li>
@@ -100,8 +100,7 @@
         <aside class="sidebar sidebar-left">
             <div class="sidebar-profile">
                 <div class="profile-body dropdown">
-                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><h4>Yang <span class="caret"></span></h4></a>
-                    <small class="title">Administrator</small>
+                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><h4>@Session["username"] <span class="caret"></span></h4></a>
                     <ul class="dropdown-menu animated fadeInRight" role="menu">
                         <li>
                             <a href="javascript:void(0);">
@@ -175,7 +174,7 @@
                                 <div class="panel panel-solid-success widget-mini">
                                     <div class="panel-body">
                                         <i class="fa fa-user"></i>
-                                        <span class="total text-center">34</span>
+                                        <span class="total text-center">@ViewData["NumAccounts"]</span>
                                         <span class="title text-center">Accounts</span>
                                     </div>
                                 </div>
@@ -186,7 +185,7 @@
                                 <div class="panel widget-mini">
                                     <div class="panel-body">
                                         <i class="fa fa-credit-card"></i>
-                                        <span class="total text-center">566</span>
+                                        <span class="total text-center">@ViewData["NumCards"]</span>
                                         <span class="title text-center">Credit Cards</span>
                                     </div>
                                 </div>
@@ -198,7 +197,7 @@
                                 
                                     <div class="panel-body">
                                         <i class="fa fa-home"></i>
-                                        <span class="total text-center">889</span>
+                                        <span class="total text-center">@ViewData["NumStores"]</span>
                                         <span class="title text-center">Stores</span>
                                     </div>
                                 </div>
@@ -209,7 +208,7 @@
                             		<div class="panel widget-mini">
                                     <div class="panel-body">
                                         <i class="fa fa-flag-checkered"></i>
-                                        <span class="total text-center">9</span>
+                                        <span class="total text-center">@ViewData["NumRelays"]</span>
                                         <span class="title text-center">Relay Stations</span>
                                     </div>
                                 </div>
@@ -325,24 +324,24 @@
     </div>
     <!--/Config demo-->
     <!--Global JS-->
-    <script src="assets/js/vendor/jquery-1.11.1.min.js"></script>
-    <script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
-    <script src="assets/plugins/navgoco/jquery.navgoco.min.js"></script>
-    <script src="assets/plugins/pace/pace.min.js"></script>
-    <script src="assets/plugins/fullscreen/jquery.fullscreen-min.js"></script>
-    <script src="assets/js/src/app.js"></script>
+    <script src="~/assets/js/vendor/jquery-1.11.1.min.js"></script>
+    <script src="~/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/assets/plugins/navgoco/jquery.navgoco.min.js"></script>
+    <script src="~/assets/plugins/pace/pace.min.js"></script>
+    <script src="~/assets/plugins/fullscreen/jquery.fullscreen-min.js"></script>
+    <script src="~/assets/js/src/app.js"></script>
     <!--Page Level JS-->
-    <script src="assets/plugins/countTo/jquery.countTo.js"></script>
-    <script src="assets/plugins/weather/js/skycons.js"></script>
-    <script src="assets/plugins/daterangepicker/moment.min.js"></script>
-    <script src="assets/plugins/daterangepicker/daterangepicker.js"></script>
+    <script src="~/assets/plugins/countTo/jquery.countTo.js"></script>
+    <script src="~/assets/plugins/weather/js/skycons.js"></script>
+    <script src="~/assets/plugins/daterangepicker/moment.min.js"></script>
+    <script src="~/assets/plugins/daterangepicker/daterangepicker.js"></script>
     <!-- ChartJS  -->
-    <script src="assets/plugins/chartjs/Chart.min.js"></script>
+    <script src="~/assets/plugins/chartjs/Chart.min.js"></script>
     <!-- Morris  -->
-    <script src="assets/plugins/morris/js/morris.min.js"></script>
-    <script src="assets/plugins/morris/js/raphael.2.1.0.min.js"></script>
+    <script src="~/assets/plugins/morris/js/morris.min.js"></script>
+    <script src="~/assets/plugins/morris/js/raphael.2.1.0.min.js"></script>
     <!-- Switch -->
-    <script src="assets/plugins/switchery/switchery.min.js"></script>
+    <script src="~/assets/plugins/switchery/switchery.min.js"></script>
     <!--Load these page level functions-->
     <script>
     $(document).ready(function() {

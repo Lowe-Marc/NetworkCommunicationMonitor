@@ -6,5 +6,11 @@ INSERT INTO Administrator (admin_id, admin_username, admin_password, question_on
 INSERT INTO Question (question_id, question_question, answer) VALUES(4, 'What is the mascot of your undergraduate university?', 'Answer');
 INSERT INTO Question (question_id, question_question, answer) VALUES(5, 'What year did you graduate high school?', 'Answer');
 INSERT INTO Question (question_id, question_question, answer) VALUES(6, 'What year were you born?', 'Answer');
-INSERT INTO Account (account_id, card_id, trans_id, account_username, account_holder_firstname, account_holder_lastname, account_address, account_phone, account_limit, account_balance) VALUES('4024007107781410', '4024007107781410', '6768592941', 'doe-john', 'John', 'Doe', '187 North Main Street Apt.4, La Crosse, WI 54601', '6085550123', 25000, 0.0);
-INSERT INTO Account (account_id, card_id, trans_id, account_username, account_holder_firstname, account_holder_lastname, account_address, account_phone, account_limit, account_balance) VALUES('4539434035012643', '4539434035012643', '5160524809', 'doe-jane', 'Jane', 'Doe', '1725 State Street, La Crosse, WI 54601', '6085554567', 20000, 0.0);
+INSERT INTO Account (account_id, account_holder_firstname, account_holder_lastname, account_address, account_phone, account_limit, account_balance) VALUES(1,'James', 'Aldridge', '187 North Main Street Apt.4, La Crosse, WI 54601', '6085550123', 25000, 0.0);
+INSERT INTO Card(card_id, card_firstname, card_lastname, card_expirationDate, card_securityCode, account_id) VALUES('4916937470822873', 'James', 'Aldridge', 04/18, '693', 1);
+INSERT INTO Card(card_id, card_firstname, card_lastname, card_expirationDate, card_securityCode, account_id) VALUES('4539511779921483', 'Cameron', 'Aldridge', 07/18, '349', 1);
+INSERT INTO Card(card_id, card_firstname, card_lastname, card_expirationDate, card_securityCode, account_id) VALUES('3599729064660729', 'Devin', 'Aldridge', 10/19, '437', 1);
+INSERT INTO Account (account_id, account_holder_firstname, account_holder_lastname, account_address, account_phone, account_limit, account_balance) VALUES('2','Gabriella', 'Lambert', '1725 State Street, La Crosse, WI 54601', '6085554567', 20000, 0.0);
+INSERT INTO Card(card_id, card_firstname, card_lastname, card_expirationDate, card_securityCode, account_id) VALUES('4024007152937081', 'Gabriella', 'Lambert', 06/19, '339', 2);
+INSERT INTO Card(card_id, card_firstname, card_lastname, card_expirationDate, card_securityCode, account_id) VALUES('4716210473532382', 'Wyatt', 'Lambert', 07/19, '350', 2);
+INSERT INTO Card(card_id, card_firstname, card_lastname, card_expirationDate, card_securityCode, account_id) VALUES('4916170736135852', 'Haley', 'Lambert', 03/19, '168', 2);
