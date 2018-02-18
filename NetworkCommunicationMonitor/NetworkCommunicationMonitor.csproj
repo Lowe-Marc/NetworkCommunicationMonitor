@@ -165,21 +165,6 @@
     <Content Include="assets\css\simple-line-icons.css" />
     <Content Include="assets\fonts\fontawesome-webfont.svg" />
     <Content Include="assets\fonts\Simple-Line-Icons.svg" />
-    <Content Include="assets\img\avatar1.png" />
-    <Content Include="assets\img\avatar2.png" />
-    <Content Include="assets\img\avatar3.png" />
-    <Content Include="assets\img\avatar4.jpg" />
-    <Content Include="assets\img\avatar5.png" />
-    <Content Include="assets\img\avatar6.png" />
-    <Content Include="assets\img\avatar7.png" />
-    <Content Include="assets\img\avatar8.png" />
-    <Content Include="assets\img\avatar9.png" />
-    <Content Include="assets\img\profile-lg.jpg" />
-    <Content Include="assets\img\profile.jpg" />
-    <Content Include="assets\img\vac-1.jpg" />
-    <Content Include="assets\img\vac-2.jpg" />
-    <Content Include="assets\img\vac-3.jpg" />
-    <Content Include="assets\img\vac-4.jpg" />
     <Content Include="assets\js\src\app.js" />
     <Content Include="assets\js\vendor\html5shiv.js" />
     <Content Include="assets\js\vendor\jquery-1.11.1.min.js" />
@@ -708,6 +693,7 @@
     <Content Include="bin\System.Web.WebPages.Razor.xml" />
     <Content Include="bin\System.Web.WebPages.xml" />
     <Content Include="bin\WebGrease.dll" />
+    <Content Include="favicon.ico" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="css\login.css" />
@@ -720,7 +706,6 @@
     <Content Include="img\monitor.ico" />
     <Content Include="js\bg.js" />
     <Content Include="js\Particleground.js" />
-    <Content Include="favicon.ico" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
@@ -806,6 +791,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="assets\img\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

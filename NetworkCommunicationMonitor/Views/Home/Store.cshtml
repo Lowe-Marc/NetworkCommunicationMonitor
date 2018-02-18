@@ -46,7 +46,8 @@
             <div class="brand">
                 <a href="~/Home/Homepage" class="logo">
                     <i class="fa fa-desktop"></i>
-                    <span>Network</span>Monitor</a>
+                    <span>Network</span>Monitor
+                </a>
             </div>
             <!--logo end-->
             <ul class="nav navbar-nav navbar-left">
@@ -56,8 +57,9 @@
                     </button>
                 </li>
                 <li class="hidden-xs hidden-sm">
-                    <input type="text" class="search" placeholder="Search project...">
-                    <button type="submit" class="btn btn-sm btn-search"><i class="fa fa-search"></i>
+                    <input type="text" class="search" placeholder="Search...">
+                    <button type="submit" class="btn btn-sm btn-search">
+                        <i class="fa fa-search"></i>
                     </button>
                 </li>
             </ul>
@@ -65,31 +67,37 @@
                 <li class="dropdown profile hidden-xs">
                     <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
                         <span class="meta">
-                        <span class="text">@Session["username"]</span>
-                        <span class="caret"></span>
+                            <span class="text">@Session["username"]</span>
+                            <span class="caret"></span>
                         </span>
                     </a>
                     <ul class="dropdown-menu animated fadeInRight" role="menu">
-                    	<br />
+                        <br />
                         <li>
                             <a href="javascript:void(0);">
-                                <span class="icon"><i class="fa fa-user"></i>
-                                </span>My Account</a>
+                                <span class="icon">
+                                    <i class="fa fa-user"></i>
+                                </span>My Account
+                            </a>
                         </li>
                         <li>
                             <a href="javascript:void(0);">
-                                <span class="icon"><i class="fa fa-cog"></i>
-                                </span>Settings</a>
+                                <span class="icon">
+                                    <i class="fa fa-cog"></i>
+                                </span>Settings
+                            </a>
                         </li>
                         <li class="divider"></li>
                         <li>
                             <a href="Index">
-                                <span class="icon"><i class="fa fa-sign-out"></i>
-                                </span>Logout</a>
+                                <span class="icon">
+                                    <i class="fa fa-sign-out"></i>
+                                </span>Logout
+                            </a>
                         </li>
                     </ul>
                 </li>
-                 <li class="toggle-fullscreen hidden-xs">
+                <li class="toggle-fullscreen hidden-xs">
                     <button type="button" class="btn btn-default expand" id="toggle-fullscreen">
                         <i class="fa fa-expand"></i>
                     </button>
@@ -101,23 +109,28 @@
             <div class="sidebar-profile">
                 <div class="profile-body dropdown">
                     <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><h4>@Session["username"] <span class="caret"></span></h4></a>
-                    <small class="title">Administrator</small>
                     <ul class="dropdown-menu animated fadeInRight" role="menu">
                         <li>
                             <a href="javascript:void(0);">
-                                <span class="icon"><i class="fa fa-user"></i>
-                                </span>My Account</a>
+                                <span class="icon">
+                                    <i class="fa fa-user"></i>
+                                </span>My Account
+                            </a>
                         </li>
                         <li>
                             <a href="javascript:void(0);">
-                                <span class="icon"><i class="fa fa-cog"></i>
-                                </span>Settings</a>
+                                <span class="icon">
+                                    <i class="fa fa-cog"></i>
+                                </span>Settings
+                            </a>
                         </li>
                         <li class="divider"></li>
                         <li>
                             <a href="Index">
-                                <span class="icon"><i class="fa fa-sign-out"></i>
-                                </span>Logout</a>
+                                <span class="icon">
+                                    <i class="fa fa-sign-out"></i>
+                                </span>Logout
+                            </a>
                         </li>
                     </ul>
                 </div>
@@ -126,28 +139,32 @@
                 <h5 class="sidebar-header">Navigation</h5>
                 <ul class="nav nav-pills nav-stacked">
                     <li class="nav-dropdown">
-                        <a href="Station" title="Network">
+                        <a href="Homepage" title="Network">
                             <i class="fa  fa-fw fa-sitemap"></i> Network
                         </a>
                     </li>
                     <li class="nav-dropdown">
                         <a href="Account" title="Account">
                             <i class="fa  fa-fw fa-user"></i> Account
+                            <span class="label label-primary label-circle pull-right">@ViewData["NumAccounts"]</span>
                         </a>
                     </li>
                     <li class="nav-dropdown">
                         <a href="Card" title="Credit Card">
                             <i class="fa  fa-fw fa-credit-card"></i> Credit Card
+                            <span class="label label-primary label-circle pull-right">@ViewData["NumCards"]</span>
                         </a>
                     </li>
                     <li class="active">
                         <a href="#" title="Stores">
                             <i class="fa  fa-fw fa-home"></i> Stores
+                            <span class="label label-primary label-circle pull-right">@ViewData["NumStores"]</span>
                         </a>
                     </li>
                     <li class="nav-dropdown">
                         <a href="Station" title="Relay Stations">
                             <i class="fa  fa-fw fa-flag-checkered"></i> Relay Stations
+                            <span class="label label-primary label-circle pull-right">@ViewData["NumRelays"]</span>
                         </a>
                     </li>
                 </ul>
@@ -157,13 +174,14 @@
         <!--main content start-->
         <section class="main-content-wrapper">
             <div class="pageheader">
-                <h1>Account Detail</h1>
+                <h1>Store Detail</h1>
                 <div class="breadcrumb-wrapper hidden-xs">
                     <span class="label">You are here:</span>
                     <ol class="breadcrumb">
-                        <li><a href="~/Home/Homepage">Network</a>
+                        <li>
+                            <a href="~/Home/Homepage">Network</a>
                         </li>
-                        <li class="active">Account Detail</li>
+                        <li class="active">Store Detail</li>
                     </ol>
                 </div>
             </div>
@@ -172,7 +190,7 @@
                     <div class="col-md-12">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <h3 class="panel-title">Account Tables</h3>
+                                <h3 class="panel-title">Store Tables</h3>
                                 <div class="actions pull-right">
                                     <i class="fa fa-expand"></i>
                                     <i class="fa fa-chevron-down"></i>

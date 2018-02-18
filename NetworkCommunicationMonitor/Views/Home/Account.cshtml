@@ -24,8 +24,6 @@
     <link rel="stylesheet" href="~/assets/css/animate.css">
     <!-- Daterange Picker -->
     <link rel="stylesheet" href="~/assets/plugins/daterangepicker/daterangepicker-bs3.css">
-    <!-- Calendar demo -->
-    <link rel="stylesheet" href="~/assets/css/clndr.css">
     <!-- Switchery -->
     <link rel="stylesheet" href="~/assets/plugins/switchery/switchery.min.css">
     <!-- Custom styles for this theme -->
@@ -46,7 +44,8 @@
             <div class="brand">
                 <a href="~/Home/Homepage" class="logo">
                     <i class="fa fa-desktop"></i>
-                    <span>Network</span>Monitor</a>
+                    <span>Network</span>Monitor
+                </a>
             </div>
             <!--logo end-->
             <ul class="nav navbar-nav navbar-left">
@@ -57,7 +56,8 @@
                 </li>
                 <li class="hidden-xs hidden-sm">
                     <input type="text" class="search" placeholder="Search project...">
-                    <button type="submit" class="btn btn-sm btn-search"><i class="fa fa-search"></i>
+                    <button type="submit" class="btn btn-sm btn-search">
+                        <i class="fa fa-search"></i>
                     </button>
                 </li>
             </ul>
@@ -65,31 +65,37 @@
                 <li class="dropdown profile hidden-xs">
                     <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
                         <span class="meta">
-                        <span class="text">@Session["username"]</span>
-                        <span class="caret"></span>
+                            <span class="text">@Session["username"]</span>
+                            <span class="caret"></span>
                         </span>
                     </a>
                     <ul class="dropdown-menu animated fadeInRight" role="menu">
-                    	<br />
+                        <br />
                         <li>
                             <a href="javascript:void(0);">
-                                <span class="icon"><i class="fa fa-user"></i>
-                                </span>My Account</a>
+                                <span class="icon">
+                                    <i class="fa fa-user"></i>
+                                </span>My Account
+                            </a>
                         </li>
                         <li>
                             <a href="javascript:void(0);">
-                                <span class="icon"><i class="fa fa-cog"></i>
-                                </span>Settings</a>
+                                <span class="icon">
+                                    <i class="fa fa-cog"></i>
+                                </span>Settings
+                            </a>
                         </li>
                         <li class="divider"></li>
                         <li>
                             <a href="Index">
-                                <span class="icon"><i class="fa fa-sign-out"></i>
-                                </span>Logout</a>
+                                <span class="icon">
+                                    <i class="fa fa-sign-out"></i>
+                                </span>Logout
+                            </a>
                         </li>
                     </ul>
                 </li>
-                 <li class="toggle-fullscreen hidden-xs">
+                <li class="toggle-fullscreen hidden-xs">
                     <button type="button" class="btn btn-default expand" id="toggle-fullscreen">
                         <i class="fa fa-expand"></i>
                     </button>
@@ -101,23 +107,28 @@
             <div class="sidebar-profile">
                 <div class="profile-body dropdown">
                     <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><h4>@Session["username"] <span class="caret"></span></h4></a>
-                    <small class="title">Administrator</small>
                     <ul class="dropdown-menu animated fadeInRight" role="menu">
                         <li>
                             <a href="javascript:void(0);">
-                                <span class="icon"><i class="fa fa-user"></i>
-                                </span>My Account</a>
+                                <span class="icon">
+                                    <i class="fa fa-user"></i>
+                                </span>My Account
+                            </a>
                         </li>
                         <li>
                             <a href="javascript:void(0);">
-                                <span class="icon"><i class="fa fa-cog"></i>
-                                </span>Settings</a>
+                                <span class="icon">
+                                    <i class="fa fa-cog"></i>
+                                </span>Settings
+                            </a>
                         </li>
                         <li class="divider"></li>
                         <li>
                             <a href="Index">
-                                <span class="icon"><i class="fa fa-sign-out"></i>
-                                </span>Logout</a>
+                                <span class="icon">
+                                    <i class="fa fa-sign-out"></i>
+                                </span>Logout
+                            </a>
                         </li>
                     </ul>
                 </div>
@@ -126,33 +137,38 @@
                 <h5 class="sidebar-header">Navigation</h5>
                 <ul class="nav nav-pills nav-stacked">
                     <li class="nav-dropdown">
-                        <a href="Station" title="Network">
+                        <a href="Homepage" title="Network">
                             <i class="fa  fa-fw fa-sitemap"></i> Network
                         </a>
                     </li>
                     <li class="active">
                         <a href="#" title="Account">
                             <i class="fa  fa-fw fa-user"></i> Account
+                            <span class="label label-primary label-circle pull-right">@ViewData["NumAccounts"]</span>
                         </a>
                     </li>
                     <li class="nav-dropdown">
                         <a href="Card" title="Credit Card">
                             <i class="fa  fa-fw fa-credit-card"></i> Credit Card
+                            <span class="label label-primary label-circle pull-right">@ViewData["NumCards"]</span>
                         </a>
                     </li>
                     <li class="nav-dropdown">
                         <a href="Store" title="Stores">
                             <i class="fa  fa-fw fa-home"></i> Stores
+                            <span class="label label-primary label-circle pull-right">@ViewData["NumStores"]</span>
                         </a>
                     </li>
                     <li class="nav-dropdown">
                         <a href="Station" title="Relay Stations">
                             <i class="fa  fa-fw fa-flag-checkered"></i> Relay Stations
+                            <span class="label label-primary label-circle pull-right">@ViewData["NumRelays"]</span>
                         </a>
                     </li>
                 </ul>
             </nav>
         </aside>
+        <!--sidebar left end-->
         <!--sidebar left end-->
         <!--main content start-->
         <section class="main-content-wrapper">
@@ -161,11 +177,16 @@
                 <div class="breadcrumb-wrapper hidden-xs">
                     <span class="label">You are here:</span>
                     <ol class="breadcrumb">
-                        <li><a href="~/Home/Homepage">Network</a>
+                        <li>
+                            <a href="~/Home/Homepage">Network</a>
                         </li>
                         <li class="active">Account Detail</li>
                     </ol>
                 </div>
+            </div>
+            <div class="alert alert-warning alert-dismissable" style="margin:0">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <strong>Tips:</strong> If you want to add a credit card, click the  <i class="fa fa-plus"></i> on the right.
             </div>
             <section id="main-content" class="animated fadeInUp">
                 <div class="row">
@@ -174,57 +195,68 @@
                             <div class="panel-heading">
                                 <h3 class="panel-title">Account Tables</h3>
                                 <div class="actions pull-right">
+                                    <i class="fa fa-plus" data-toggle="modal" data-target="#add" title="add"></i>
                                     <i class="fa fa-expand"></i>
                                     <i class="fa fa-chevron-down"></i>
                                 </div>
                             </div>
                             <div class="panel-body">
+
                                 @{
-                                    List<NetworkCommunicationMonitor.Models.Account> accounts = (List<NetworkCommunicationMonitor.Models.Account>)ViewData["Accounts"];
-                                    if (accounts.Count == 0)
-                                    {
-                                        <h3>There are no accounts in the database.</h3>
-                                    }
-                                    else
-                                    {
-                                        <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                                        <thead>
-                                            <tr>
-                                                <th>First Name</th>
-                                                <th>Last Name</th>
-                                                <th>Credit Cards</th>
-                                                <th>Address</th>
-                                                <th>Phone</th>
-                                                <th>Limit</th>
-                                                <th>Balance</th>
-                                            </tr>
-                                        </thead>
-                                            <tbody>
+                                List<NetworkCommunicationMonitor.Models.Account> accounts = (List<NetworkCommunicationMonitor.Models.Account>)ViewData["Accounts"];
+                                if (accounts.Count == 0)
+                                {
+                                    <h3>There are no accounts in the database.</h3>
+                            }
+                            else
+                            {
+                                <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                    <thead>
+                                        <tr style="cursor:pointer">
+                                            <th>First Name</th>
+                                            <th>Last Name</th>
+                                            <th>Credit Cards</th>
+                                            <th>Address</th>
+                                            <th>Phone</th>
+                                            <th>Limit</th>
+                                            <th>Balance</th>
+                                            <th>Operation</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
                                         @{
-                                            foreach (NetworkCommunicationMonitor.Models.Account account in accounts)
-                                            {
-                                                <tr>
-                                                    <td>@account.firstName</td>
-                                                    <td>@account.lastName</td>
-                                                    <td>
-                                                        <select>
-                                                            @{ foreach (NetworkCommunicationMonitor.Models.Card card in account.cards)
-                                                                {
-                                                                    <option>@card.cardNumber</option>
-                                                                }
-                                                             }
-                                                        </select>
-                                                    </td>
-                                                    <td>@account.accountAddress</td>
-                                                    <td>@account.phoneNumber</td>
-                                                    <td>@account.accountLimit</td>
-                                                    <td>@account.accountBalance</td>
-                                                </tr>
-                                            }
-                                        }
-                                            </tbody>
-                                        </table>
+                                        foreach (NetworkCommunicationMonitor.Models.Account account in accounts)
+                                        {
+                                            <tr>
+                                                <td>@account.firstName</td>
+                                                <td>@account.lastName</td>
+                                                <td>
+                                                    <select>
+                                                        @{ foreach (NetworkCommunicationMonitor.Models.Card card in account.cards)
+                                                        {
+                                                            <option>@card.cardNumber</option>
+                                                    }
+                                                        }
+                                                    </select>
+                                                </td>
+                                                <td>@account.accountAddress</td>
+                                                <td>@account.phoneNumber</td>
+                                                <td>@account.accountLimit</td>
+                                                <td>@account.accountBalance</td>
+                                                <td>
+                                                    <button class="btn btn-danger btn-3d" style="cursor:pointer;" title="delete" data-toggle="modal" data-target="#delete">
+                                                        <span class="glyphicon glyphicon-trash"></span>
+                                                    </button>
+                                                    <button class="btn btn-default btn-3d" style="cursor:pointer;" title="edit" data-toggle="modal" data-target="#edit">
+                                                        <span class="glyphicon glyphicon-pencil"></span>
+                                                    </button>
+                                                </td>
+                                            </tr>
                                     }
+                                        }
+                                    </tbody>
+                                </table>
+                        }
                                 }
                             </div>
                         </div>
@@ -234,6 +266,195 @@
         </section>
         <!--main content end-->
     </section>
+    <!--delete modal start-->
+    <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h1 class="modal-title" id="myModalLabel"> Delete</h1>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure to delete [Firstname Lastname]'s account?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                    <button type="button" class="btn btn-danger">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--delete modal end-->
+    
+    <!--add modal start-->
+    <div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h1 class="modal-title" id="myModalLabel"> Add an account</h1>
+                </div>
+                <div class="modal-body">
+                    <!--main content start-->
+                    <div class="alert alert-warning alert-dismissable" style="margin:0">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        <strong>Tips:</strong> If you want to add an account, you should also add a credit bound with it.
+                    </div>
+                    <section class="main-content-wrapper" style="padding:0">
+                        <section id="main-content" class="animated fadeInUp">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="panel panel-default">
+                                        <div class="panel-body">
+                                            <section class="fuelux">
+                                                <div id="MyWizard" class="wizard">
+                                                    <ul class="steps">
+                                                        <li data-target="#step1" class="active">
+                                                            <span class="badge badge-info">1</span>Step 1<span class="chevron"></span>
+                                                        </li>
+                                                        <li data-target="#step3">
+                                                            <span class="badge">2</span>Step 2<span class="chevron"></span>
+                                                        </li>
+                                                    </ul>
+                                                    <div class="actions">
+                                                        <button type="button" class="btn btn-default btn-mini btn-prev"> <i class="fa fa-chevron-left"></i> Prev</button>
+                                                        <button type="button" class="btn btn-primary btn-mini btn-next" data-last="Submit">
+                                                            Next <i class="fa fa-chevron-right"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="step-content">
+                                                    <div class="step-pane active" id="step1">
+                                                        <form class="form-horizontal">
+                                                            <div class="form-group">
+                                                                <div class="col-sm-12">
+                                                                    <h2 style="text-align:center;">Account Info</h2>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="account_holder_firstname" class="col-sm-3 control-label">First Name</label>
+                                                                <div class="col-sm-6">
+                                                                    <input type="text" class="form-control" id="account_holder_firstname" name="account_holder_firstname" required="" placeholder="first name">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="account_holder_lastname" class="col-sm-3 control-label">Last Name</label>
+                                                                <div class="col-sm-6">
+                                                                    <input type="text" class="form-control" id="account_holder_lastname" name="account_holder_lastname" required="" placeholder="last name">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="account_address" class="col-sm-3 control-label">Address</label>
+                                                                <div class="col-sm-6">
+                                                                    <input type="text" class="form-control" id="account_address" name="account_address" required="" placeholder="address">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="input2" class="col-sm-3 control-label">Phone</label>
+                                                                <div class="col-sm-6">
+                                                                    <input type="text" class="form-control" id="input2" name="input2" required="" placeholder="(999) 999-9999">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="account_limit" class="col-sm-3 control-label">Limit</label>
+                                                                <div class="col-sm-6">
+                                                                    <input type="text" class="form-control" id="account_limit" name="account_limit" required="" placeholder="(0-25000)">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="account_balance" class="col-sm-3 control-label">Balance</label>
+                                                                <div class="col-sm-6">
+                                                                    <input type="text" class="form-control" id="account_balance" name="account_balance" required="" placeholder="(0-25000)">
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <div class="step-pane" id="step3">
+                                                        <form class="form-horizontal">
+                                                            <div class="form-group">
+                                                                <div class="col-sm-12">
+                                                                    <h2 style="text-align:center;">Card Info</h2>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="card_id" class="col-sm-3 control-label">Card No</label>
+                                                                <div class="col-sm-6">
+                                                                    <input type="text" class="form-control" id="card_id" name="card_id" placeholder="x999-9999-9999">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="card_firstname" class="col-sm-3 control-label">First Name</label>
+                                                                <div class="col-sm-6">
+                                                                    <input type="text" class="form-control" id="card_firstname" name="card_firstname" placeholder="first name">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="card_lastname" class="col-sm-3 control-label">Last Name</label>
+                                                                <div class="col-sm-6">
+                                                                    <input type="text" class="form-control" id="card_lastname" name="card_lastname" placeholder="last name">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-sm-3 control-label">Expiration</label>
+                                                                <div class="col-sm-3">
+                                                                    <select class="form-control" id="card_expirationMonth" name="card_expirationMonth">
+                                                                        <option value="0">Month</option>
+                                                                        <option value="1">01</option>
+                                                                        <option value="2">02</option>
+                                                                        <option value="3">03</option>
+                                                                        <option value="4">04</option>
+                                                                        <option value="5">05</option>
+                                                                        <option value="6">06</option>
+                                                                        <option value="7">07</option>
+                                                                        <option value="8">08</option>
+                                                                        <option value="9">09</option>
+                                                                        <option value="10">10</option>
+                                                                        <option value="11">11</option>
+                                                                        <option value="12">12</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <select class="form-control" id="card_expirationYear" name="card_expirationYear">
+                                                                        <option value="0">Year</option>
+                                                                        <option value="2018">2018</option>
+                                                                        <option value="2019">2019</option>
+                                                                        <option value="2020">2020</option>
+                                                                        <option value="2021">2021</option>
+                                                                        <option value="2022">2022</option>
+                                                                        <option value="2023">2023</option>
+                                                                        <option value="2024">2024</option>
+                                                                        <option value="2025">2025</option>
+                                                                        <option value="2026">2026</option>
+                                                                        <option value="2027">2027</option>
+                                                                        <option value="2028">2028</option>
+                                                                        <option value="2029">2029</option>
+                                                                        <option value="2030">2030</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="card_securityCode" class="col-sm-3 control-label">Security Code</label>
+                                                                <div class="col-sm-3">
+                                                                    <input type="text" class="form-control" id="card_securityCode" name="card_securityCode" required="" placeholder="(999)">
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </section>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                </div>
+                </section>
+                </section>
+                <!--main content end-->
+            </div>
+        </div>
+    </div>
+    </div>
+    <!--add modal end-->
     <!--Config demo-->
     <div id="config" class="config hidden-xs">
         <h4>Settings<a href="javascript:void(0)" class="config-link closed"><i class="icon-settings"></i></a></h4>
@@ -347,12 +568,16 @@
     <!--Page Leve JS -->
     <script src="~/assets/plugins/dataTables/js/jquery.dataTables.js"></script>
     <script src="~/assets/plugins/dataTables/js/dataTables.bootstrap.js"></script>
+    <script src="~/assets/plugins/wizard/js/loader.min.js"></script>
+    <script src="~/assets/plugins/mask/js/jquery.maskedinput.min.js"></script>
     <script>
-    $(document).ready(function() {
-        $('#example').dataTable();
-    });
+        $(document).ready(function () {
+            $('#example').dataTable();
+        });
+        $(document).ready(function () {
+            app.formMask();
+        });
     </script>
-       
 </body>
 
 </html>
