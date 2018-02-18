@@ -27,7 +27,9 @@ namespace NetworkCommunicationMonitor.Controllers
                 if (valid.Equals("true", StringComparison.Ordinal))
                 {
                     Session["adminID"] = user.getID();
-                    return RedirectToAction("Question", "User", user);
+                    Session["user"] = user;
+                    Session["username"] = user.UserName;
+                    return RedirectToAction("Question", "User");
                 }
                 else if (valid.Equals("blocked",StringComparison.Ordinal))
                 {
@@ -35,7 +37,7 @@ namespace NetworkCommunicationMonitor.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("Login", "Home");
+                    return RedirectToAction("Index", "Home");
                 }
             }
             return RedirectToAction("Index", "Home");
@@ -45,11 +47,11 @@ namespace NetworkCommunicationMonitor.Controllers
         // If there are no more questions to ask the user, they will be blocked and redirected to
         // the homepage.
         [HttpGet]
-        public ActionResult Question(Models.User user)
+        public ActionResult Question()
         {
             if (Models.Global.questions.Count == 0)
             {
-                user.blockThisUser(Convert.ToInt32(Session["adminID"]));
+                Models.User.blockThisUser(Convert.ToInt32(Session["adminID"]));
                 Session["adminID"] = null;
                 return RedirectToAction("Blocked", "Home");
             }
@@ -67,8 +69,7 @@ namespace NetworkCommunicationMonitor.Controllers
             string answer = Models.Global.correctAnswers.Pop();
             if (user.answerProvided.Equals(answer,StringComparison.Ordinal))
             {
-                Session["user"] = user;
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Homepage", "Home");
             }
 
             return RedirectToAction("Question", "User", user);

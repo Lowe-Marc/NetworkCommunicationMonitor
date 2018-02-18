@@ -1,0 +1,34 @@
+﻿@model NetworkCommunicationMonitor.Models.User
+
+@{
+    ViewBag.Title = "Login";
+}
+
+<h2>Login</h2>
+
+@ViewData["Warning"]
+
+@using (Html.BeginForm("Login", "User", FormMethod.Post))
+{
+    @Html.ValidationSummary(false);
+    <div>
+        <fieldset>
+            <div class="editor-label">
+                @Html.TextBoxFor(u => u.UserName)
+                @Html.ValidationMessageFor(u => u.UserName)
+            </div>
+            <div class="editor-label">
+                @Html.LabelFor(u => u.UserName)
+            </div>
+            <div class="editor-field">
+                @Html.PasswordFor(u => u.Password)
+                @Html.ValidationMessageFor(u => u.Password)
+            </div>
+            <div class="editor-label">
+                @Html.CheckBoxFor(u => u.RememberMe)
+                @Html.LabelFor(u => u.RememberMe)
+            </div>
+            <input type="submit" value="Log In" />
+        </fieldset>
+    </div>
+}

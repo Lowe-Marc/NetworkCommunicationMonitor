@@ -1,0 +1,68 @@
+* {
+	margin: 0;
+	padding: 0;
+	text-decoration: none;
+}
+
+body {
+	height: 100%;
+	width: 100%;
+	text-align: center;
+	background: white;
+}
+
+hr{
+	color: gray;
+}
+
+.fl{
+	float: left;
+}
+.pointer{
+	cursor: pointer;
+}
+
+.header,
+.main,
+.footer {
+	position: relative;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.input {
+	width: 100%;
+	margin-bottom: 10px;
+	border: none;
+	outline: none;
+	padding: 10px;
+	font-size: 13px;
+	color: black;
+	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+	border: 1px solid rgba(0, 0, 0, 0.3);
+	border-radius: 4px;
+	-moz-border-radius: 25px;
+	box-shadow: inset 0 -5px 45px rgba(100, 100, 100, 0.2), 0 1px 1px rgba(255, 255, 255, 0.2);
+	-webkit-transition: box-shadow .5s ease;
+	-moz-transition: box-shadow .5s ease;
+	-o-transition: box-shadow .5s ease;
+	-ms-transition: box-shadow .5s ease;
+	transition: box-shadow .5s ease;
+}
+
+.input:focus {
+	box-shadow: inset 0 -5px 45px rgba(100, 100, 100, 0.4), 0 1px 1px rgba(255, 255, 255, 0.2);
+}
+
+.input[type=text]:focus,
+.input[type=password]:focus {
+	outline: none;
+	border-color: #51a7e8;
+	box-shadow: inset 0 1px 2px rgba(0, 0, 0, .075), 0 0 5px rgba(81, 167, 232, .5);
+}
+
+.header{
+	position: fixed;
+	width: 100%;
+	z-index: 999;
+}
