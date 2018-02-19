@@ -213,6 +213,7 @@
                                 <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                     <thead>
                                         <tr style="cursor:pointer">
+                                            <th>Account ID</th>
                                             <th>First Name</th>
                                             <th>Last Name</th>
                                             <th>Credit Cards</th>
@@ -228,6 +229,7 @@
                                         foreach (NetworkCommunicationMonitor.Models.Account account in accounts)
                                         {
                                             <tr>
+                                                <td>@account.accountNumber</td>
                                                 <td>@account.firstName</td>
                                                 <td>@account.lastName</td>
                                                 <td>

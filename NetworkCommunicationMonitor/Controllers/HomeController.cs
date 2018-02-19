@@ -21,6 +21,8 @@ namespace NetworkCommunicationMonitor.Controllers
 
         public ActionResult Homepage()
         {
+            if (Session["username"] == null)
+                return RedirectToAction("Index","Home");
             ViewData["NumAccounts"] = NetworkCommunicationMonitor.Models.Account.getNumAccounts();
             ViewData["NumCards"] = NetworkCommunicationMonitor.Models.Card.getNumCards();
             ViewData["NumStores"] = NetworkCommunicationMonitor.Models.Store.getNumStores();
@@ -30,24 +32,32 @@ namespace NetworkCommunicationMonitor.Controllers
 
         public ActionResult Account()
         {
+            if (Session["username"] == null)
+                return RedirectToAction("Index", "Home");
             ViewData["Accounts"] = NetworkCommunicationMonitor.Models.Account.getAccounts();
             return View();
         }
 
         public ActionResult Card()
         {
+            if (Session["username"] == null)
+                return RedirectToAction("Index", "Home");
             ViewData["Cards"] = NetworkCommunicationMonitor.Models.Card.getCards();
             return View();
         }
 
         public ActionResult Station()
         {
+            if (Session["username"] == null)
+                return RedirectToAction("Index", "Home");
             ViewData["Relays"] = NetworkCommunicationMonitor.Models.Relay.getRelays();
             return View();
         }
 
         public ActionResult Store()
         {
+            if (Session["username"] == null)
+                return RedirectToAction("Index", "Home");
             ViewData["Stores"] = NetworkCommunicationMonitor.Models.Store.getStores();
             return View();
         }

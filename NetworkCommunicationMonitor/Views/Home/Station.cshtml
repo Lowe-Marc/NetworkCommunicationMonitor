@@ -197,16 +197,16 @@
                                 </div>
                             </div>
                             <div class="panel-body">
-                                @{
-                                List<NetworkCommunicationMonitor.Models.Relay> relays = (List<NetworkCommunicationMonitor.Models.Relay>)ViewData["Relays"];
-                                if (relays.Count == 0)
-                                {
-                                    <h3>There are no relays in the database.</h3>
-                            }
-                            else
-                            {
+                                @{ 
+                                    List<NetworkCommunicationMonitor.Models.Relay> relays = (List<NetworkCommunicationMonitor.Models.Relay>)ViewData["Relays"];
+                                    if (relays.Count == 0)
+                                    {
+                                        <h3>There are no relays in the database.</h3>
+                                    }
+                                    else
+                                    {
 
-                            }
+                                    }
                                 }
                             </div>
                         </div>

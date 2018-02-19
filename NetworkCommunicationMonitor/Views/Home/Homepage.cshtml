@@ -32,11 +32,24 @@
     <link rel="stylesheet" href="~/assets/css/main.css">
     <!-- Feature detection -->
     <script src="~/assets/js/vendor/modernizr-2.6.2.min.js"></script>
+    <script src="~/js/d3.min.js"></script>
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
     <script src="assets/js/vendor/html5shiv.js"></script>
     <script src="assets/js/vendor/respond.min.js"></script>
     <![endif]-->
+    <style>
+        .links line {
+            stroke: #000000;
+            stroke-opacity: 0.8;
+        }
+
+        .nodes circle {
+            cursor: move;
+            stroke: #000000;
+            stroke-width: 1px;
+        }
+    </style>
 </head>
 
 <body>
@@ -72,7 +85,7 @@
                         </span>
                     </a>
                     <ul class="dropdown-menu animated fadeInRight" role="menu">
-                    	<br />
+                        <br />
                         <li>
                             <a href="javascript:void(0);">
                                 <span class="icon">
@@ -112,24 +125,30 @@
                     <ul class="dropdown-menu animated fadeInRight" role="menu">
                         <li>
                             <a href="javascript:void(0);">
-                                <span class="icon"><i class="fa fa-user"></i>
-                                </span>My Account</a>
+                                <span class="icon">
+                                    <i class="fa fa-user"></i>
+                                </span>My Account
+                            </a>
                         </li>
                         <li>
                             <a href="javascript:void(0);">
-                                <span class="icon"><i class="fa fa-cog"></i>
-                                </span>Settings</a>
+                                <span class="icon">
+                                    <i class="fa fa-cog"></i>
+                                </span>Settings
+                            </a>
                         </li>
                         <li class="divider"></li>
                         <li>
                             <a href="Index">
-                                <span class="icon"><i class="fa fa-sign-out"></i>
-                                </span>Logout</a>
+                                <span class="icon">
+                                    <i class="fa fa-sign-out"></i>
+                                </span>Logout
+                            </a>
                         </li>
                     </ul>
                 </div>
             </div>
-           <nav>
+            <nav>
                 <h5 class="sidebar-header">Navigation</h5>
                 <ul class="nav nav-pills nav-stacked">
                     <li class="active">
@@ -181,54 +200,55 @@
                     <div class="col-md-12 col-lg-12">
                         <div class="row">
                             <div class="col-md-3">
-                            		<a href="Account">
-                                <div class="panel panel-solid-success widget-mini">
-                                    <div class="panel-body">
-                                        <i class="fa fa-user"></i>
-                                        <span class="total text-center">@ViewData["NumAccounts"]</span>
-                                        <span class="title text-center">Accounts</span>
+                                <a href="Account">
+                                    <div class="panel panel-solid-success widget-mini">
+                                        <div class="panel-body">
+                                            <i class="fa fa-user"></i>
+                                            <span class="total text-center">@ViewData["NumAccounts"]</span>
+                                            <span class="title text-center">Accounts</span>
+                                        </div>
                                     </div>
-                                </div>
-                            		</a>
+                                </a>
                             </div>
                             <div class="col-md-3">
-                            		<a href="Card">
-                                <div class="panel widget-mini">
-                                    <div class="panel-body">
-                                        <i class="fa fa-credit-card"></i>
-                                        <span class="total text-center">@ViewData["NumCards"]</span>
-                                        <span class="title text-center">Credit Cards</span>
+                                <a href="Card">
+                                    <div class="panel widget-mini">
+                                        <div class="panel-body">
+                                            <i class="fa fa-credit-card"></i>
+                                            <span class="total text-center">@ViewData["NumCards"]</span>
+                                            <span class="title text-center">Credit Cards</span>
+                                        </div>
                                     </div>
-                                </div>
-                               </a>
+                                </a>
                             </div>
                             <div class="col-md-3">
-                            		<a href="Store">
-                            		<div class="panel panel-solid-info widget-mini">
-                                
-                                    <div class="panel-body">
-                                        <i class="fa fa-home"></i>
-                                        <span class="total text-center">@ViewData["NumStores"]</span>
-                                        <span class="title text-center">Stores</span>
+                                <a href="Store">
+                                    <div class="panel panel-solid-info widget-mini">
+
+                                        <div class="panel-body">
+                                            <i class="fa fa-home"></i>
+                                            <span class="total text-center">@ViewData["NumStores"]</span>
+                                            <span class="title text-center">Stores</span>
+                                        </div>
                                     </div>
-                                </div>
-                               </a>
+                                </a>
                             </div>
                             <div class="col-md-3">
-                            		<a href="Station">
-                            		<div class="panel widget-mini">
-                                    <div class="panel-body">
-                                        <i class="fa fa-flag-checkered"></i>
-                                        <span class="total text-center">@ViewData["NumRelays"]</span>
-                                        <span class="title text-center">Relay Stations</span>
+                                <a href="Station">
+                                    <div class="panel widget-mini">
+                                        <div class="panel-body">
+                                            <i class="fa fa-flag-checkered"></i>
+                                            <span class="total text-center">@ViewData["NumRelays"]</span>
+                                            <span class="title text-center">Relay Stations</span>
+                                        </div>
                                     </div>
-                                </div>
-                               </a>
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
+            <div id="svg" class="animated fadeInDown"></div>
         </section>
         <!--main content end-->
     </section>
@@ -281,7 +301,6 @@
                                 <span class="nav bg-dark"></span>
                             </div>
                         </li>
-
                     </ul>
                 </div>
                 <div class="col-xs-6">
@@ -334,6 +353,442 @@
         </div>
     </div>
     <!--/Config demo-->
+    <!--d3 JS-->
+    <script>
+        var graph = {
+            "nodes": [{
+                "id": "processing_center",
+                "group": 0
+            },
+            {
+                "id": "store1",
+                "group": 1
+            },
+            {
+                "id": "store2",
+                "group": 1
+            },
+            {
+                "id": "store3",
+                "group": 1
+            },
+            {
+                "id": "store4",
+                "group": 1
+            },
+            {
+                "id": "store5",
+                "group": 1
+            },
+            {
+                "id": "store6",
+                "group": 1
+            },
+            {
+                "id": "store7",
+                "group": 1
+            },
+            {
+                "id": "store8",
+                "group": 1
+            },
+            {
+                "id": "store9",
+                "group": 1
+            },
+            {
+                "id": "store10",
+                "group": 1
+            },
+            {
+                "id": "store11",
+                "group": 1
+            },
+            {
+                "id": "store12",
+                "group": 1
+            },
+            {
+                "id": "store13",
+                "group": 1
+            },
+            {
+                "id": "store14",
+                "group": 1
+            },
+            {
+                "id": "store15",
+                "group": 1
+            },
+            {
+                "id": "store16",
+                "group": 1
+            },
+            {
+                "id": "store17",
+                "group": 1
+            },
+            {
+                "id": "store18",
+                "group": 1
+            },
+            {
+                "id": "store19",
+                "group": 1
+            },
+            {
+                "id": "store20",
+                "group": 1
+            },
+            {
+                "id": "relay1",
+                "group": 2
+            },
+            {
+                "id": "relay2",
+                "group": 2
+            },
+            {
+                "id": "relay3",
+                "group": 2
+            },
+            {
+                "id": "relay4",
+                "group": 2
+            },
+            {
+                "id": "relay5",
+                "group": 2
+            },
+            {
+                "id": "relay6",
+                "group": 2
+            },
+            {
+                "id": "relay7",
+                "group": 2
+            }
+            ],
+            "links": [
+                { "source": "store1", "target": "relay1", "distance": 50, "value": 4 },
+                {
+                    "source": "store2",
+                    "target": "relay7",
+                    "distance": 50,
+                    "value": 4
+                },
+                {
+                    "source": "store3",
+                    "target": "relay4",
+                    "distance": 50,
+                    "value": 4
+                },
+                {
+                    "source": "store4",
+                    "target": "relay6",
+                    "distance": 50,
+                    "value": 4
+                },
+                {
+                    "source": "store5",
+                    "target": "relay7",
+                    "distance": 50,
+                    "value": 4
+                },
+                {
+                    "source": "store6",
+                    "target": "relay3",
+                    "distance": 50,
+                    "value": 4
+                },
+                {
+                    "source": "store7",
+                    "target": "relay1",
+                    "distance": 50,
+                    "value": 4
+                },
+                {
+                    "source": "store8",
+                    "target": "relay6",
+                    "distance": 50,
+                    "value": 4
+                },
+                {
+                    "source": "store9",
+                    "target": "relay5",
+                    "distance": 50,
+                    "value": 4
+                },
+                {
+                    "source": "store10",
+                    "target": "relay1",
+                    "distance": 50,
+                    "value": 4
+                },
+                {
+                    "source": "store11",
+                    "target": "relay6",
+                    "distance": 50,
+                    "value": 4
+                },
+                {
+                    "source": "store12",
+                    "target": "relay2",
+                    "distance": 50,
+                    "value": 4
+                },
+                {
+                    "source": "store13",
+                    "target": "relay5",
+                    "distance": 50,
+                    "value": 4
+                },
+                {
+                    "source": "store14",
+                    "target": "relay7",
+                    "distance": 50,
+                    "value": 4
+                },
+                {
+                    "source": "store15",
+                    "target": "relay1",
+                    "distance": 50,
+                    "value": 4
+                },
+                {
+                    "source": "store16",
+                    "target": "relay4",
+                    "distance": 50,
+                    "value": 4
+                },
+                {
+                    "source": "store17",
+                    "target": "relay2",
+                    "distance": 50,
+                    "value": 4
+                },
+                {
+                    "source": "store18",
+                    "target": "relay3",
+                    "distance": 50,
+                    "value": 4
+                },
+                {
+                    "source": "store19",
+                    "target": "relay5",
+                    "distance": 50,
+                    "value": 4
+                },
+                {
+                    "source": "store20",
+                    "target": "relay4",
+                    "distance": 50,
+                    "value": 4
+                },
+                {
+                    "source": "relay1",
+                    "target": "relay2",
+                    "distance": 80,
+                    "value": 8
+                },
+                {
+                    "source": "relay2",
+                    "target": "relay3",
+                    "distance": 80,
+                    "value": 8
+                },
+                {
+                    "source": "relay3",
+                    "target": "relay1",
+                    "distance": 80,
+                    "value": 8
+                },
+                {
+                    "source": "relay4",
+                    "target": "relay5",
+                    "distance": 80,
+                    "value": 8
+                },
+                {
+                    "source": "relay4",
+                    "target": "relay1",
+                    "distance": 80,
+                    "value": 8
+                },
+                {
+                    "source": "relay6",
+                    "target": "relay4",
+                    "distance": 80,
+                    "value": 8
+                },
+                {
+                    "source": "relay3",
+                    "target": "relay7",
+                    "distance": 80,
+                    "value": 8
+                },
+                {
+                    "source": "relay5",
+                    "target": "processing_center",
+                    "distance": 200,
+                    "value": 16
+                },
+                {
+                    "source": "relay2",
+                    "target": "processing_center",
+                    "distance": 200,
+                    "value": 16
+                },
+                {
+                    "source": "relay6",
+                    "target": "processing_center",
+                    "distance": 200,
+                    "value": 16
+                }
+            ]
+        }
+
+        var width = innerWidth,
+            height = innerHeight;
+
+        var svg = d3.select("#svg").append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+        var simulation = d3.forceSimulation(node)
+            .force('link', d3.forceLink().id(d => d.id).distance(d => d.distance))
+            .force('collision', d3.forceCollide(1).strength(0.2))
+            .force('charge', d3.forceManyBody().strength(-220).distanceMax(1000))
+            .force('center', d3.forceCenter(width / 2, height / 2));
+
+        var color = d3.scaleOrdinal(d3.schemeCategory10);
+
+        var link = svg.append("g")
+            .attr("class", "links")
+            .selectAll("line")
+            .data(graph.links)
+            .enter().append("line")
+            .attr("stroke-width", function (d) {
+                return Math.sqrt(d.value);
+            });
+
+        var node = svg.append("g")
+            .attr("class", "nodes")
+            .selectAll("circle")
+            .data(graph.nodes)
+            .enter()
+            .append("circle")
+            .attr("r", 12)
+            .attr("r", function (d) {
+                switch (d.group) {
+                    case 0:
+                        return 50;
+                    case 1:
+                        return 10;
+                    case 2:
+                        return 20;
+                }
+            })
+            .attr("fill", function (d) {
+                return color(d.group);
+            })
+            .call(d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended));
+
+        var text = svg.selectAll("text")
+            .data(graph.nodes)
+            .enter()
+            .append("text")
+            .style("fill", "#000")
+            .style("font-size", "20")
+            .attr("dx", function (d) {
+                switch (d.group) {
+                    case 0:
+                        return -70;
+                    case 1:
+                        return -28;
+                    case 2:
+                        return -22;
+                }
+            })
+            .attr("dy", function (d) {
+                switch (d.group) {
+                    case 0:
+                        return -55;
+                    case 1:
+                        return -10;
+                    case 2:
+                        return -22;
+                }
+            })
+            .text(function (d) {
+                return d.id;
+            });
+
+        node.append("title")
+            .text(function (d) {
+                return d.id;
+            });
+
+        simulation
+            .nodes(graph.nodes)
+            .on("tick", ticked);
+
+        simulation.force("link")
+            .links(graph.links);
+
+        function ticked() {
+
+            node
+                .attr("cx", function (d) {
+                    return d.x;
+                })
+                .attr("cy", function (d) {
+                    return d.y;
+                });
+
+            text
+                .attr("x", function (d) {
+                    return d.x;
+                })
+                .attr("y", function (d) {
+                    return d.y;
+                });
+
+            link
+                .attr("x1", function (d) {
+                    return d.source.x;
+                })
+                .attr("y1", function (d) {
+                    return d.source.y;
+                })
+                .attr("x2", function (d) {
+                    return d.target.x;
+                })
+                .attr("y2", function (d) {
+                    return d.target.y;
+                });
+        }
+
+        function dragstarted(d) {
+            if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+        }
+
+        function dragged(d) {
+            d.fx = d3.event.x;
+            d.fy = d3.event.y;
+        }
+
+        function dragended(d) {
+            if (!d3.event.active) simulation.alphaTarget(0);
+            d.fx = null;
+            d.fy = null;
+        }
+    </script>
     <!--Global JS-->
     <script src="~/assets/js/vendor/jquery-1.11.1.min.js"></script>
     <script src="~/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
@@ -355,15 +810,15 @@
     <script src="~/assets/plugins/switchery/switchery.min.js"></script>
     <!--Load these page level functions-->
     <script>
-    $(document).ready(function() {
-        app.dateRangePicker();
-        app.chartJs();
-        app.weather();
-        app.spinStart();
-        app.spinStop();
-    });
+        $(document).ready(function () {
+            app.dateRangePicker();
+            app.chartJs();
+            app.weather();
+            app.spinStart();
+            app.spinStop();
+        });
     </script>
-     
+
 </body>
 
 </html>

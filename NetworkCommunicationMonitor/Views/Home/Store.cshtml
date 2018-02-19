@@ -197,16 +197,16 @@
                                 </div>
                             </div>
                             <div class="panel-body">
-                                @{
-                                List<NetworkCommunicationMonitor.Models.Store> stores = (List<NetworkCommunicationMonitor.Models.Store>)ViewData["Stores"];
-                                if (stores.Count == 0)
-                                {
-                                    <h3>There are no stores in the database.</h3>
-                            }
-                            else
-                            {
+                                @{ 
+                                    List<NetworkCommunicationMonitor.Models.Store> stores = (List<NetworkCommunicationMonitor.Models.Store>)ViewData["Stores"];
+                                    if (stores.Count == 0)
+                                    {
+                                        <h3>There are no stores in the database.</h3>
+                                    }
+                                    else
+                                    {
 
-                            }
+                                    }
                                 }
                             </div>
                         </div>

@@ -705,6 +705,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="img\monitor.ico" />
     <Content Include="js\bg.js" />
+    <Content Include="js\d3.min.js" />
     <Content Include="js\Particleground.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -788,6 +789,7 @@
     <Content Include="Views\Home\Pages500.cshtml" />
     <Content Include="Views\Home\Station.cshtml" />
     <Content Include="Views\Home\Store.cshtml" />
+    <Content Include="Views\Home\Blocked.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
