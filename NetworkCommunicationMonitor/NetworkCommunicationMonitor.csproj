@@ -705,6 +705,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="img\monitor.ico" />
     <Content Include="js\bg.js" />
+    <Content Include="js\d3.min.js" />
     <Content Include="js\Particleground.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />

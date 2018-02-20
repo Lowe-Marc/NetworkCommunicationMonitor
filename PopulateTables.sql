@@ -14,3 +14,8 @@ INSERT INTO Account (account_id, account_holder_firstname, account_holder_lastna
 INSERT INTO Card(card_id, card_firstname, card_lastname, card_expirationDate, card_securityCode, account_id) VALUES('4024007152937081', 'Gabriella', 'Lambert', 06/19, '339', 2);
 INSERT INTO Card(card_id, card_firstname, card_lastname, card_expirationDate, card_securityCode, account_id) VALUES('4716210473532382', 'Wyatt', 'Lambert', 07/19, '350', 2);
 INSERT INTO Card(card_id, card_firstname, card_lastname, card_expirationDate, card_securityCode, account_id) VALUES('4916170736135852', 'Haley', 'Lambert', 03/19, '168', 2);
+INSERT INTO Account (account_id, account_holder_firstname, account_holder_lastname, account_address, account_phone, account_limit, account_balance) VALUES('3','McCullough', 'Carole', '3167 Franklin Avenue, Nelson, NH', '6039698862', 15000, 0.0);
+INSERT INTO Card(card_id, card_firstname, card_lastname, card_expirationDate, card_securityCode, account_id) VALUES('4716477993656484', 'Carole', 'McCullough', 07/19, '342', 3);
+INSERT INTO Account (account_id, account_holder_firstname, account_holder_lastname, account_address, account_phone, account_limit, account_balance) VALUES('4','Adams', 'Darrell', '4402 Hedge Street, Piscataway NJ', '9084066387', 22000, 0.0);
+INSERT INTO Card(card_id, card_firstname, card_lastname, card_expirationDate, card_securityCode, account_id) VALUES('5538572760352094', 'Darrell', 'Adams', 08/21, '758', 4);
+INSERT INTO Card(card_id, card_firstname, card_lastname, card_expirationDate, card_securityCode, account_id) VALUES('4485228863864370', 'Dalton', 'Lily', 07/18, '259', 4);
