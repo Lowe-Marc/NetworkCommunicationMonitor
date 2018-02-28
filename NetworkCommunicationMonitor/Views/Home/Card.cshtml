@@ -198,31 +198,39 @@
                             </div>
                             <div class="panel-body">
                                 @{
-                                List<NetworkCommunicationMonitor.Models.Card> cards = (List<NetworkCommunicationMonitor.Models.Card>)ViewData["Cards"];
-                                if (cards.Count == 0)
-                                {
-                                    <h3>There are no credit cards in the database.</h3>
-                            }
-                            else
-                            {
-                                <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                                    <thead>
-                                        <tr>
-                                            <th>Card Number</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @{
-                                        foreach (NetworkCommunicationMonitor.Models.Card card in cards)
-                                        {
-                                            <tr>
-                                                <td>@card.cardNumber</td>
-                                            </tr>
+                                    List<NetworkCommunicationMonitor.Models.Card> cards = (List<NetworkCommunicationMonitor.Models.Card>)ViewData["Cards"];
+                                    if (cards.Count == 0)
+                                    {
+                                        <h3>There are no credit cards in the database.</h3>
                                     }
-                                        }
-                                    </tbody>
-                                </table>
-                        }
+                                    else
+                                    {
+                                        <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                            <thead>
+                                                <tr>
+                                                    <th>Account Number</th>
+                                                    <th>Card Number</th>
+                                                    <th>First Name</th>
+                                                    <th>Last Name</th>
+                                                    <th>Expiration Date</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @{
+                                                    foreach (NetworkCommunicationMonitor.Models.Card card in cards)
+                                                    {
+                                                        <tr>
+                                                            <td>@card.accountNumber</td>
+                                                            <td>@card.cardNumber</td>
+                                                            <td>@card.firstName</td>
+                                                            <td>@card.lastName</td>
+                                                            <td>@card.expirationMonth + "/" + @card.expirationYear</td>
+                                                        </tr>
+                                                    }
+                                                }
+                                            </tbody>
+                                        </table>
+                                    }
                                 }
                             </div>
                         </div>
