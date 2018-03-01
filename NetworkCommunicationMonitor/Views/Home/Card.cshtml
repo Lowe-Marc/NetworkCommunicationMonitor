@@ -30,6 +30,8 @@
     <link rel="stylesheet" href="~/assets/plugins/switchery/switchery.min.css">
     <!-- Custom styles for this theme -->
     <link rel="stylesheet" href="~/assets/css/main.css">
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Monda" rel="stylesheet">
     <!-- Feature detection -->
     <script src="~/assets/js/vendor/modernizr-2.6.2.min.js"></script>
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -140,7 +142,7 @@
                 <ul class="nav nav-pills nav-stacked">
                     <li class="nav-dropdown">
                         <a href="Homepage" title="Network">
-                            <i class="fa  fa-fw fa-sitemap"></i> Network
+                            <i class="fa  fa-fw fa-share-alt"></i> Network
                         </a>
                     </li>
                     <li class="nav-dropdown">
@@ -167,6 +169,12 @@
                             <span class="label label-primary label-circle pull-right">@ViewData["NumRelays"]</span>
                         </a>
                     </li>
+                    <li class="nav-dropdown">
+                        <a href="Transaction" title="Transactions">
+                            <i class="fa  fa-fw fa-exchange"></i> Transactions
+                            <span class="label label-primary label-circle pull-right">@ViewData["NumTransactions"]</span>
+                        </a>
+                    </li>
                 </ul>
             </nav>
         </aside>
@@ -185,6 +193,10 @@
                     </ol>
                 </div>
             </div>
+            <div class="alert alert-warning alert-dismissable" style="margin:0">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <p style="font-size:16px;font-family: 'Monda', sans-serif;"><strong><i class="fa fa-exclamation-triangle"></i> Tips:</strong> If you want to add a credit card, click the  <i class="fa fa-plus"></i> on the right.</p>
+            </div>
             <section id="main-content" class="animated fadeInUp">
                 <div class="row">
                     <div class="col-md-12">
@@ -192,37 +204,55 @@
                             <div class="panel-heading">
                                 <h3 class="panel-title">Card Tables</h3>
                                 <div class="actions pull-right">
+                                    <i class="fa fa-plus" data-toggle="modal" data-target="#add-card" title="add"></i>
                                     <i class="fa fa-expand"></i>
                                     <i class="fa fa-chevron-down"></i>
                                 </div>
                             </div>
                             <div class="panel-body">
                                 @{
-                                List<NetworkCommunicationMonitor.Models.Card> cards = (List<NetworkCommunicationMonitor.Models.Card>)ViewData["Cards"];
-                                if (cards.Count == 0)
-                                {
-                                    <h3>There are no credit cards in the database.</h3>
-                            }
-                            else
-                            {
-                                <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                                    <thead>
-                                        <tr>
-                                            <th>Card Number</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @{
-                                        foreach (NetworkCommunicationMonitor.Models.Card card in cards)
-                                        {
-                                            <tr>
-                                                <td>@card.cardNumber</td>
-                                            </tr>
+                                    List<NetworkCommunicationMonitor.Models.Card> cards = (List<NetworkCommunicationMonitor.Models.Card>)ViewData["Cards"];
+                                    if (cards.Count == 0)
+                                    {
+                                        <h3>There are no credit cards in the database.</h3>
                                     }
-                                        }
-                                    </tbody>
-                                </table>
-                        }
+                                    else
+                                    {
+                                        <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                            <thead>
+                                                <tr>
+                                                    <th>Account ID</th>
+                                                    <th>Card Number</th>
+                                                    <th>First Name</th>
+                                                    <th>Last Name</th>
+                                                    <th>Expiration Date</th>
+                                                    <th>Operation</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @{
+                                                    foreach (NetworkCommunicationMonitor.Models.Card card in cards)
+                                                    {
+                                                        <tr>
+                                                            <td>@card.accountNumber</td>
+                                                            <td>@card.cardNumber</td>
+                                                            <td>@card.firstName</td>
+                                                            <td>@card.lastName</td>
+                                                            <td>@card.expirationMonth/@card.expirationYear</td>
+                                                            <td>
+                                                                <button class="btn btn-danger btn-3d" style="cursor:pointer;" title="delete" data-toggle="modal" data-target="#delete-card">
+                                                                    <span class="glyphicon glyphicon-trash"></span>
+                                                                </button>
+                                                                <button class="btn btn-default btn-3d" style="cursor:pointer;" title="edit" data-toggle="modal" data-target="#edit-card">
+                                                                    <span class="glyphicon glyphicon-pencil"></span>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                }
+                                            </tbody>
+                                        </table>
+                                    }
                                 }
                             </div>
                         </div>
@@ -232,6 +262,127 @@
         </section>
         <!--main content end-->
     </section>
+    <!--delete modal start-->
+    <div class="modal fade" id="delete-card" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h1 class="modal-title" id="myModalLabel"> Delete</h1>
+                </div>
+                <div class="modal-body">
+                    <p style="font-size:16px;font-family: 'Monda', sans-serif;">Are you sure to delete the card bound with [account.ID]?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                    <button type="button" class="btn btn-danger">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--delete modal end-->
+    <!--add modal start-->
+    <div class="modal fade" id="add-card" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h1 class="modal-title" id="myModalLabel"> Add a card</h1>
+                </div>
+                <div class="modal-body">
+                    <!--main content start-->
+                    <div class="alert alert-warning alert-dismissable" style="margin:0">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        <p style="font-size:16px;font-family: 'Monda', sans-serif;"><strong><i class="fa fa-exclamation-triangle"></i> Tips:</strong> If you want to a card, you should choose an account bound with it.</p>
+                    </div>
+                    <section class="main-content-wrapper" style="padding:0">
+                        <section id="main-content" class="animated fadeInUp">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="panel panel-default">
+                                        <div class="panel-body">
+                                            <section class="fuelux">
+                                                <div id="MyWizard" class="wizard">
+                                                    <ul class="steps">
+                                                        <li data-target="#step1" class="active">
+                                                            <span class="badge badge-info">1</span>Step 1<span class="chevron"></span>
+                                                        </li>
+                                                        <li data-target="#step3">
+                                                            <span class="badge">2</span>Step 2<span class="chevron"></span>
+                                                        </li>
+                                                    </ul>
+                                                    <div class="actions">
+                                                        <button type="button" class="btn btn-default btn-mini btn-prev"> <i class="fa fa-chevron-left"></i> Prev</button>
+                                                        <button type="button" class="btn btn-primary btn-mini btn-next" data-last="Submit">
+                                                            Next <i class="fa fa-chevron-right"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="step-content">
+                                                    <div class="step-pane active" id="step1">
+                                                        <form class="card-form form-horizontal">
+                                                            <div class="form-group">
+                                                                <div class="col-sm-12">
+                                                                    <h2 style="text-align:center;">Card Info</h2>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card-wrapper" style="margin-bottom:10px;"></div>
+                                                            <div class="form-group">
+                                                                <label class="col-sm-4 control-label">Card number</label>
+                                                                <div class="col-sm-6">
+                                                                    <input type="text" class="form-control" name="number" placeholder="Card number" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-sm-4 control-label">Full name</label>
+                                                                <div class="col-sm-6">
+                                                                    <input type="text" class="form-control" name="name" placeholder="Full name" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-sm-4 control-label">Expiry</label>
+                                                                <div class="col-sm-6">
+                                                                    <input type="text" class="form-control" name="expiry" style="margin:0;" placeholder="MM/YYYY" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="col-sm-4 control-label">CVC</label>
+                                                                <div class="col-sm-6">
+                                                                    <input type="text" class="form-control" name="cvc" style="margin:0 0 0 -4px;" placeholder="CVC" />
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                <div class="step-pane" id="step3">
+                                                    <form class="card-form form-horizontal">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-5 control-label">Choose an account</label>
+                                                            <div class="col-sm-6">
+                                                                <select class="form-control">
+                                                                    <option>1</option>
+                                                                    <option>2</option>
+                                                                    <option>3</option>
+                                                                    <option>4</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                </div>
+                                            </section>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </section>
+                <!--main content end-->
+            </div>
+        </div>
+    </div>
+    </div>
+    <!--add modal end-->
     <!--Config demo-->
     <div id="config" class="config hidden-xs">
         <h4>Settings<a href="javascript:void(0)" class="config-link closed"><i class="icon-settings"></i></a></h4>
@@ -281,7 +432,6 @@
                                 <span class="nav bg-dark"></span>
                             </div>
                         </li>
-
                     </ul>
                 </div>
                 <div class="col-xs-6">
@@ -334,6 +484,8 @@
         </div>
     </div>
     <!--/Config demo-->
+    <!--Card JS-->
+    <script src="~/js/card.js"></script>
     <!--Global JS-->
     <script src="~/assets/js/vendor/jquery-1.11.1.min.js"></script>
     <script src="~/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
@@ -345,12 +497,26 @@
     <!--Page Leve JS -->
     <script src="~/assets/plugins/dataTables/js/jquery.dataTables.js"></script>
     <script src="~/assets/plugins/dataTables/js/dataTables.bootstrap.js"></script>
+    <script src="~/assets/plugins/wizard/js/loader.min.js"></script>
+    <script src="~/assets/plugins/mask/js/jquery.maskedinput.min.js"></script>
     <script>
-    $(document).ready(function() {
-        $('#example').dataTable();
-    });
+        $(document).ready(function () {
+            $('#example').dataTable();
+        });
     </script>
-       
-</body>
+    <script>
+        //card.js
+        var card = new Card({
+            form: '.card-form',
+            container: '.card-wrapper',
 
+            placeholders: {
+                number: '**** **** **** ****',
+                name: 'Full Name',
+                expiry: '**/****',
+                cvc: '***'
+            }
+        });
+    </script>
+</body>
 </html>

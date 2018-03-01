@@ -27,6 +27,7 @@ namespace NetworkCommunicationMonitor.Controllers
             ViewData["NumCards"] = NetworkCommunicationMonitor.Models.Card.getNumCards();
             ViewData["NumStores"] = NetworkCommunicationMonitor.Models.Store.getNumStores();
             ViewData["NumRelays"] = NetworkCommunicationMonitor.Models.Relay.getNumRelays();
+            ViewData["NumTransactions"] = NetworkCommunicationMonitor.Models.Transaction.getNumTransactions();
             return View();
         }
 
@@ -34,11 +35,12 @@ namespace NetworkCommunicationMonitor.Controllers
         {
             if (Session["username"] == null)
                 return RedirectToAction("Index", "Home");
-            ViewData["Accounts"] = NetworkCommunicationMonitor.Models.Account.getAccounts();
             ViewData["NumAccounts"] = NetworkCommunicationMonitor.Models.Account.getNumAccounts();
             ViewData["NumCards"] = NetworkCommunicationMonitor.Models.Card.getNumCards();
             ViewData["NumStores"] = NetworkCommunicationMonitor.Models.Store.getNumStores();
             ViewData["NumRelays"] = NetworkCommunicationMonitor.Models.Relay.getNumRelays();
+            ViewData["NumTransactions"] = NetworkCommunicationMonitor.Models.Transaction.getNumTransactions();
+            ViewData["Accounts"] = NetworkCommunicationMonitor.Models.Account.getAccounts();
             return View();
         }
 
@@ -46,11 +48,12 @@ namespace NetworkCommunicationMonitor.Controllers
         {
             if (Session["username"] == null)
                 return RedirectToAction("Index", "Home");
-            ViewData["Cards"] = NetworkCommunicationMonitor.Models.Card.getCards();
             ViewData["NumAccounts"] = NetworkCommunicationMonitor.Models.Account.getNumAccounts();
             ViewData["NumCards"] = NetworkCommunicationMonitor.Models.Card.getNumCards();
             ViewData["NumStores"] = NetworkCommunicationMonitor.Models.Store.getNumStores();
             ViewData["NumRelays"] = NetworkCommunicationMonitor.Models.Relay.getNumRelays();
+            ViewData["NumTransactions"] = NetworkCommunicationMonitor.Models.Transaction.getNumTransactions();
+            ViewData["Cards"] = NetworkCommunicationMonitor.Models.Card.getCards();
             return View();
         }
 
@@ -58,11 +61,25 @@ namespace NetworkCommunicationMonitor.Controllers
         {
             if (Session["username"] == null)
                 return RedirectToAction("Index", "Home");
-            ViewData["Relays"] = NetworkCommunicationMonitor.Models.Relay.getRelays();
             ViewData["NumAccounts"] = NetworkCommunicationMonitor.Models.Account.getNumAccounts();
             ViewData["NumCards"] = NetworkCommunicationMonitor.Models.Card.getNumCards();
             ViewData["NumStores"] = NetworkCommunicationMonitor.Models.Store.getNumStores();
             ViewData["NumRelays"] = NetworkCommunicationMonitor.Models.Relay.getNumRelays();
+            ViewData["NumTransactions"] = NetworkCommunicationMonitor.Models.Transaction.getNumTransactions();
+            ViewData["Relays"] = NetworkCommunicationMonitor.Models.Relay.getRelays();
+            return View();
+        }
+
+        public ActionResult Transaction()
+        {
+            if (Session["username"] == null)
+                return RedirectToAction("Index", "Home");
+            ViewData["NumAccounts"] = NetworkCommunicationMonitor.Models.Account.getNumAccounts();
+            ViewData["NumCards"] = NetworkCommunicationMonitor.Models.Card.getNumCards();
+            ViewData["NumStores"] = NetworkCommunicationMonitor.Models.Store.getNumStores();
+            ViewData["NumRelays"] = NetworkCommunicationMonitor.Models.Relay.getNumRelays();
+            ViewData["NumTransactions"] = NetworkCommunicationMonitor.Models.Transaction.getNumTransactions();
+            ViewData["Transactions"] = NetworkCommunicationMonitor.Models.Transaction.getTransactions();
             return View();
         }
 
@@ -70,11 +87,12 @@ namespace NetworkCommunicationMonitor.Controllers
         {
             if (Session["username"] == null)
                 return RedirectToAction("Index", "Home");
-            ViewData["Stores"] = NetworkCommunicationMonitor.Models.Store.getStores();
             ViewData["NumAccounts"] = NetworkCommunicationMonitor.Models.Account.getNumAccounts();
             ViewData["NumCards"] = NetworkCommunicationMonitor.Models.Card.getNumCards();
             ViewData["NumStores"] = NetworkCommunicationMonitor.Models.Store.getNumStores();
             ViewData["NumRelays"] = NetworkCommunicationMonitor.Models.Relay.getNumRelays();
+            ViewData["NumTransactions"] = NetworkCommunicationMonitor.Models.Transaction.getNumTransactions();
+            ViewData["Stores"] = NetworkCommunicationMonitor.Models.Store.getStores();
             return View();
         }
 
