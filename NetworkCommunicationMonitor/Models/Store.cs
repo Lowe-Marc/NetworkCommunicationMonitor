@@ -49,8 +49,6 @@ namespace NetworkCommunicationMonitor.Models
         // Static query to get the number of stores
         public static int getNumStores()
         {
-            return 0;
-
             int numStores = 0;
 
             var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);

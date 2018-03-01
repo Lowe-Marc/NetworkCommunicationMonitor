@@ -48,8 +48,6 @@ namespace NetworkCommunicationMonitor.Models
 
         public static int getNumRelays()
         {
-            return 0;
-
             int numRelays = 0;
 
             var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
@@ -57,7 +55,7 @@ namespace NetworkCommunicationMonitor.Models
             {
                 DataTable questionTable = new DataTable();
                 DataRowCollection rows;
-                string _sql = @"SELECT Count(*) FROM Relay";
+                string _sql = @"SELECT Count(*) FROM RelayStation";
                 var cmd = new SqlCommand(_sql, cn);
 
                 cn.Open();

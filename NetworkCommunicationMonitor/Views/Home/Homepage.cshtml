@@ -180,6 +180,12 @@
                             <span class="label label-primary label-circle pull-right">@ViewData["NumRelays"]</span>
                         </a>
                     </li>
+                    <li class="nav-dropdown">
+                        <a href="Transaction" title="Transactions">
+                            <i class="fa  fa-fw fa-flag-checkered"></i> Transactions
+                            <span class="label label-primary label-circle pull-right">@ViewData["NumTransactions"]</span>
+                        </a>
+                    </li>
                 </ul>
             </nav>
         </aside>
@@ -224,7 +230,6 @@
                             <div class="col-md-3">
                                 <a href="Store">
                                     <div class="panel panel-solid-info widget-mini">
-
                                         <div class="panel-body">
                                             <i class="fa fa-home"></i>
                                             <span class="total text-center">@ViewData["NumStores"]</span>
@@ -240,6 +245,17 @@
                                             <i class="fa fa-flag-checkered"></i>
                                             <span class="total text-center">@ViewData["NumRelays"]</span>
                                             <span class="title text-center">Relay Stations</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="Transaction">
+                                    <div class="panel widget-mini">
+                                        <div class="panel-body">
+                                            <i class="fa fa-flag-checkered"></i>
+                                            <span class="total text-center">@ViewData["NumTransactions"]</span>
+                                            <span class="title text-center">Transactions</span>
                                         </div>
                                     </div>
                                 </a>

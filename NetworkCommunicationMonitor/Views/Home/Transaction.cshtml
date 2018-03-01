@@ -5,7 +5,6 @@
 <!--[if gt IE 8]><!-->
 <html class="no-js">
 <!--<![endif]-->
-
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -38,7 +37,6 @@
     <script src="assets/js/vendor/respond.min.js"></script>
     <![endif]-->
 </head>
-
 <body>
     <section id="main-wrapper" class="theme-default">
         <header id="header">
@@ -149,8 +147,8 @@
                             <span class="label label-primary label-circle pull-right">@ViewData["NumAccounts"]</span>
                         </a>
                     </li>
-                    <li class="active">
-                        <a href="#" title="Credit Card">
+                    <li class="nav-dropdown">
+                        <a href="Card" title="Credit Card">
                             <i class="fa  fa-fw fa-credit-card"></i> Credit Card
                             <span class="label label-primary label-circle pull-right">@ViewData["NumCards"]</span>
                         </a>
@@ -167,8 +165,8 @@
                             <span class="label label-primary label-circle pull-right">@ViewData["NumRelays"]</span>
                         </a>
                     </li>
-                    <li class="nav-dropdown">
-                        <a href="Transaction" title="Transactions">
+                    <li class="active">
+                        <a href="#" title="Transactions">
                             <i class="fa  fa-fw fa-flag-checkered"></i> Transactions
                             <span class="label label-primary label-circle pull-right">@ViewData["NumTransactions"]</span>
                         </a>
@@ -180,14 +178,14 @@
         <!--main content start-->
         <section class="main-content-wrapper">
             <div class="pageheader">
-                <h1>Card Detail</h1>
+                <h1>Relay Station Detail</h1>
                 <div class="breadcrumb-wrapper hidden-xs">
                     <span class="label">You are here:</span>
                     <ol class="breadcrumb">
                         <li>
                             <a href="~/Home/Homepage">Network</a>
                         </li>
-                        <li class="active">Card Detail</li>
+                        <li class="active">Relay Station Detail</li>
                     </ol>
                 </div>
             </div>
@@ -196,7 +194,7 @@
                     <div class="col-md-12">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <h3 class="panel-title">Card Tables</h3>
+                                <h3 class="panel-title">Relay Station Tables</h3>
                                 <div class="actions pull-right">
                                     <i class="fa fa-expand"></i>
                                     <i class="fa fa-chevron-down"></i>
@@ -204,34 +202,53 @@
                             </div>
                             <div class="panel-body">
                                 @{
-                                    List<NetworkCommunicationMonitor.Models.Card> cards = (List<NetworkCommunicationMonitor.Models.Card>)ViewData["Cards"];
-                                    if (cards.Count == 0)
+                                    List<NetworkCommunicationMonitor.Models.Transaction> transactions = (List<NetworkCommunicationMonitor.Models.Transaction>)ViewData["Transactions"];
+                                    if (transactions.Count == 0)
                                     {
-                                        <h3>There are no credit cards in the database.</h3>
+                                        <h3>There are no transactions in the database.</h3>
                                     }
                                     else
                                     {
                                         <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                             <thead>
                                                 <tr>
-                                                    <th>Account Number</th>
-                                                    <th>Card Number</th>
-                                                    <th>First Name</th>
-                                                    <th>Last Name</th>
-                                                    <th>Expiration Date</th>
+                                                    <th>Transaction ID</th>
+                                                    <th>Account ID</th>
+                                                    <th>Store ID</th>
+                                                    <th>Amount</th>
+                                                    <th>Date</th>
+                                                    <th>Category</th>
+                                                    <th>Approved</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @{
-                                                    foreach (NetworkCommunicationMonitor.Models.Card card in cards)
+                                                    foreach (NetworkCommunicationMonitor.Models.Transaction transaction in transactions)
                                                     {
-                                                        <tr>
-                                                            <td>@card.accountNumber</td>
-                                                            <td>@card.cardNumber</td>
-                                                            <td>@card.firstName</td>
-                                                            <td>@card.lastName</td>
-                                                            <td>@card.expirationMonth/@card.expirationYear</td>
-                                                        </tr>
+                                                        if (!transaction.encrypted)
+                                                        { 
+                                                            <tr>
+                                                                <td>@transaction.transactionID</td>
+                                                                <td>@transaction.accountID</td>
+                                                                <td>@transaction.storeID</td>
+                                                                <td>@transaction.amount</td>
+                                                                <td>@transaction.transactionDate</td>
+                                                                <td>@transaction.category</td>
+                                                                <td>@transaction.status</td>
+                                                            </tr>
+                                                        }
+                                                        else
+                                                        {
+                                                            <tr>
+                                                                <td>Encrypted</td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                            </tr>
+                                                        }
                                                     }
                                                 }
                                             </tbody>
@@ -295,7 +312,6 @@
                                 <span class="nav bg-dark"></span>
                             </div>
                         </li>
-
                     </ul>
                 </div>
                 <div class="col-xs-6">
@@ -364,7 +380,6 @@
         $('#example').dataTable();
     });
     </script>
-       
-</body>
 
+</body>
 </html>
