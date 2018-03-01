@@ -706,6 +706,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="img\monitor.ico" />
     <Content Include="js\bg.js" />
+    <Content Include="js\card.js" />
     <Content Include="js\d3.min.js" />
     <Content Include="js\Particleground.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -791,6 +792,7 @@
     <Content Include="Views\Home\Station.cshtml" />
     <Content Include="Views\Home\Store.cshtml" />
     <Content Include="Views\Home\Blocked.cshtml" />
+    <Content Include="Views\Home\Question.cshtml" />
     <Content Include="Views\Home\Transaction.cshtml" />
   </ItemGroup>
   <ItemGroup>
