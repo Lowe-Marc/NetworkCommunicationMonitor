@@ -761,7 +761,9 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -793,6 +795,8 @@
     <Content Include="Views\Home\Store.cshtml" />
     <Content Include="Views\Home\Blocked.cshtml" />
     <Content Include="Views\Home\Transaction.cshtml" />
+    <Content Include="Views\Home\Question.cshtml" />
+    <Content Include="Views\Home\CreateAccount.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

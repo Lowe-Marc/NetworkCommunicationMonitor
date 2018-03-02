@@ -130,5 +130,17 @@ namespace NetworkCommunicationMonitor.Controllers
             Session["user"] = null;
             return View();
         }
+
+        public ActionResult CreateAccount(FormCollection collection)
+        {
+            ViewData["NumAccounts"] = NetworkCommunicationMonitor.Models.Account.getNumAccounts();
+            ViewData["NumCards"] = NetworkCommunicationMonitor.Models.Card.getNumCards();
+            ViewData["NumStores"] = NetworkCommunicationMonitor.Models.Store.getNumStores();
+            ViewData["NumRelays"] = NetworkCommunicationMonitor.Models.Relay.getNumRelays();
+            ViewData["NumTransactions"] = NetworkCommunicationMonitor.Models.Transaction.getNumTransactions();
+
+            ViewData["name"] = collection["firstname"];
+            return View();
+        }
     }
 }

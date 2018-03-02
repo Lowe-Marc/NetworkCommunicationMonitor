@@ -14,5 +14,7 @@ namespace NetworkCommunicationMonitor.Controllers
             ViewData["Accounts"] = NetworkCommunicationMonitor.Models.Account.getAccounts();
             return View();
         }
+
+        
     }
 }

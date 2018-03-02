@@ -196,7 +196,7 @@
             </div>
             <div class="alert alert-warning alert-dismissable" style="margin:0">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                <p style="font-size:16px;font-family: 'Monda', sans-serif;"><strong><i class="fa fa-exclamation-triangle"></i>  Tips:</strong> If you want to add an account, click the  <i class="fa fa-plus"></i> on the right.</p>
+                <p class="my-font"><strong><i class="fa fa-exclamation-triangle"></i>  Tips:</strong> If you want to add an account, click the  <i class="fa fa-plus"></i> on the right.</p>
             </div>
             <section id="main-content" class="animated fadeInUp">
                 <div class="row">
@@ -286,7 +286,7 @@
                     <h1 class="modal-title" id="myModalLabel"> Delete</h1>
                 </div>
                 <div class="modal-body">
-                    <p style="font-size:16px;font-family: 'Monda', sans-serif;">Are you sure to delete [Firstname Lastname]'s account?</p>
+                    <p class="my-font">Are you sure to delete [Firstname Lastname]'s account?</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
@@ -297,136 +297,143 @@
     </div>
     <!--delete modal end-->
     <!--add account modal start-->
+    @using (Html.BeginForm("CreateAccount", "Home", FormMethod.Post))
+    {
     <div class="modal fade" id="add-account" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h1 class="modal-title" id="myModalLabel"> Add an account</h1>
+                    <h1 class="modal-title" id="myModalLabel"><strong> Add an account</strong></h1>
                 </div>
                 <div class="modal-body">
                     <!--main content start-->
                     <div class="alert alert-warning alert-dismissable" style="margin:0">
                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                        <p style="font-size:16px;font-family: 'Monda', sans-serif;"><strong><i class="fa fa-exclamation-triangle"></i> Tips:</strong> If you want to add an account, you should also add a credit bound with it.</p>
+                        <p class="my-font"><strong><i class="fa fa-exclamation-triangle"></i> Tips:</strong> If you want to add an account, you should also add a credit bound with it.</p>
                     </div>
-                    <section class="main-content-wrapper" style="padding:0">
-                        <section id="main-content" class="animated fadeInUp">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="panel panel-default">
-                                        <div class="panel-body">
-                                            <section class="fuelux">
-                                                <div id="MyWizard" class="wizard">
-                                                    <ul class="steps">
-                                                        <li data-target="#step1" class="active">
-                                                            <span class="badge badge-info">1</span>Step 1<span class="chevron"></span>
-                                                        </li>
-                                                        <li data-target="#step3">
-                                                            <span class="badge">2</span>Step 2<span class="chevron"></span>
-                                                        </li>
-                                                    </ul>
-                                                    <div class="actions">
-                                                        <button type="button" class="btn btn-default btn-mini btn-prev"> <i class="fa fa-chevron-left"></i> Prev</button>
-                                                        <button type="button" class="btn btn-primary btn-mini btn-next" data-last="Submit">
-                                                            Next <i class="fa fa-chevron-right"></i>
-                                                        </button>
+                        <section class="main-content-wrapper" style="padding:0">
+                            <section id="main-content" class="animated fadeInUp">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="panel panel-default">                                            
+                                            <div class="panel-body">
+                                                <section class="fuelux">
+                                                    <div id="MyWizard" class="wizard">
+                                                        <ul class="steps">
+                                                            <li data-target="#step1" class="active">
+                                                                <span class="badge badge-info">1</span>Step 1<span class="chevron"></span>
+                                                            </li>
+                                                            <li data-target="#step3">
+                                                                <span class="badge">2</span>Step 2<span class="chevron"></span>
+                                                            </li>
+                                                        </ul>
+                                                        <div class="actions">
+                                                            <button type="button" class="btn btn-default btn-mini btn-prev"> <i class="fa fa-chevron-left"></i> Prev</button>
+                                                            <button type="button" class="btn btn-primary btn-mini btn-next" data-last="Last">
+                                                                Next <i class="fa fa-chevron-right"></i>
+                                                            </button>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="step-content">
-                                                    <div class="step-pane active" id="step1">
-                                                        <form class="form-horizontal">
+                                                    <div class="step-content">
+                                                        <div class="step-pane active" id="step1">
                                                             <div class="form-group">
                                                                 <div class="col-sm-12">
-                                                                    <h2 style="text-align:center;">Account Info</h2>
+                                                                    <h2 style="text-align:center; margin: -10px 0 15px 0;">Account Info</h2>
                                                                 </div>
                                                             </div>
-                                                            <div class="form-group">
-                                                                <label for="account_holder_firstname" class="col-sm-3 control-label">First Name</label>
-                                                                <div class="col-sm-6">
-                                                                    <input type="text" class="form-control" id="account_holder_firstname" name="account_holder_firstname" required="" placeholder="first name">
+                                                            <div class="form-horizontal">
+                                                                <div class="form-group">
+                                                                    <label for="firstName" class="col-sm-4 control-label">First Name</label>
+                                                                    <div class="col-sm-6">
+                                                                        <input type="text" class="form-control" name="firstname" value="" required="" placeholder="first name">
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label for="account_holder_lastname" class="col-sm-3 control-label">Last Name</label>
-                                                                <div class="col-sm-6">
-                                                                    <input type="text" class="form-control" id="account_holder_lastname" name="account_holder_lastname" required="" placeholder="last name">
+                                                                <div class="form-group">
+                                                                    <label for="account_holder_lastname" class="col-sm-4 control-label">Last Name</label>
+                                                                    <div class="col-sm-6">
+                                                                        <input type="text" class="form-control" id="account_holder_lastname" name="account_holder_lastname" required="" placeholder="last name">
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label for="account_address" class="col-sm-3 control-label">Address</label>
-                                                                <div class="col-sm-6">
-                                                                    <input type="text" class="form-control" id="account_address" name="account_address" required="" placeholder="address">
+                                                                <div class="form-group">
+                                                                    <label for="account_address" class="col-sm-4 control-label">Address</label>
+                                                                    <div class="col-sm-6">
+                                                                        <input type="text" class="form-control" id="account_address" name="account_address" required="" placeholder="address">
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label for="input2" class="col-sm-3 control-label">Phone</label>
-                                                                <div class="col-sm-6">
-                                                                    <input type="text" class="form-control" id="input2" name="input2" required="" placeholder="(999) 999-9999">
+                                                                <div class="form-group">
+                                                                    <label for="input2" class="col-sm-4 control-label">Phone</label>
+                                                                    <div class="col-sm-6">
+                                                                        <input type="text" class="form-control" id="input2" name="input2" required="" placeholder="(999) 999-9999">
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label for="account_limit" class="col-sm-3 control-label">Limit</label>
-                                                                <div class="col-sm-6">
-                                                                    <input type="text" class="form-control" id="account_limit" name="account_limit" required="" placeholder="(0-25000)">
+                                                                <div class="form-group">
+                                                                    <label for="account_limit" class="col-sm-4 control-label">Limit</label>
+                                                                    <div class="col-sm-6">
+                                                                        <input type="text" class="form-control" id="account_limit" name="account_limit" required="" placeholder="(0-25000)">
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label for="account_balance" class="col-sm-3 control-label">Balance</label>
-                                                                <div class="col-sm-6">
-                                                                    <input type="text" class="form-control" id="account_balance" name="account_balance" required="" placeholder="(0-25000)">
+                                                                <div class="form-group">
+                                                                    <label for="account_balance" class="col-sm-4 control-label">Balance</label>
+                                                                    <div class="col-sm-6">
+                                                                        <input type="text" class="form-control" id="account_balance" name="account_balance" required="" placeholder="(0-25000)">
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                    <div class="step-pane" id="step3">
-                                                        <div class="form-group">
-                                                            <div class="col-sm-12">
-                                                                <h2 style="text-align:center;">Card Info</h2>
                                                             </div>
                                                         </div>
-                                                        <div class="card-wrapper"></div>
-                                                        <form class="card-form form-horizontal">
+                                                        <div class="step-pane" id="step3">
                                                             <div class="form-group">
-                                                                <label class="col-sm-4 control-label">Card number</label>
-                                                                <div class="col-sm-6">
-                                                                    <input type="text" class="form-control" name="number" placeholder="Card number" />
+                                                                <div class="col-sm-12">
+                                                                    <h2 style="text-align:center;">Card Info</h2>
                                                                 </div>
                                                             </div>
-                                                            <div class="form-group">
-                                                                <label class="col-sm-4 control-label">Full name</label>
-                                                                <div class="col-sm-6">
-                                                                    <input type="text" class="form-control" name="name" placeholder="Full name" />
+                                                            <div class="card-wrapper"></div>
+                                                            <div class="card-form form-horizontal col-sm-offset-2">
+                                                                <div class="form-group">
+                                                                    <label class="col-sm-4 control-label">Card number</label>
+                                                                    <div class="col-sm-6">
+                                                                        <input type="text" class="form-control" name="number" placeholder="Card number" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="col-sm-4 control-label">Full name</label>
+                                                                    <div class="col-sm-6">
+                                                                        <input type="text" class="form-control" name="name" placeholder="Full name" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="col-sm-4 control-label">Expiry</label>
+                                                                    <div class="col-sm-6">
+                                                                        <input type="text" class="form-control" name="expiry" style="margin:0;" placeholder="MM/YYYY" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="col-sm-4 control-label">CVC</label>
+                                                                    <div class="col-sm-6">
+                                                                        <input type="text" class="form-control" name="cvc" style="margin:0 0 0 -4px;" placeholder="CVC" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <div class="col-sm-10">
+                                                                        <input type="submit" class="btn btn-success btn-block" value="Submit" />
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="form-group">
-                                                                <label class="col-sm-4 control-label">Expiry</label>
-                                                                <div class="col-sm-6">
-                                                                    <input type="text" class="form-control" name="expiry" style="margin:0;" placeholder="MM/YYYY" />
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label class="col-sm-4 control-label">CVC</label>
-                                                                <div class="col-sm-6">
-                                                                    <input type="text" class="form-control" name="cvc" style="margin:0 0 0 -4px;" placeholder="CVC" />
-                                                                </div>
-                                                            </div>
-                                                        </form>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </section>
+                                                </section>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
+                        </section>
                     </section>
-                </section>
                 <!--main content end-->
             </div>
         </div>
     </div>
     </div>
+    }
     <!--add modal end-->
     <!--Config demo-->
     <div id="config" class="config hidden-xs">
