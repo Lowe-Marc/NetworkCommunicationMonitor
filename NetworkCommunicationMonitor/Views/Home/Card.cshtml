@@ -197,7 +197,9 @@
             </div>
             <div class="alert alert-warning alert-dismissable" style="margin:0">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                <p class="my-font"><strong><i class="fa fa-exclamation-triangle"></i> Tips:</strong> If you want to add a credit card, click the  <i class="fa fa-plus"></i> on the right.</p>
+                <p class="my-font">
+                    <strong><i class="fa fa-exclamation-triangle"></i>  Tips:</strong> If you want to operate a card, choose one: <i class="fa fa-plus"></i>  <i class="fa fa-trash-o"></i>  <i class="fa fa-pencil" title="edit" data-toggle="modal"></i> on the right.
+                </p>
             </div>
             <section id="main-content" class="animated fadeInUp">
                 <div class="row">
@@ -206,9 +208,9 @@
                             <div class="panel-heading">
                                 <h3 class="panel-title">Card Tables</h3>
                                 <div class="actions pull-right">
-                                    <i class="fa fa-plus" data-toggle="modal" data-target="#add-card" title="add"></i>
-                                    <i class="glyphicon glyphicon-trash" title="delete" data-toggle="modal" data-target="#delete-card"></i>
-                                    <i class="glyphicon glyphicon-pencil" title="edit" data-toggle="modal" data-target="#edit-card"></i>
+                                    <i class="fa fa-plus"  title="add" data-toggle="modal" data-target="#add-card"></i>
+                                    <i class="fa fa-trash-o" title="delete" data-toggle="modal" data-target="#delete-card"></i>
+                                    <i class="fa fa-pencil" title="edit" data-toggle="modal" data-target="#edit-card"></i>
                                     <i class="fa fa-expand"></i>
                                     <i class="fa fa-chevron-down"></i>
                                 </div>
@@ -267,17 +269,37 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h1 class="modal-title" id="myModalLabel">Delete</h1>
                     </div>
-                    <div class="card-form form-horizontal col-sm-offset-2">
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">Card number</label>
-                            <div class="col-sm-6">
-                                <input type="text" class="form-control" name="number" placeholder="Card number" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-check-input">
-                        <input type="checkbox" class="form-check-input" id="confirmation-checkbox" required="" />
-                        <label for="confirmation-checkbox" display="inline-block">I understand I am permenently removing the card with this number from the system.</label>
+                    <div class="modal-body">
+                        <section class="main-content-wrapper" style="padding:0">
+                            <section id="main-content" class="animated fadeInUp">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="panel panel-default">
+                                            <div class="panel-body">
+                                                <div class="form-horizontal">
+                                                    <div class="form-group">
+                                                        <label class="col-sm-4 control-label">Card number</label>
+                                                        <div class="col-sm-7">
+                                                            <input type="text" class="form-control" name="delete_cardNumber" placeholder="Card number" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-4 control-label">Confirm Card Number</label>
+                                                        <div class="col-sm-7">
+                                                            <input type="text" class="form-control" name="confirm_delete_cardNumber" placeholder="Confirm card number" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <input type="checkbox" class="col-sm-2" id="confirmation-checkbox" required="required" style="min-width:20px;min-height:20px;margin:20px 0 0 10%;" />
+                                                        <label class="col-sm-8" for="confirmation-checkbox">I understand I am permenently removing the card with this Number from the system.</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </section>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -302,7 +324,7 @@
                         <!--main content start-->
                         <div class="alert alert-warning alert-dismissable" style="margin:0">
                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                            <p class="my-font"><strong><i class="fa fa-exclamation-triangle"></i> Tips:</strong> If you want to a card, you must bind it to an account.</p>
+                            <p class="my-font"><strong><i class="fa fa-exclamation-triangle"></i> Tips:</strong> If you want to a card, you must link it to an account.</p>
                         </div>
                         <section class="main-content-wrapper" style="padding:0">
                             <section id="main-content" class="animated fadeInUp">
@@ -339,7 +361,7 @@
                                                     <div class="form-group">
                                                         <label class="col-sm-4 control-label">Link account</label>
                                                         <div class="col-sm-6">
-                                                            <select class="form-control" style="padding:0;" id="AccountID" name="AccountID">
+                                                            <select class="form-control" style="padding:0;" id="accountID" name="accountID">
                                                                 @{
                                                                     List<NetworkCommunicationMonitor.Models.Account> accounts = (List<NetworkCommunicationMonitor.Models.Account>)ViewData["Accounts"];
                                                                     foreach (NetworkCommunicationMonitor.Models.Account account in accounts)
@@ -377,21 +399,41 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h1 class="modal-title" id="myModalLabel">Delete</h1>
+                        <h1 class="modal-title" id="myModalLabel">Edit a card</h1>
                     </div>
-                    <div class="card-form form-horizontal col-sm-offset-2">
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">Card number</label>
-                            <div class="col-sm-6">
-                                <input type="text" class="form-control" name="number" placeholder="Card number" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">Full name</label>
-                            <div class="col-sm-6">
-                                <input type="text" class="form-control" name="name" placeholder="Full name" />
-                            </div>
-                        </div>
+                    <div class="modal-body">
+                        <section class="main-content-wrapper" style="padding:0">
+                            <section id="main-content" class="animated fadeInUp">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="panel panel-default">
+                                            <div class="panel-body">
+                                                <div class="card-form form-horizontal col-sm-offset-2">
+                                                    <div class="form-group">
+                                                        <label class="col-sm-4 control-label">Card number</label>
+                                                        <div class="col-sm-6">
+                                                            <input type="text" class="form-control" name="cardNumber" placeholder="Card number" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-4 control-label">Last name</label>
+                                                        <div class="col-sm-6">
+                                                            <input type="text" class="form-control" name="firstName" placeholder="First name" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-4 control-label">First name</label>
+                                                        <div class="col-sm-6">
+                                                            <input type="text" class="form-control" name="lastName" placeholder="Last name" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </section>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>

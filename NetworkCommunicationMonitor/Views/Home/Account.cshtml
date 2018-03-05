@@ -196,7 +196,9 @@
             </div>
             <div class="alert alert-warning alert-dismissable" style="margin:0">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                <p class="my-font"><strong><i class="fa fa-exclamation-triangle"></i>  Tips:</strong> If you want to add an account, click the  <i class="fa fa-plus"></i> on the right.</p>
+                <p class="my-font">
+                    <strong><i class="fa fa-exclamation-triangle"></i>  Tips:</strong> If you want to operate an account, choose one: <i class="fa fa-plus"></i>  <i class="fa fa-trash-o"></i>  <i class="fa fa-pencil" title="edit" data-toggle="modal"></i> on the right.
+                </p>
             </div>
             <section id="main-content" class="animated fadeInUp">
                 <div class="row">
@@ -206,8 +208,8 @@
                                 <h3 class="panel-title">Account Tables @ViewData["Test"]</h3>
                                 <div class="actions pull-right">
                                     <i class="fa fa-plus" data-toggle="modal" data-target="#add-account" title="add"></i>
-                                    <i class="glyphicon glyphicon-trash" title="delete" data-toggle="modal" data-target="#delete-account"></i>
-                                    <i class="glyphicon glyphicon-pencil" title="edit" data-toggle="modal" data-target="#edit-account"></i>
+                                    <i class="fa fa-trash-o" title="delete" data-toggle="modal" data-target="#delete-account"></i>
+                                    <i class="fa fa-pencil" title="edit" data-toggle="modal" data-target="#edit-account"></i>
                                     <i class="fa fa-expand"></i>
                                     <i class="fa fa-chevron-down"></i>
                                 </div>
@@ -280,22 +282,38 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h1 class="modal-title" id="myModalLabel">Delete</h1>
                     </div>
-                    <div class="form-group">
-                        <label class="col-sm-4 control-label">Account number to delete</label>
-                        <div class="col-sm-6">
-                            <select class="form-control" style="padding:0;" id="AccountID" name="AccountID">
-                                @{ 
-                                    foreach (NetworkCommunicationMonitor.Models.Account account in accounts)
-                                    {
-                                        <option>@account.accountNumber</option>
-                                    }
-                                }
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-check-input">
-                        <input type="checkbox" class="form-check-input" id="confirmation-checkbox" required="" />
-                        <label for="confirmation-checkbox" display="inline-block" >I understand I am permenently removing the account with this ID from the system.</label>
+                    <div class="modal-body">
+                        <section class="main-content-wrapper" style="padding:0">
+                            <section id="main-content" class="animated fadeInUp">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="panel panel-default">
+                                            <div class="panel-body">
+                                                <div class="form-horizontal">
+                                                    <div class="form-group">
+                                                        <label class="col-sm-6 control-label">Account number to delete</label>
+                                                        <div class="col-sm-6">
+                                                            <select class="form-control" style="padding:0;" id="accountID" name="AccountID">
+                                                                @{
+                                                                    foreach (NetworkCommunicationMonitor.Models.Account account in accounts)
+                                                                    {
+                                                                        <option>@account.accountNumber</option>
+                                                                    }
+                                                                }
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <input type="checkbox" class="col-sm-2" id="confirmation-checkbox" required="required" style="min-width:20px;min-height:20px;margin:20px 0 0 10%;" />
+                                                        <label class="col-sm-8" for="confirmation-checkbox">I understand I am permenently removing the account with this ID from the system.</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </section>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -304,371 +322,366 @@
                 </div>
             </div>
         </div>
-    }
-    <!--delete modal end-->
-    <!--add account modal start-->
-    @using (Html.BeginForm("AddAccount", "Home", FormMethod.Post))
-    {
-        <div class="modal fade" id="add-account" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h1 class="modal-title" id="myModalLabel"><strong> Add an account</strong></h1>
-                    </div>
-                    <div class="modal-body">
-                        <!--main content start-->
-                        <div class="alert alert-warning alert-dismissable" style="margin:0">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                            <p class="my-font"><strong><i class="fa fa-exclamation-triangle"></i> Tips:</strong> If you want to add an account, you must also add a credit card bound with it.</p>
+        }
+        <!--delete modal end-->
+        <!--add account modal start-->
+        @using (Html.BeginForm("AddAccount", "Home", FormMethod.Post))
+        {
+            <div class="modal fade" id="add-account" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h1 class="modal-title" id="myModalLabel"><strong> Add an account</strong></h1>
                         </div>
-                        <section class="main-content-wrapper" style="padding:0">
-                            <section id="main-content" class="animated fadeInUp">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="panel panel-default">
-                                            <div class="panel-body">
-                                                <section class="fuelux">
-                                                    <div id="MyWizard" class="wizard">
-                                                        <ul class="steps">
-                                                            <li data-target="#step1" class="active">
-                                                                <span class="badge badge-info">1</span>Step 1<span class="chevron"></span>
-                                                            </li>
-                                                            <li data-target="#step3">
-                                                                <span class="badge">2</span>Step 2<span class="chevron"></span>
-                                                            </li>
-                                                        </ul>
-                                                        <div class="actions">
-                                                            <button type="button" class="btn btn-default btn-mini btn-prev"> <i class="fa fa-chevron-left"></i> Prev</button>
-                                                            <button type="button" class="btn btn-primary btn-mini btn-next" data-last="Last">
-                                                                Next <i class="fa fa-chevron-right"></i>
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                    <div class="step-content">
-                                                        <div class="step-pane active" id="step1">
-                                                            <div class="form-group">
-                                                                <div class="col-sm-12">
-                                                                    <h2 style="text-align:center; margin: -10px 0 15px 0;">Account Info</h2>
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-horizontal">
-                                                                <div class="form-group">
-                                                                    <label for="firstName" class="col-sm-4 control-label">First Name</label>
-                                                                    <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" name="firstname" value="" required="" placeholder="first name">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label for="account_holder_lastname" class="col-sm-4 control-label">Last Name</label>
-                                                                    <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" id="account_holder_lastname" name="account_holder_lastname" required="" placeholder="last name">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label for="account_address" class="col-sm-4 control-label">Address</label>
-                                                                    <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" id="account_address" name="account_address" required="" placeholder="address">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label for="input2" class="col-sm-4 control-label">Phone</label>
-                                                                    <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" id="input2" name="input2" required="" placeholder="(999) 999-9999">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label for="account_limit" class="col-sm-4 control-label">Limit</label>
-                                                                    <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" id="account_limit" name="account_limit" required="" placeholder="(0-25000)">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label for="account_balance" class="col-sm-4 control-label">Balance</label>
-                                                                    <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" id="account_balance" name="account_balance" required="" placeholder="(0-25000)">
-                                                                    </div>
-                                                                </div>
+                        <div class="modal-body">
+                            <!--main content start-->
+                            <div class="alert alert-warning alert-dismissable" style="margin:0">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                <p class="my-font"><strong><i class="fa fa-exclamation-triangle"></i> Tips:</strong> If you want to add an account, you must also add a credit card bound with it.</p>
+                            </div>
+                            <section class="main-content-wrapper" style="padding:0">
+                                <section id="main-content" class="animated fadeInUp">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="panel panel-default">
+                                                <div class="panel-body">
+                                                    <section class="fuelux">
+                                                        <div id="MyWizard" class="wizard">
+                                                            <ul class="steps">
+                                                                <li data-target="#step1" class="active">
+                                                                    <span class="badge badge-info">1</span>Step 1<span class="chevron"></span>
+                                                                </li>
+                                                                <li data-target="#step3">
+                                                                    <span class="badge">2</span>Step 2<span class="chevron"></span>
+                                                                </li>
+                                                            </ul>
+                                                            <div class="actions">
+                                                                <button type="button" class="btn btn-default btn-mini btn-prev"> <i class="fa fa-chevron-left"></i> Prev</button>
+                                                                <button type="button" class="btn btn-primary btn-mini btn-next" data-last="Last">
+                                                                    Next <i class="fa fa-chevron-right"></i>
+                                                                </button>
                                                             </div>
                                                         </div>
-                                                        <div class="step-pane" id="step3">
-                                                            <div class="form-group">
-                                                                <div class="col-sm-12">
-                                                                    <h2 style="text-align:center;">Card Info</h2>
+                                                        <div class="step-content">
+                                                            <div class="step-pane active" id="step1">
+                                                                <div class="form-group">
+                                                                    <div class="col-sm-12">
+                                                                        <h2 style="text-align:center; margin: -10px 0 15px 0;">Account Info</h2>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-horizontal">
+                                                                    <div class="form-group">
+                                                                        <label for="firstName" class="col-sm-4 control-label">First Name</label>
+                                                                        <div class="col-sm-6">
+                                                                            <input type="text" class="form-control" id="firstname" name="firstname" value="" required="" placeholder="first name">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="account_holder_lastname" class="col-sm-4 control-label">Last Name</label>
+                                                                        <div class="col-sm-6">
+                                                                            <input type="text" class="form-control" id="lastname" name="lastname" required="" placeholder="last name">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="account_address" class="col-sm-4 control-label">Address</label>
+                                                                        <div class="col-sm-6">
+                                                                            <input type="text" class="form-control" id="address" name="address" required="" placeholder="address">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="input2" class="col-sm-4 control-label">Phone</label>
+                                                                        <div class="col-sm-6">
+                                                                            <input type="text" class="form-control" id="input2" name="input2" required="" placeholder="(999) 999-9999">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="account_limit" class="col-sm-4 control-label">Limit</label>
+                                                                        <div class="col-sm-6">
+                                                                            <input type="text" class="form-control" id="limit" name="limit" required="" placeholder="(0-25000)">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="account_balance" class="col-sm-4 control-label">Balance</label>
+                                                                        <div class="col-sm-6">
+                                                                            <input type="text" class="form-control" id="balance" name="balance" required="" placeholder="(0-25000)">
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="card-wrapper"></div>
-                                                            <div class="card-form form-horizontal col-sm-offset-2">
+                                                            <div class="step-pane" id="step3">
                                                                 <div class="form-group">
-                                                                    <label class="col-sm-4 control-label">Card number</label>
-                                                                    <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" name="number" placeholder="Card number" required=""/>
+                                                                    <div class="col-sm-12">
+                                                                        <h2 style="text-align:center;">Card Info</h2>
                                                                     </div>
                                                                 </div>
-                                                                <div class="form-group">
-                                                                    <label class="col-sm-4 control-label">Full name</label>
-                                                                    <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" name="name" placeholder="Full name" required=""/>
+                                                                <div class="card-wrapper"></div>
+                                                                <div class="card-form form-horizontal col-sm-offset-2">
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-4 control-label">Card number</label>
+                                                                        <div class="col-sm-6">
+                                                                            <input type="text" class="form-control" name="number" placeholder="Card number" required="" />
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label class="col-sm-4 control-label">Expiry</label>
-                                                                    <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" name="expiry" style="margin:0;" placeholder="MM/YYYY" required=""/>
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-4 control-label">Full name</label>
+                                                                        <div class="col-sm-6">
+                                                                            <input type="text" class="form-control" name="name" placeholder="Full name" required="" />
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label class="col-sm-4 control-label">CVC</label>
-                                                                    <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" name="cvc" style="margin:0 0 0 -4px;" placeholder="CVC" required=""/>
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-4 control-label">Expiry</label>
+                                                                        <div class="col-sm-6">
+                                                                            <input type="text" class="form-control" name="expiry" style="margin:0;" placeholder="MM/YYYY" required="" />
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <div class="col-sm-10">
-                                                                        <input type="submit" class="btn btn-success btn-block" value="Submit" />
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-4 control-label">CVC</label>
+                                                                        <div class="col-sm-6">
+                                                                            <input type="text" class="form-control" name="cvc" style="margin:0 0 0 -4px;" placeholder="CVC" required="" />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <div class="col-sm-10">
+                                                                            <input type="submit" class="btn btn-success btn-block" value="Submit" />
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                </section>
+                                                    </section>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </section>
                             </section>
-                        </section>
-                        <!--main content end-->
+                            <!--main content end-->
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    }
-    <!--add modal end-->
-    <!--edit start-->
-    @using (Html.BeginForm("EditAccount", "Home", FormMethod.Post))
-    {
-        <div class="modal fade" id="edit-account" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h1 class="modal-title" id="myModalLabel"><strong> Edit an account</strong></h1>
-                    </div>
-                    <div class="modal-body">
-                        <!--main content start-->
-                        <section class="main-content-wrapper" style="padding:0">
-                            <section id="main-content" class="animated fadeInUp">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="panel panel-default">
-                                            <div class="panel-body">
-                                                <section class="fuelux">
-                                                    <div class="step-content">
-                                                        <div class="step-pane active" id="step1">
-                                                            <div class="form-group">
-                                                                <div class="col-sm-12">
-                                                                    <h2 style="text-align:center; margin: -10px 0 15px 0;">Account Info</h2>
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-horizontal">
-                                                                <div class="form-group">
-                                                                    <label class="col-sm-4 control-label">Account number to edit</label>
-                                                                    <div class="col-sm-6">
-                                                                        <select class="form-control" style="padding:0;">
-                                                                            @{
-                                                                                foreach (NetworkCommunicationMonitor.Models.Account account in accounts)
-                                                                                {
-                                                                                    <option>@account.accountNumber</option>
-                                                                                }
-                                                                            }
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label for="firstName" class="col-sm-4 control-label">First Name</label>
-                                                                    <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" name="firstname" value="" required="" placeholder="first name">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label for="account_holder_lastname" class="col-sm-4 control-label">Last Name</label>
-                                                                    <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" id="account_holder_lastname" name="account_holder_lastname" required="" placeholder="last name">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label for="account_address" class="col-sm-4 control-label">Address</label>
-                                                                    <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" id="account_address" name="account_address" required="" placeholder="address">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label for="input2" class="col-sm-4 control-label">Phone</label>
-                                                                    <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" id="input2" name="input2" required="" placeholder="(999) 999-9999">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                                                    <input type="submit" class="btn btn-danger" value="Submit Changes" />
-                                                                </div>
-                                                            </div>
+        }
+        <!--add modal end-->
+        <!--edit modal start-->
+        @using (Html.BeginForm("EditAccount", "Home", FormMethod.Post))
+        {
+            <div class="modal fade" id="edit-account" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h1 class="modal-title" id="myModalLabel"><strong> Edit an account</strong></h1>
+                        </div>
+                        <div class="modal-body">
+                            <!--main content start-->
+                            <section class="main-content-wrapper" style="padding:0">
+                                <section id="main-content" class="animated fadeInUp">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="panel panel-default">
+                                                <div class="panel-body">
+                                                    <div class="form-group">
+                                                        <div class="col-sm-12">
+                                                            <h2 style="text-align:center; margin: -10px 0 15px 0;">Account Info</h2>
                                                         </div>
                                                     </div>
-                                                </section>
+                                                    <div class="form-horizontal">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-4 control-label">Account number</label>
+                                                            <div class="col-sm-6">
+                                                                <select class="form-control" style="padding:0;" id="accountID" name="accountID">
+                                                                    @{
+                                                                        foreach (NetworkCommunicationMonitor.Models.Account account in accounts)
+                                                                        {
+                                                                            <option>@account.accountNumber</option>
+                                                                        }
+                                                                    }
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="firstName" class="col-sm-4 control-label">First Name</label>
+                                                            <div class="col-sm-6">
+                                                                <input type="text" class="form-control" name="firstName" value="" required="" placeholder="first name">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="account_holder_lastname" class="col-sm-4 control-label">Last Name</label>
+                                                            <div class="col-sm-6">
+                                                                <input type="text" class="form-control" id="lastName" name="lastName" required="" placeholder="last name">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="account_address" class="col-sm-4 control-label">Address</label>
+                                                            <div class="col-sm-6">
+                                                                <input type="text" class="form-control" id="address" name="address" required="" placeholder="address">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="input2" class="col-sm-4 control-label">Phone</label>
+                                                            <div class="col-sm-6">
+                                                                <input type="text" class="form-control" id="input2" name="input2" required="" placeholder="(999) 999-9999">
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                                            <input type="submit" class="btn btn-danger" value="Submit Changes" />
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </section>
                             </section>
-                        </section>
-                        <!--main content end-->
+                            <!--main content end-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        <!--edit modal end-->
+        <!--Config demo-->
+        <div id="config" class="config hidden-xs">
+            <h4>Settings<a href="javascript:void(0)" class="config-link closed"><i class="icon-settings"></i></a></h4>
+            <div class="config-swatch-wrap">
+                <div class="row">
+                    <div class="col-xs-6">
+                        <ul class="options">
+                            <li>
+                                <div class="theme-style-wrapper" data-theme="theme-default">
+                                    <span class="header bg-white"></span>
+                                    <span class="header bg-white"></span>
+                                    <span class="nav bg-dark"></span>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="theme-style-wrapper" data-theme="theme-dark">
+                                    <span class="header bg-dark"></span>
+                                    <span class="header bg-white"></span>
+                                    <span class="nav bg-dark"></span>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="theme-style-wrapper" data-theme="theme-blue">
+                                    <span class="header bg-info"></span>
+                                    <span class="header bg-white"></span>
+                                    <span class="nav bg-dark"></span>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="theme-style-wrapper" data-theme="theme-blue-full">
+                                    <span class="header bg-info"></span>
+                                    <span class="header bg-info"></span>
+                                    <span class="nav bg-dark"></span>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="theme-style-wrapper" data-theme="theme-grey">
+                                    <span class="header bg-grey"></span>
+                                    <span class="header bg-white"></span>
+                                    <span class="nav bg-dark"></span>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="theme-style-wrapper" data-theme="theme-grey-full">
+                                    <span class="header bg-grey"></span>
+                                    <span class="header bg-grey"></span>
+                                    <span class="nav bg-dark"></span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-xs-6">
+                        <ul class="options">
+                            <li>
+                                <div class="theme-style-wrapper" data-theme="theme-dark-full">
+                                    <span class="header bg-dark"></span>
+                                    <span class="header bg-dark"></span>
+                                    <span class="nav bg-dark"></span>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="theme-style-wrapper" data-theme="theme-green">
+                                    <span class="header bg-green"></span>
+                                    <span class="header bg-white"></span>
+                                    <span class="nav bg-dark"></span>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="theme-style-wrapper" data-theme="theme-green-full">
+                                    <span class="header bg-green"></span>
+                                    <span class="header bg-green"></span>
+                                    <span class="nav bg-dark"></span>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="theme-style-wrapper" data-theme="theme-red">
+                                    <span class="header bg-red"></span>
+                                    <span class="header bg-white"></span>
+                                    <span class="nav bg-dark"></span>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="theme-style-wrapper" data-theme="theme-red-full">
+                                    <span class="header bg-red"></span>
+                                    <span class="header bg-red"></span>
+                                    <span class="nav bg-dark"></span>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="theme-style-wrapper" data-theme="theme-dark-blue-full">
+                                    <span class="header bg-dark-blue"></span>
+                                    <span class="header bg-dark-blue"></span>
+                                    <span class="nav bg-dark"></span>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
         </div>
-    }
-    <!--Config demo-->
-    <div id="config" class="config hidden-xs">
-        <h4>Settings<a href="javascript:void(0)" class="config-link closed"><i class="icon-settings"></i></a></h4>
-        <div class="config-swatch-wrap">
-            <div class="row">
-                <div class="col-xs-6">
-                    <ul class="options">
-                        <li>
-                            <div class="theme-style-wrapper" data-theme="theme-default">
-                                <span class="header bg-white"></span>
-                                <span class="header bg-white"></span>
-                                <span class="nav bg-dark"></span>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="theme-style-wrapper" data-theme="theme-dark">
-                                <span class="header bg-dark"></span>
-                                <span class="header bg-white"></span>
-                                <span class="nav bg-dark"></span>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="theme-style-wrapper" data-theme="theme-blue">
-                                <span class="header bg-info"></span>
-                                <span class="header bg-white"></span>
-                                <span class="nav bg-dark"></span>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="theme-style-wrapper" data-theme="theme-blue-full">
-                                <span class="header bg-info"></span>
-                                <span class="header bg-info"></span>
-                                <span class="nav bg-dark"></span>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="theme-style-wrapper" data-theme="theme-grey">
-                                <span class="header bg-grey"></span>
-                                <span class="header bg-white"></span>
-                                <span class="nav bg-dark"></span>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="theme-style-wrapper" data-theme="theme-grey-full">
-                                <span class="header bg-grey"></span>
-                                <span class="header bg-grey"></span>
-                                <span class="nav bg-dark"></span>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-xs-6">
-                    <ul class="options">
-                        <li>
-                            <div class="theme-style-wrapper" data-theme="theme-dark-full">
-                                <span class="header bg-dark"></span>
-                                <span class="header bg-dark"></span>
-                                <span class="nav bg-dark"></span>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="theme-style-wrapper" data-theme="theme-green">
-                                <span class="header bg-green"></span>
-                                <span class="header bg-white"></span>
-                                <span class="nav bg-dark"></span>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="theme-style-wrapper" data-theme="theme-green-full">
-                                <span class="header bg-green"></span>
-                                <span class="header bg-green"></span>
-                                <span class="nav bg-dark"></span>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="theme-style-wrapper" data-theme="theme-red">
-                                <span class="header bg-red"></span>
-                                <span class="header bg-white"></span>
-                                <span class="nav bg-dark"></span>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="theme-style-wrapper" data-theme="theme-red-full">
-                                <span class="header bg-red"></span>
-                                <span class="header bg-red"></span>
-                                <span class="nav bg-dark"></span>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="theme-style-wrapper" data-theme="theme-dark-blue-full">
-                                <span class="header bg-dark-blue"></span>
-                                <span class="header bg-dark-blue"></span>
-                                <span class="nav bg-dark"></span>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--/Config demo-->
-    <!--Card JS-->
-    <script src="~/js/card.js"></script>
-    <!--Global JS-->
-    <script src="~/assets/js/vendor/jquery-1.11.1.min.js"></script>
-    <script src="~/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
-    <script src="~/assets/plugins/navgoco/jquery.navgoco.min.js"></script>
-    <script src="~/assets/plugins/switchery/switchery.min.js"></script>
-    <script src="~/assets/plugins/pace/pace.min.js"></script>
-    <script src="~/assets/plugins/fullscreen/jquery.fullscreen-min.js"></script>
-    <script src="~/assets/js/src/app.js"></script>
-    <!--Page Leve JS -->
-    <script src="~/assets/plugins/dataTables/js/jquery.dataTables.js"></script>
-    <script src="~/assets/plugins/dataTables/js/dataTables.bootstrap.js"></script>
-    <script src="~/assets/plugins/wizard/js/loader.min.js"></script>
-    <script src="~/assets/plugins/mask/js/jquery.maskedinput.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('#example').dataTable();
-        });
-        $(document).ready(function () {
-            app.formMask();
-        });
-    </script>
-    <script>
-        //card.js
-        var card = new Card({
-            form: '.card-form',
-            container: '.card-wrapper',
+        <!--/Config demo-->
+        <!--Card JS-->
+        <script src="~/js/card.js"></script>
+        <!--Global JS-->
+        <script src="~/assets/js/vendor/jquery-1.11.1.min.js"></script>
+        <script src="~/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+        <script src="~/assets/plugins/navgoco/jquery.navgoco.min.js"></script>
+        <script src="~/assets/plugins/switchery/switchery.min.js"></script>
+        <script src="~/assets/plugins/pace/pace.min.js"></script>
+        <script src="~/assets/plugins/fullscreen/jquery.fullscreen-min.js"></script>
+        <script src="~/assets/js/src/app.js"></script>
+        <!--Page Leve JS -->
+        <script src="~/assets/plugins/dataTables/js/jquery.dataTables.js"></script>
+        <script src="~/assets/plugins/dataTables/js/dataTables.bootstrap.js"></script>
+        <script src="~/assets/plugins/wizard/js/loader.min.js"></script>
+        <script src="~/assets/plugins/mask/js/jquery.maskedinput.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                $('#example').dataTable();
+            });
+            $(document).ready(function () {
+                app.formMask();
+            });
+        </script>
+        <script>
+            //card.js
+            var card = new Card({
+                form: '.card-form',
+                container: '.card-wrapper',
 
-            placeholders: {
-                number: '**** **** **** ****',
-                name: 'Full Name',
-                expiry: '**/****',
-                cvc: '***'
-            }
-        });
+                placeholders: {
+                    number: '**** **** **** ****',
+                    name: 'Full Name',
+                    expiry: '**/****',
+                    cvc: '***'
+                }
+            });
 
 
-    </script>
-</body>
+        </script>
+    </body>
 
 </html>

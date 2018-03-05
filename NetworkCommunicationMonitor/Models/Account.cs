@@ -91,9 +91,77 @@ namespace NetworkCommunicationMonitor.Models
             return numAccounts;
         }
 
+        public static int getAccountID(string firstName, string lastName, string address, string phone, int limit, double balance)
+        {
+            int accountID = -1;
+
+            var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
+            using (cn)
+            {
+                DataTable questionTable = new DataTable();
+                DataRowCollection rows;
+                string _sql = @"SELECT account_id FROM Account WHERE account_holder_firstname = '" + firstName + "' AND account_holder_lastname = '" + lastName 
+                    + "' AND account_address = '" + address + "' AND account_phone = '" + phone + "' AND account_limit = " + limit + " AND account_balance = " + balance;
+                var cmd = new SqlCommand(_sql, cn);
+
+                cn.Open();
+
+                questionTable.Load(cmd.ExecuteReader());
+                rows = questionTable.Rows;
+
+                foreach (DataRow row in rows)
+                {
+                    accountID = Convert.ToInt32(row["account_id"]);
+                }
+            }
+
+            return accountID;
+        }
+
         public static void deleteAccount(int accountID)
         {
+            Card.deleteCardsForAccount(accountID);
 
+            var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
+            using (cn)
+            {
+                string _sql = @"DELETE FROM Account WHERE account_id = " + accountID;
+                var cmd = new SqlCommand(_sql, cn);
+
+                cn.Open();
+                cmd.ExecuteNonQuery();
+                cn.Close();
+            }
+        }
+
+        public static void createAccount(string firstname, string lastname, string address, string phone, int limit, double balance)
+        {
+            var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
+            using (cn)
+            {
+                string _sql = @"INSERT INTO Account (account_holder_firstname, account_holder_lastname,
+                account_address, account_phone, account_limit, account_balance) VALUES('" + firstname + "', '" + lastname + "', '" + address + "' , '" + phone + "', " + limit + ", " + balance + ")";
+                var cmd = new SqlCommand(_sql, cn);
+
+                cn.Open();
+                cmd.ExecuteNonQuery();
+                cn.Close();
+            }
+        }
+
+        public static void editAccount(int accountID, string firstname, string lastname, string address, string phone)
+        {
+            var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
+            using (cn)
+            {
+                string _sql = @"UPDATE Account SET account_holder_firstname = '" + firstname + "',  account_holder_lastname = '" + lastname 
+                    + "', account_address = '" + address + "', account_phone = '" + phone + "' WHERE account_id = " + accountID;
+                var cmd = new SqlCommand(_sql, cn);
+
+                cn.Open();
+                cmd.ExecuteNonQuery();
+                cn.Close();
+            }
         }
     }
 }
