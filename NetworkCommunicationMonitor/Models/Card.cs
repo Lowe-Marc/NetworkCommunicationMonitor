@@ -41,7 +41,7 @@ namespace NetworkCommunicationMonitor.Models
                 foreach (DataRow row in rows)
                 {
                     Card tempCard = new Card();
-                    tempCard.cardNumber = Convert.ToString(row["card_id"]);
+                    tempCard.cardNumber = formatCardNumber(Convert.ToString(row["card_id"]));
                     tempCard.firstName = Convert.ToString(row["card_firstname"]);
                     tempCard.lastName = Convert.ToString(row["card_lastname"]);
                     tempCard.expirationMonth = Convert.ToInt32(row["card_expirationMonth"]);
@@ -75,12 +75,27 @@ namespace NetworkCommunicationMonitor.Models
                 foreach (DataRow row in rows)
                 {
                     Card card = new Card();
-                    card.cardNumber = (string)row["card_id"];
+                    card.cardNumber = formatCardNumber((string)row["card_id"]);
                     cards.Add(card);
                 }
             }
 
             return cards;
+        }
+
+        // This will take the card number and put a space every 4 numbers for readability
+        public static string formatCardNumber(string cardNumber)
+        {
+            string formattedNumber = "";
+            for (int i = 0; i < cardNumber.Length; i++)
+            {
+                if (i % 4 == 0 && i > 0)
+                {
+                    formattedNumber = formattedNumber + " ";
+                }
+                formattedNumber = formattedNumber + cardNumber[i];
+            }
+            return formattedNumber;
         }
 
         // Static query get the number of cards

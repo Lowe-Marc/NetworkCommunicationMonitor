@@ -796,7 +796,8 @@
     <Content Include="Views\Home\Blocked.cshtml" />
     <Content Include="Views\Home\Transaction.cshtml" />
     <Content Include="Views\Home\Question.cshtml" />
-    <Content Include="Views\Home\CreateAccount.cshtml" />
+    <Content Include="Views\Home\AddAccount.cshtml" />
+    <Content Include="Views\Home\DeleteAccount.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

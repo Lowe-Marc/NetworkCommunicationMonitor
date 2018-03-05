@@ -197,7 +197,9 @@
             </div>
             <div class="alert alert-warning alert-dismissable" style="margin:0">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                <p class="my-font"><strong><i class="fa fa-exclamation-triangle"></i> Tips:</strong> If you want to add a credit card, click the  <i class="fa fa-plus"></i> on the right.</p>
+                <p class="my-font">
+                    <strong><i class="fa fa-exclamation-triangle"></i>  Tips:</strong> If you want to operate a card, choose one: <i class="fa fa-plus"></i>  <i class="fa fa-trash-o"></i>  <i class="fa fa-pencil" title="edit" data-toggle="modal"></i> on the right.
+                </p>
             </div>
             <section id="main-content" class="animated fadeInUp">
                 <div class="row">
@@ -206,7 +208,9 @@
                             <div class="panel-heading">
                                 <h3 class="panel-title">Card Tables</h3>
                                 <div class="actions pull-right">
-                                    <i class="fa fa-plus" data-toggle="modal" data-target="#add-card" title="add"></i>
+                                    <i class="fa fa-plus"  title="add" data-toggle="modal" data-target="#add-card"></i>
+                                    <i class="fa fa-trash-o" title="delete" data-toggle="modal" data-target="#delete-card"></i>
+                                    <i class="fa fa-pencil" title="edit" data-toggle="modal" data-target="#edit-card"></i>
                                     <i class="fa fa-expand"></i>
                                     <i class="fa fa-chevron-down"></i>
                                 </div>
@@ -228,7 +232,6 @@
                                                     <th>First Name</th>
                                                     <th>Last Name</th>
                                                     <th>Expiration Date</th>
-                                                    <th>Operation</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -241,14 +244,6 @@
                                                             <td>@card.firstName</td>
                                                             <td>@card.lastName</td>
                                                             <td>@card.expirationMonth/@card.expirationYear</td>
-                                                            <td>
-                                                                <button class="btn btn-danger btn-3d" style="cursor:pointer;" title="delete" data-toggle="modal" data-target="#delete-card">
-                                                                    <span class="glyphicon glyphicon-trash"></span>
-                                                                </button>
-                                                                <button class="btn btn-default btn-3d" style="cursor:pointer;" title="edit" data-toggle="modal" data-target="#edit-card">
-                                                                    <span class="glyphicon glyphicon-pencil"></span>
-                                                                </button>
-                                                            </td>
                                                         </tr>
                                                     }
                                                 }
@@ -265,100 +260,190 @@
         <!--main content end-->
     </section>
     <!--delete modal start-->
-    <div class="modal fade" id="delete-card" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h1 class="modal-title my-font" id="myModalLabel"> Delete</h1>
-                </div>
-                <div class="modal-body">
-                    <p class="my-font">Are you sure to delete the card bound with [account.ID]?</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
-                    <button type="button" class="btn btn-danger">Yes</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--delete modal end-->
-    <!--add modal start-->
-    <div class="modal fade" id="add-card" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h1 class="modal-title my-font" id="myModalLabel"><strong> Add a card</strong></h1>
-                </div>
-                <div class="modal-body">
-                    <!--main content start-->
-                    <div class="alert alert-warning alert-dismissable" style="margin:0">
-                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                        <p class="my-font"><strong><i class="fa fa-exclamation-triangle"></i> Tips:</strong> If you want to a card, you should choose an account bound with it.</p>
+    @using (Html.BeginForm("DeleteCard", "Home", FormMethod.Post))
+    {
+        <div class="modal fade" id="delete-card" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h1 class="modal-title" id="myModalLabel">Delete</h1>
                     </div>
-                    <section class="main-content-wrapper" style="padding:0">
-                        <section id="main-content" class="animated fadeInUp">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="panel panel-default">
-                                        <div class="panel-body">
-                                            <div class="card-wrapper"></div>
-                                            <div class="card-form form-horizontal col-sm-offset-2">
-                                                <div class="form-group">
-                                                    <label class="col-sm-4 control-label">Card number</label>
-                                                    <div class="col-sm-6">
-                                                        <input type="text" class="form-control" name="number" placeholder="Card number" />
+                    <div class="modal-body">
+                        <section class="main-content-wrapper" style="padding:0">
+                            <section id="main-content" class="animated fadeInUp">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="panel panel-default">
+                                            <div class="panel-body">
+                                                <div class="form-horizontal">
+                                                    <div class="form-group">
+                                                        <label class="col-sm-4 control-label">Card number</label>
+                                                        <div class="col-sm-7">
+                                                            <input type="text" class="form-control" name="number" placeholder="Card number" />
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="col-sm-4 control-label">Full name</label>
-                                                    <div class="col-sm-6">
-                                                        <input type="text" class="form-control" name="name" placeholder="Full name" />
+                                                    <div class="form-group">
+                                                        <label class="col-sm-4 control-label">Confirm Card Number</label>
+                                                        <div class="col-sm-7">
+                                                            <input type="text" class="form-control" name="number" placeholder="Confirm card number" />
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="col-sm-4 control-label">Expiry</label>
-                                                    <div class="col-sm-6">
-                                                        <input type="text" class="form-control" name="expiry" style="margin:0;" placeholder="MM/YYYY" />
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="col-sm-4 control-label">CVC</label>
-                                                    <div class="col-sm-6">
-                                                        <input type="text" class="form-control" name="cvc" style="margin:0 0 0 -4px;" placeholder="CVC" />
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="col-sm-4 control-label">Link account</label>
-                                                    <div class="col-sm-6">
-                                                        <select class="form-control" style="padding:0;">
-                                                            <option>1</option>
-                                                            <option>2</option>
-                                                            <option>3</option>
-                                                            <option>4</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <div class="col-sm-10">
-                                                        <input type="submit" class="btn btn-success btn-block" value="Submit" />
+                                                    <div class="form-group">
+                                                        <input type="checkbox" class="col-sm-2" id="confirmation-checkbox" required="required" style="min-width:20px;min-height:20px;margin:20px 0 0 10%;" />
+                                                        <label class="col-sm-8" for="confirmation-checkbox">I understand I am permenently removing the card with this Number from the system.</label>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </section>
-                </section>
-                <!--main content end-->
+                            </section>
+                        </section>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <input type="submit" class="btn btn-danger" value="Delete" />
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    </div>
+    }
+    <!--delete modal end-->
+    <!--add modal start-->
+    @using (Html.BeginForm("AddCard", "Home", FormMethod.Post))
+    {
+        <div class="modal fade" id="add-card" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h1 class="modal-title my-font" id="myModalLabel"><strong> Add a card</strong></h1>
+                    </div>
+                    <div class="modal-body">
+                        <!--main content start-->
+                        <div class="alert alert-warning alert-dismissable" style="margin:0">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                            <p class="my-font"><strong><i class="fa fa-exclamation-triangle"></i> Tips:</strong> If you want to a card, you must link it to an account.</p>
+                        </div>
+                        <section class="main-content-wrapper" style="padding:0">
+                            <section id="main-content" class="animated fadeInUp">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="panel panel-default">
+                                            <div class="panel-body">
+                                                <div class="card-wrapper"></div>
+                                                <div class="card-form form-horizontal col-sm-offset-2">
+                                                    <div class="form-group">
+                                                        <label class="col-sm-4 control-label">Card number</label>
+                                                        <div class="col-sm-6">
+                                                            <input type="text" class="form-control" name="number" placeholder="Card number" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-4 control-label">Full name</label>
+                                                        <div class="col-sm-6">
+                                                            <input type="text" class="form-control" name="name" placeholder="Full name" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-4 control-label">Expiry</label>
+                                                        <div class="col-sm-6">
+                                                            <input type="text" class="form-control" name="expiry" style="margin:0;" placeholder="MM/YYYY" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-4 control-label">CVC</label>
+                                                        <div class="col-sm-6">
+                                                            <input type="text" class="form-control" name="cvc" style="margin:0 0 0 -4px;" placeholder="CVC" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-4 control-label">Link account</label>
+                                                        <div class="col-sm-6">
+                                                            <select class="form-control" style="padding:0;" id="AccountID" name="AccountID">
+                                                                @{
+                                                                    List<NetworkCommunicationMonitor.Models.Account> accounts = (List<NetworkCommunicationMonitor.Models.Account>)ViewData["Accounts"];
+                                                                    foreach (NetworkCommunicationMonitor.Models.Account account in accounts)
+                                                                    {
+                                                                        <option>@account.accountNumber</option>
+                                                                    }
+                                                                }
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="col-sm-10">
+                                                            <input type="submit" class="btn btn-success btn-block" value="Submit" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </section>
+                    </div>
+                    <!--main content end-->
+                </div>
+            </div>
+        </div>
+    }
     <!--add modal end-->
+    <!--edit card start-->
+    @using (Html.BeginForm("EditCard", "Home", FormMethod.Post))
+    {
+        <div class="modal fade" id="edit-card" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h1 class="modal-title" id="myModalLabel">Edit a card</h1>
+                    </div>
+                    <div class="modal-body">
+                        <section class="main-content-wrapper" style="padding:0">
+                            <section id="main-content" class="animated fadeInUp">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="panel panel-default">
+                                            <div class="panel-body">
+                                                <div class="card-form form-horizontal col-sm-offset-2">
+                                                    <div class="form-group">
+                                                        <label class="col-sm-4 control-label">Card number</label>
+                                                        <div class="col-sm-6">
+                                                            <input type="text" class="form-control" name="number" placeholder="Card number" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-4 control-label">Last name</label>
+                                                        <div class="col-sm-6">
+                                                            <input type="text" class="form-control" name="name" placeholder="Last name" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-4 control-label">First name</label>
+                                                        <div class="col-sm-6">
+                                                            <input type="text" class="form-control" name="name" placeholder="First name" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </section>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <input type="submit" class="btn btn-danger" value="Submit Changes" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <!--edit card end-->
     <!--Config demo-->
     <div id="config" class="config hidden-xs">
         <h4>Settings<a href="javascript:void(0)" class="config-link closed"><i class="icon-settings"></i></a></h4>
@@ -479,6 +564,9 @@
         $(document).ready(function () {
             $('#example').dataTable();
         });
+        $(document).ready(function () {
+            app.formMask();
+        });
     </script>
     <script>
         //card.js
@@ -493,6 +581,8 @@
                 cvc: '***'
             }
         });
+
+
     </script>
 </body>
 </html>
