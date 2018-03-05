@@ -140,7 +140,33 @@ namespace NetworkCommunicationMonitor.Controllers
             ViewData["NumRelays"] = NetworkCommunicationMonitor.Models.Relay.getNumRelays();
             ViewData["NumTransactions"] = NetworkCommunicationMonitor.Models.Transaction.getNumTransactions();
 
-            ViewData["name"] = collection["firstname"];
+            string firstName = Convert.ToString(collection["firstname"]);
+            string lastName = Convert.ToString(collection["lastname"]);
+            string address = Convert.ToString(collection["address"]);
+            string phone = Convert.ToString(collection["input2"]);
+            phone = phone.Remove(9, 1);
+            phone = phone.Remove(5, 1);
+            phone = phone.Remove(4, 1);
+            phone = phone.Remove(0, 1);
+            int limit = Convert.ToInt32(collection["limit"]);
+            double balance = Convert.ToDouble(collection["balance"]);
+            NetworkCommunicationMonitor.Models.Account.createAccount(firstName, lastName, address, phone, limit, balance);
+
+            int accountID = NetworkCommunicationMonitor.Models.Account.getAccountID(firstName, lastName, address, phone, limit, balance);
+            string cardNumber = Convert.ToString(collection["number"]);
+            cardNumber = cardNumber.Remove(14, 1);
+            cardNumber = cardNumber.Remove(9, 1);
+            cardNumber = cardNumber.Remove(4, 1);
+            string fullName = Convert.ToString(collection["name"]);
+            string[] names = fullName.Split(' ');
+            string cardFirstName = names[0];
+            string cardLastName = names[1];
+            DateTime expiry = Convert.ToDateTime(collection["expiry"]);
+            int month = expiry.Month;
+            int year = expiry.Year;
+            string cvc = Convert.ToString(collection["cvc"]);
+            NetworkCommunicationMonitor.Models.Card.createCard(cardNumber, cardFirstName, cardLastName, month, year, accountID, cvc);
+
             return RedirectToAction("Account", "Home");
         }
 
@@ -152,7 +178,7 @@ namespace NetworkCommunicationMonitor.Controllers
             ViewData["NumRelays"] = NetworkCommunicationMonitor.Models.Relay.getNumRelays();
             ViewData["NumTransactions"] = NetworkCommunicationMonitor.Models.Transaction.getNumTransactions();
 
-            NetworkCommunicationMonitor.Models.Account.deleteAccount(Convert.ToInt32(collection["AccountID"]));
+            NetworkCommunicationMonitor.Models.Account.deleteAccount(Convert.ToInt32(collection["accountID"]));
 
             return RedirectToAction("Account", "Home");
         }
@@ -165,6 +191,13 @@ namespace NetworkCommunicationMonitor.Controllers
             ViewData["NumRelays"] = NetworkCommunicationMonitor.Models.Relay.getNumRelays();
             ViewData["NumTransactions"] = NetworkCommunicationMonitor.Models.Transaction.getNumTransactions();
 
+            int accountID = Convert.ToInt32(collection["accountID"]);
+            string firstName = Convert.ToString(collection["firstName"]);
+            string lastName = Convert.ToString(collection["lastName"]);
+            string address = Convert.ToString(collection["address"]);
+            string phone = Convert.ToString(collection["input2"]);
+            NetworkCommunicationMonitor.Models.Account.editAccount(accountID, firstName, lastName, address, phone);
+
             return RedirectToAction("Account", "Home");
         }
 
@@ -176,7 +209,26 @@ namespace NetworkCommunicationMonitor.Controllers
             ViewData["NumRelays"] = NetworkCommunicationMonitor.Models.Relay.getNumRelays();
             ViewData["NumTransactions"] = NetworkCommunicationMonitor.Models.Transaction.getNumTransactions();
 
-            ViewData["name"] = collection["firstname"];
+            string cardNumber = Convert.ToString(collection["number"]);
+            cardNumber = cardNumber.Remove(14, 1);
+            cardNumber = cardNumber.Remove(9, 1);
+            cardNumber = cardNumber.Remove(4, 1);
+            string fullName = Convert.ToString(collection["name"]);
+            string[] names = fullName.Split(' ');
+            string cardFirstName = names[0];
+            string cardLastName = names[1];
+            string exp = Convert.ToString(collection["expiry"]);
+            exp = exp.Remove(4, 1);
+            exp = exp.Remove(2, 1);
+            //DateTime expiry = DateTime.ParseExact(exp,"mm/yyyy", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None);
+            //int month = expiry.Month;
+            //int year = expiry.Year;
+            int month = Convert.ToInt32(exp.Substring(0, 2));
+            int year = Convert.ToInt32(exp.Substring(3, 4));
+            string cvc = Convert.ToString(collection["cvc"]);
+            int accountID = Convert.ToInt32(collection["accountID"]);
+            NetworkCommunicationMonitor.Models.Card.createCard(cardNumber, cardFirstName, cardLastName, month, year, accountID, cvc);
+
             return RedirectToAction("Card", "Home");
         }
 
@@ -188,6 +240,8 @@ namespace NetworkCommunicationMonitor.Controllers
             ViewData["NumRelays"] = NetworkCommunicationMonitor.Models.Relay.getNumRelays();
             ViewData["NumTransactions"] = NetworkCommunicationMonitor.Models.Transaction.getNumTransactions();
 
+            NetworkCommunicationMonitor.Models.Card.deleteCard(Convert.ToString(collection["delete_cardNumber"]));
+
             return RedirectToAction("Card", "Home");
         }
 
@@ -198,6 +252,12 @@ namespace NetworkCommunicationMonitor.Controllers
             ViewData["NumStores"] = NetworkCommunicationMonitor.Models.Store.getNumStores();
             ViewData["NumRelays"] = NetworkCommunicationMonitor.Models.Relay.getNumRelays();
             ViewData["NumTransactions"] = NetworkCommunicationMonitor.Models.Transaction.getNumTransactions();
+
+            string firstName = Convert.ToString(collection["firstName"]);
+            string lastName = Convert.ToString(collection["lastName"]);
+            string cardNumber = Convert.ToString(collection["cardNumber"]);
+
+            NetworkCommunicationMonitor.Models.Card.editCard(firstName, lastName, cardNumber);
 
             return RedirectToAction("Card", "Home");
         }

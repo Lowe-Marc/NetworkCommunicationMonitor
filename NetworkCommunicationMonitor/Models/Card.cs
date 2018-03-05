@@ -124,6 +124,65 @@ namespace NetworkCommunicationMonitor.Models
 
             return numCards;
         }
+
+        public static void deleteCard(string cardID)
+        {
+            var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
+            using (cn)
+            {
+                string _sql = @"DELETE FROM Card WHERE card_id = '" + cardID + "'";
+                var cmd = new SqlCommand(_sql, cn);
+
+                cn.Open();
+                cmd.ExecuteNonQuery();
+                cn.Close();
+            }
+        }
+
+        public static void deleteCardsForAccount(int accountID)
+        {
+            var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
+            using (cn)
+            {
+                string _sql = @"DELETE FROM Card WHERE account_id = " + accountID;
+                var cmd = new SqlCommand(_sql, cn);
+
+                cn.Open();
+                cmd.ExecuteNonQuery();
+                cn.Close();
+            }
+        }
+
+        public static void createCard(string cardID, string firstname, string lastname, int card_expirationMonth, int card_expirationYear, int accountID, string cvc)
+        {
+            var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
+            using (cn)
+            {
+                string _sql = @"INSERT INTO Card (card_id, card_firstname, card_lastname, card_expirationMonth, "
+                + "card_expirationYear, card_securityCode, account_id) VALUES('" + cardID + "', '" + firstname + "', '" + lastname + "', " 
+                + card_expirationMonth + ", " + card_expirationYear + ", " + cvc + ", " + accountID + ")";
+                var cmd = new SqlCommand(_sql, cn);
+
+                cn.Open();
+                cmd.ExecuteNonQuery();
+                cn.Close();
+
+            }
+        }
+
+        public static void editCard(string firstname, string lastname, string cardID)
+        {
+            var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
+            using (cn)
+            {
+                string _sql = @"UPDATE Card SET card_firstname = '" + firstname + "', card_lastname = '" + lastname + "' WHERE card_id = " + cardID;
+                var cmd = new SqlCommand(_sql, cn);
+
+                cn.Open();
+                cmd.ExecuteNonQuery();
+                cn.Close();
+            }
+        }
     }
 
 }
