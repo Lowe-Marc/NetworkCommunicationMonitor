@@ -196,16 +196,18 @@
             </div>
             <div class="alert alert-warning alert-dismissable" style="margin:0">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                <p style="font-size:16px;font-family: 'Monda', sans-serif;"><strong><i class="fa fa-exclamation-triangle"></i>  Tips:</strong> If you want to add an account, click the  <i class="fa fa-plus"></i> on the right.</p>
+                <p class="my-font"><strong><i class="fa fa-exclamation-triangle"></i>  Tips:</strong> If you want to add an account, click the  <i class="fa fa-plus"></i> on the right.</p>
             </div>
             <section id="main-content" class="animated fadeInUp">
                 <div class="row">
                     <div class="col-md-12">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <h3 class="panel-title">Account Tables</h3>
+                                <h3 class="panel-title">Account Tables @ViewData["Test"]</h3>
                                 <div class="actions pull-right">
                                     <i class="fa fa-plus" data-toggle="modal" data-target="#add-account" title="add"></i>
+                                    <i class="glyphicon glyphicon-trash" title="delete" data-toggle="modal" data-target="#delete-account"></i>
+                                    <i class="glyphicon glyphicon-pencil" title="edit" data-toggle="modal" data-target="#edit-account"></i>
                                     <i class="fa fa-expand"></i>
                                     <i class="fa fa-chevron-down"></i>
                                 </div>
@@ -230,7 +232,6 @@
                                                     <th>Phone</th>
                                                     <th>Limit</th>
                                                     <th>Balance</th>
-                                                    <th>Operation</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -254,14 +255,6 @@
                                                             <td>@account.phoneNumber</td>
                                                             <td>@account.accountLimit</td>
                                                             <td>@account.accountBalance</td>
-                                                            <td>
-                                                                <button class="btn btn-danger btn-3d" style="cursor:pointer;" title="delete" data-toggle="modal" data-target="#delete-account">
-                                                                    <span class="glyphicon glyphicon-trash"></span>
-                                                                </button>
-                                                                <button class="btn btn-default btn-3d" style="cursor:pointer;" title="edit" data-toggle="modal" data-target="#edit-account">
-                                                                    <span class="glyphicon glyphicon-pencil"></span>
-                                                                </button>
-                                                            </td>
                                                         </tr>
                                                     }
                                                 }
@@ -278,156 +271,264 @@
         <!--main content end-->
     </section>
     <!--delete modal start-->
-    <div class="modal fade" id="delete-account" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h1 class="modal-title" id="myModalLabel"> Delete</h1>
-                </div>
-                <div class="modal-body">
-                    <p style="font-size:16px;font-family: 'Monda', sans-serif;">Are you sure to delete [Firstname Lastname]'s account?</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
-                    <button type="button" class="btn btn-danger">Yes</button>
+    @using (Html.BeginForm("DeleteAccount", "Home", FormMethod.Post))
+    {
+        <div class="modal fade" id="delete-account" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h1 class="modal-title" id="myModalLabel">Delete</h1>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Account number to delete</label>
+                        <div class="col-sm-6">
+                            <select class="form-control" style="padding:0;" id="AccountID" name="AccountID">
+                                @{ 
+                                    foreach (NetworkCommunicationMonitor.Models.Account account in accounts)
+                                    {
+                                        <option>@account.accountNumber</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-check-input">
+                        <input type="checkbox" class="form-check-input" id="confirmation-checkbox" required="" />
+                        <label for="confirmation-checkbox" display="inline-block" >I understand I am permenently removing the account with this ID from the system.</label>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <input type="submit" class="btn btn-danger" value="Delete" />
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    }
     <!--delete modal end-->
     <!--add account modal start-->
-    <div class="modal fade" id="add-account" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h1 class="modal-title" id="myModalLabel"> Add an account</h1>
-                </div>
-                <div class="modal-body">
-                    <!--main content start-->
-                    <div class="alert alert-warning alert-dismissable" style="margin:0">
-                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                        <p style="font-size:16px;font-family: 'Monda', sans-serif;"><strong><i class="fa fa-exclamation-triangle"></i> Tips:</strong> If you want to add an account, you should also add a credit bound with it.</p>
+    @using (Html.BeginForm("AddAccount", "Home", FormMethod.Post))
+    {
+        <div class="modal fade" id="add-account" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h1 class="modal-title" id="myModalLabel"><strong> Add an account</strong></h1>
                     </div>
-                    <section class="main-content-wrapper" style="padding:0">
-                        <section id="main-content" class="animated fadeInUp">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="panel panel-default">
-                                        <div class="panel-body">
-                                            <section class="fuelux">
-                                                <div id="MyWizard" class="wizard">
-                                                    <ul class="steps">
-                                                        <li data-target="#step1" class="active">
-                                                            <span class="badge badge-info">1</span>Step 1<span class="chevron"></span>
-                                                        </li>
-                                                        <li data-target="#step3">
-                                                            <span class="badge">2</span>Step 2<span class="chevron"></span>
-                                                        </li>
-                                                    </ul>
-                                                    <div class="actions">
-                                                        <button type="button" class="btn btn-default btn-mini btn-prev"> <i class="fa fa-chevron-left"></i> Prev</button>
-                                                        <button type="button" class="btn btn-primary btn-mini btn-next" data-last="Submit">
-                                                            Next <i class="fa fa-chevron-right"></i>
-                                                        </button>
+                    <div class="modal-body">
+                        <!--main content start-->
+                        <div class="alert alert-warning alert-dismissable" style="margin:0">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                            <p class="my-font"><strong><i class="fa fa-exclamation-triangle"></i> Tips:</strong> If you want to add an account, you must also add a credit card bound with it.</p>
+                        </div>
+                        <section class="main-content-wrapper" style="padding:0">
+                            <section id="main-content" class="animated fadeInUp">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="panel panel-default">
+                                            <div class="panel-body">
+                                                <section class="fuelux">
+                                                    <div id="MyWizard" class="wizard">
+                                                        <ul class="steps">
+                                                            <li data-target="#step1" class="active">
+                                                                <span class="badge badge-info">1</span>Step 1<span class="chevron"></span>
+                                                            </li>
+                                                            <li data-target="#step3">
+                                                                <span class="badge">2</span>Step 2<span class="chevron"></span>
+                                                            </li>
+                                                        </ul>
+                                                        <div class="actions">
+                                                            <button type="button" class="btn btn-default btn-mini btn-prev"> <i class="fa fa-chevron-left"></i> Prev</button>
+                                                            <button type="button" class="btn btn-primary btn-mini btn-next" data-last="Last">
+                                                                Next <i class="fa fa-chevron-right"></i>
+                                                            </button>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="step-content">
-                                                    <div class="step-pane active" id="step1">
-                                                        <form class="form-horizontal">
+                                                    <div class="step-content">
+                                                        <div class="step-pane active" id="step1">
                                                             <div class="form-group">
                                                                 <div class="col-sm-12">
-                                                                    <h2 style="text-align:center;">Account Info</h2>
+                                                                    <h2 style="text-align:center; margin: -10px 0 15px 0;">Account Info</h2>
                                                                 </div>
                                                             </div>
-                                                            <div class="form-group">
-                                                                <label for="account_holder_firstname" class="col-sm-3 control-label">First Name</label>
-                                                                <div class="col-sm-6">
-                                                                    <input type="text" class="form-control" id="account_holder_firstname" name="account_holder_firstname" required="" placeholder="first name">
+                                                            <div class="form-horizontal">
+                                                                <div class="form-group">
+                                                                    <label for="firstName" class="col-sm-4 control-label">First Name</label>
+                                                                    <div class="col-sm-6">
+                                                                        <input type="text" class="form-control" name="firstname" value="" required="" placeholder="first name">
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label for="account_holder_lastname" class="col-sm-3 control-label">Last Name</label>
-                                                                <div class="col-sm-6">
-                                                                    <input type="text" class="form-control" id="account_holder_lastname" name="account_holder_lastname" required="" placeholder="last name">
+                                                                <div class="form-group">
+                                                                    <label for="account_holder_lastname" class="col-sm-4 control-label">Last Name</label>
+                                                                    <div class="col-sm-6">
+                                                                        <input type="text" class="form-control" id="account_holder_lastname" name="account_holder_lastname" required="" placeholder="last name">
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label for="account_address" class="col-sm-3 control-label">Address</label>
-                                                                <div class="col-sm-6">
-                                                                    <input type="text" class="form-control" id="account_address" name="account_address" required="" placeholder="address">
+                                                                <div class="form-group">
+                                                                    <label for="account_address" class="col-sm-4 control-label">Address</label>
+                                                                    <div class="col-sm-6">
+                                                                        <input type="text" class="form-control" id="account_address" name="account_address" required="" placeholder="address">
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label for="input2" class="col-sm-3 control-label">Phone</label>
-                                                                <div class="col-sm-6">
-                                                                    <input type="text" class="form-control" id="input2" name="input2" required="" placeholder="(999) 999-9999">
+                                                                <div class="form-group">
+                                                                    <label for="input2" class="col-sm-4 control-label">Phone</label>
+                                                                    <div class="col-sm-6">
+                                                                        <input type="text" class="form-control" id="input2" name="input2" required="" placeholder="(999) 999-9999">
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label for="account_limit" class="col-sm-3 control-label">Limit</label>
-                                                                <div class="col-sm-6">
-                                                                    <input type="text" class="form-control" id="account_limit" name="account_limit" required="" placeholder="(0-25000)">
+                                                                <div class="form-group">
+                                                                    <label for="account_limit" class="col-sm-4 control-label">Limit</label>
+                                                                    <div class="col-sm-6">
+                                                                        <input type="text" class="form-control" id="account_limit" name="account_limit" required="" placeholder="(0-25000)">
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label for="account_balance" class="col-sm-3 control-label">Balance</label>
-                                                                <div class="col-sm-6">
-                                                                    <input type="text" class="form-control" id="account_balance" name="account_balance" required="" placeholder="(0-25000)">
+                                                                <div class="form-group">
+                                                                    <label for="account_balance" class="col-sm-4 control-label">Balance</label>
+                                                                    <div class="col-sm-6">
+                                                                        <input type="text" class="form-control" id="account_balance" name="account_balance" required="" placeholder="(0-25000)">
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                    <div class="step-pane" id="step3">
-                                                        <div class="form-group">
-                                                            <div class="col-sm-12">
-                                                                <h2 style="text-align:center;">Card Info</h2>
                                                             </div>
                                                         </div>
-                                                        <div class="card-wrapper"></div>
-                                                        <form class="card-form form-horizontal">
+                                                        <div class="step-pane" id="step3">
                                                             <div class="form-group">
-                                                                <label class="col-sm-4 control-label">Card number</label>
-                                                                <div class="col-sm-6">
-                                                                    <input type="text" class="form-control" name="number" placeholder="Card number" />
+                                                                <div class="col-sm-12">
+                                                                    <h2 style="text-align:center;">Card Info</h2>
                                                                 </div>
                                                             </div>
-                                                            <div class="form-group">
-                                                                <label class="col-sm-4 control-label">Full name</label>
-                                                                <div class="col-sm-6">
-                                                                    <input type="text" class="form-control" name="name" placeholder="Full name" />
+                                                            <div class="card-wrapper"></div>
+                                                            <div class="card-form form-horizontal col-sm-offset-2">
+                                                                <div class="form-group">
+                                                                    <label class="col-sm-4 control-label">Card number</label>
+                                                                    <div class="col-sm-6">
+                                                                        <input type="text" class="form-control" name="number" placeholder="Card number" required=""/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="col-sm-4 control-label">Full name</label>
+                                                                    <div class="col-sm-6">
+                                                                        <input type="text" class="form-control" name="name" placeholder="Full name" required=""/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="col-sm-4 control-label">Expiry</label>
+                                                                    <div class="col-sm-6">
+                                                                        <input type="text" class="form-control" name="expiry" style="margin:0;" placeholder="MM/YYYY" required=""/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="col-sm-4 control-label">CVC</label>
+                                                                    <div class="col-sm-6">
+                                                                        <input type="text" class="form-control" name="cvc" style="margin:0 0 0 -4px;" placeholder="CVC" required=""/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <div class="col-sm-10">
+                                                                        <input type="submit" class="btn btn-success btn-block" value="Submit" />
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="form-group">
-                                                                <label class="col-sm-4 control-label">Expiry</label>
-                                                                <div class="col-sm-6">
-                                                                    <input type="text" class="form-control" name="expiry" style="margin:0;" placeholder="MM/YYYY" />
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label class="col-sm-4 control-label">CVC</label>
-                                                                <div class="col-sm-6">
-                                                                    <input type="text" class="form-control" name="cvc" style="margin:0 0 0 -4px;" placeholder="CVC" />
-                                                                </div>
-                                                            </div>
-                                                        </form>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </section>
+                                                </section>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </section>
-                </section>
-                <!--main content end-->
+                            </section>
+                        </section>
+                        <!--main content end-->
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    </div>
+    }
     <!--add modal end-->
+    <!--edit start-->
+    @using (Html.BeginForm("EditAccount", "Home", FormMethod.Post))
+    {
+        <div class="modal fade" id="edit-account" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h1 class="modal-title" id="myModalLabel"><strong> Edit an account</strong></h1>
+                    </div>
+                    <div class="modal-body">
+                        <!--main content start-->
+                        <section class="main-content-wrapper" style="padding:0">
+                            <section id="main-content" class="animated fadeInUp">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="panel panel-default">
+                                            <div class="panel-body">
+                                                <section class="fuelux">
+                                                    <div class="step-content">
+                                                        <div class="step-pane active" id="step1">
+                                                            <div class="form-group">
+                                                                <div class="col-sm-12">
+                                                                    <h2 style="text-align:center; margin: -10px 0 15px 0;">Account Info</h2>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-horizontal">
+                                                                <div class="form-group">
+                                                                    <label class="col-sm-4 control-label">Account number to edit</label>
+                                                                    <div class="col-sm-6">
+                                                                        <select class="form-control" style="padding:0;">
+                                                                            @{
+                                                                                foreach (NetworkCommunicationMonitor.Models.Account account in accounts)
+                                                                                {
+                                                                                    <option>@account.accountNumber</option>
+                                                                                }
+                                                                            }
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="firstName" class="col-sm-4 control-label">First Name</label>
+                                                                    <div class="col-sm-6">
+                                                                        <input type="text" class="form-control" name="firstname" value="" required="" placeholder="first name">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="account_holder_lastname" class="col-sm-4 control-label">Last Name</label>
+                                                                    <div class="col-sm-6">
+                                                                        <input type="text" class="form-control" id="account_holder_lastname" name="account_holder_lastname" required="" placeholder="last name">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="account_address" class="col-sm-4 control-label">Address</label>
+                                                                    <div class="col-sm-6">
+                                                                        <input type="text" class="form-control" id="account_address" name="account_address" required="" placeholder="address">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="input2" class="col-sm-4 control-label">Phone</label>
+                                                                    <div class="col-sm-6">
+                                                                        <input type="text" class="form-control" id="input2" name="input2" required="" placeholder="(999) 999-9999">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                                                    <input type="submit" class="btn btn-danger" value="Submit Changes" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </section>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </section>
+                        <!--main content end-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
     <!--Config demo-->
     <div id="config" class="config hidden-xs">
         <h4>Settings<a href="javascript:void(0)" class="config-link closed"><i class="icon-settings"></i></a></h4>
@@ -565,6 +666,8 @@
                 cvc: '***'
             }
         });
+
+
     </script>
 </body>
 

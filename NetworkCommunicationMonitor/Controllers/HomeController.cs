@@ -54,6 +54,7 @@ namespace NetworkCommunicationMonitor.Controllers
             ViewData["NumRelays"] = NetworkCommunicationMonitor.Models.Relay.getNumRelays();
             ViewData["NumTransactions"] = NetworkCommunicationMonitor.Models.Transaction.getNumTransactions();
             ViewData["Cards"] = NetworkCommunicationMonitor.Models.Card.getCards();
+            ViewData["Accounts"] = NetworkCommunicationMonitor.Models.Account.getAccounts();
             return View();
         }
 
@@ -129,6 +130,76 @@ namespace NetworkCommunicationMonitor.Controllers
         {
             Session["user"] = null;
             return View();
+        }
+
+        public ActionResult AddAccount(FormCollection collection)
+        {
+            ViewData["NumAccounts"] = NetworkCommunicationMonitor.Models.Account.getNumAccounts();
+            ViewData["NumCards"] = NetworkCommunicationMonitor.Models.Card.getNumCards();
+            ViewData["NumStores"] = NetworkCommunicationMonitor.Models.Store.getNumStores();
+            ViewData["NumRelays"] = NetworkCommunicationMonitor.Models.Relay.getNumRelays();
+            ViewData["NumTransactions"] = NetworkCommunicationMonitor.Models.Transaction.getNumTransactions();
+
+            ViewData["name"] = collection["firstname"];
+            return RedirectToAction("Account", "Home");
+        }
+
+        public ActionResult DeleteAccount(FormCollection collection)
+        {
+            ViewData["NumAccounts"] = NetworkCommunicationMonitor.Models.Account.getNumAccounts();
+            ViewData["NumCards"] = NetworkCommunicationMonitor.Models.Card.getNumCards();
+            ViewData["NumStores"] = NetworkCommunicationMonitor.Models.Store.getNumStores();
+            ViewData["NumRelays"] = NetworkCommunicationMonitor.Models.Relay.getNumRelays();
+            ViewData["NumTransactions"] = NetworkCommunicationMonitor.Models.Transaction.getNumTransactions();
+
+            NetworkCommunicationMonitor.Models.Account.deleteAccount(Convert.ToInt32(collection["AccountID"]));
+
+            return RedirectToAction("Account", "Home");
+        }
+
+        public ActionResult EditAccount(FormCollection collection)
+        {
+            ViewData["NumAccounts"] = NetworkCommunicationMonitor.Models.Account.getNumAccounts();
+            ViewData["NumCards"] = NetworkCommunicationMonitor.Models.Card.getNumCards();
+            ViewData["NumStores"] = NetworkCommunicationMonitor.Models.Store.getNumStores();
+            ViewData["NumRelays"] = NetworkCommunicationMonitor.Models.Relay.getNumRelays();
+            ViewData["NumTransactions"] = NetworkCommunicationMonitor.Models.Transaction.getNumTransactions();
+
+            return RedirectToAction("Account", "Home");
+        }
+
+        public ActionResult AddCard(FormCollection collection)
+        {
+            ViewData["NumAccounts"] = NetworkCommunicationMonitor.Models.Account.getNumAccounts();
+            ViewData["NumCards"] = NetworkCommunicationMonitor.Models.Card.getNumCards();
+            ViewData["NumStores"] = NetworkCommunicationMonitor.Models.Store.getNumStores();
+            ViewData["NumRelays"] = NetworkCommunicationMonitor.Models.Relay.getNumRelays();
+            ViewData["NumTransactions"] = NetworkCommunicationMonitor.Models.Transaction.getNumTransactions();
+
+            ViewData["name"] = collection["firstname"];
+            return RedirectToAction("Card", "Home");
+        }
+
+        public ActionResult DeleteCard(FormCollection collection)
+        {
+            ViewData["NumAccounts"] = NetworkCommunicationMonitor.Models.Account.getNumAccounts();
+            ViewData["NumCards"] = NetworkCommunicationMonitor.Models.Card.getNumCards();
+            ViewData["NumStores"] = NetworkCommunicationMonitor.Models.Store.getNumStores();
+            ViewData["NumRelays"] = NetworkCommunicationMonitor.Models.Relay.getNumRelays();
+            ViewData["NumTransactions"] = NetworkCommunicationMonitor.Models.Transaction.getNumTransactions();
+
+            return RedirectToAction("Card", "Home");
+        }
+
+        public ActionResult EditCard(FormCollection collection)
+        {
+            ViewData["NumAccounts"] = NetworkCommunicationMonitor.Models.Account.getNumAccounts();
+            ViewData["NumCards"] = NetworkCommunicationMonitor.Models.Card.getNumCards();
+            ViewData["NumStores"] = NetworkCommunicationMonitor.Models.Store.getNumStores();
+            ViewData["NumRelays"] = NetworkCommunicationMonitor.Models.Relay.getNumRelays();
+            ViewData["NumTransactions"] = NetworkCommunicationMonitor.Models.Transaction.getNumTransactions();
+
+            return RedirectToAction("Card", "Home");
         }
     }
 }

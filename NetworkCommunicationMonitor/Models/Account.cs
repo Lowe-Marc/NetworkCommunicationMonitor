@@ -90,5 +90,10 @@ namespace NetworkCommunicationMonitor.Models
 
             return numAccounts;
         }
+
+        public static void deleteAccount(int accountID)
+        {
+
+        }
     }
 }
