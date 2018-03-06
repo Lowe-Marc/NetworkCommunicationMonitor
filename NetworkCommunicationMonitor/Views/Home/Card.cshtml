@@ -276,22 +276,22 @@
                                     <div class="col-md-12">
                                         <div class="panel panel-default">
                                             <div class="panel-body">
-                                                <div class="form-horizontal">
+                                                <div class="form-horizontal  col-sm-offset-2">
                                                     <div class="form-group">
                                                         <label class="col-sm-4 control-label">Card number</label>
                                                         <div class="col-sm-7">
-                                                            <input type="text" class="form-control" name="delete_cardNumber" placeholder="Card number" />
+                                                            <input type="text" class="form-control" name="delete_cardNumber" placeholder="Card number" maxlength="19" onkeyup="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,'')"/>
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="col-sm-4 control-label">Confirm Card Number</label>
                                                         <div class="col-sm-7">
-                                                            <input type="text" class="form-control" name="confirm_delete_cardNumber" placeholder="Confirm card number" />
+                                                            <input type="text" class="form-control" name="confirm_delete_cardNumber" placeholder="Confirm card number" maxlength="19" onkeyup="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,'')"/>
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <input type="checkbox" class="col-sm-2" id="confirmation-checkbox" required="required" style="min-width:20px;min-height:20px;margin:20px 0 0 10%;" />
-                                                        <label class="col-sm-8" for="confirmation-checkbox">I understand I am permenently removing the card with this Number from the system.</label>
+                                                        <label class="col-sm-8" for="confirmation-checkbox">I understand I am permenently removing the card with this number from the system.</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -337,25 +337,25 @@
                                                     <div class="form-group">
                                                         <label class="col-sm-4 control-label">Card number</label>
                                                         <div class="col-sm-6">
-                                                            <input type="text" class="form-control" name="number" placeholder="Card number" />
+                                                            <input type="text" class="form-control" name="number" placeholder="Card number" minlength="13" maxlength="19" required=""/>
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="col-sm-4 control-label">Full name</label>
                                                         <div class="col-sm-6">
-                                                            <input type="text" class="form-control" name="name" placeholder="Full name" />
+                                                            <input type="text" class="form-control" name="name" placeholder="Full name"  minlength="4" maxlength="30" required=""/>
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="col-sm-4 control-label">Expiry</label>
                                                         <div class="col-sm-6">
-                                                            <input type="text" class="form-control" name="expiry" style="margin:0;" placeholder="MM/YYYY" />
+                                                            <input type="text" class="form-control" name="expiry" style="margin:0;" placeholder="MM/YYYY" required=""/>
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="col-sm-4 control-label">CVC</label>
                                                         <div class="col-sm-6">
-                                                            <input type="text" class="form-control" name="cvc" style="margin:0 0 0 -4px;" placeholder="CVC" />
+                                                            <input type="text" class="form-control" name="cvc" style="margin:0 0 0 -4px;" placeholder="CVC" maxlength="3" required=""/>
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
@@ -412,19 +412,19 @@
                                                     <div class="form-group">
                                                         <label class="col-sm-4 control-label">Card number</label>
                                                         <div class="col-sm-6">
-                                                            <input type="text" class="form-control" name="cardNumber" placeholder="Card number" />
+                                                            <input type="text" class="form-control" name="cardNumber" maxlength="19" placeholder="Card number" onkeyup="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,'')"/>
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="col-sm-4 control-label">Last name</label>
                                                         <div class="col-sm-6">
-                                                            <input type="text" class="form-control" name="firstName" placeholder="First name" />
+                                                            <input type="text" class="form-control" name="firstName" placeholder="First name"  minlength="2" maxlength="15"/>
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="col-sm-4 control-label">First name</label>
                                                         <div class="col-sm-6">
-                                                            <input type="text" class="form-control" name="lastName" placeholder="Last name" />
+                                                            <input type="text" class="form-control" name="lastName" placeholder="Last name"  minlength="2" maxlength="15"/>
                                                         </div>
                                                     </div>
                                                 </div>

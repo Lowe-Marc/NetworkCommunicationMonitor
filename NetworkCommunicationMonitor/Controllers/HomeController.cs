@@ -195,7 +195,7 @@ namespace NetworkCommunicationMonitor.Controllers
             string firstName = Convert.ToString(collection["firstName"]);
             string lastName = Convert.ToString(collection["lastName"]);
             string address = Convert.ToString(collection["address"]);
-            string phone = Convert.ToString(collection["input2"]);
+            string phone = Convert.ToString(collection["phone"]);
             NetworkCommunicationMonitor.Models.Account.editAccount(accountID, firstName, lastName, address, phone);
 
             return RedirectToAction("Account", "Home");

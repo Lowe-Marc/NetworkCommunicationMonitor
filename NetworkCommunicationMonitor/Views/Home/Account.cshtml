@@ -374,13 +374,13 @@
                                                                     <div class="form-group">
                                                                         <label for="firstName" class="col-sm-4 control-label">First Name</label>
                                                                         <div class="col-sm-6">
-                                                                            <input type="text" class="form-control" id="firstname" name="firstname" value="" required="" placeholder="first name">
+                                                                            <input type="text" class="form-control" id="firstname" name="firstname" required="" minlength="2" maxlength="15" placeholder="first name">
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group">
                                                                         <label for="account_holder_lastname" class="col-sm-4 control-label">Last Name</label>
                                                                         <div class="col-sm-6">
-                                                                            <input type="text" class="form-control" id="lastname" name="lastname" required="" placeholder="last name">
+                                                                            <input type="text" class="form-control" id="lastname" name="lastname" required="" minlength="2" maxlength="15" placeholder="last name">
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group">
@@ -398,13 +398,13 @@
                                                                     <div class="form-group">
                                                                         <label for="account_limit" class="col-sm-4 control-label">Limit</label>
                                                                         <div class="col-sm-6">
-                                                                            <input type="text" class="form-control" id="limit" name="limit" required="" placeholder="(0-25000)">
+                                                                            <input type="text" class="form-control" id="limit" name="limit" required="" placeholder="(0-25000)" onkeyup="value = value.replace(/[^\d]/g, ''); if ( value > 25000) { value = 25000; }" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,'')" />
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group">
                                                                         <label for="account_balance" class="col-sm-4 control-label">Balance</label>
                                                                         <div class="col-sm-6">
-                                                                            <input type="text" class="form-control" id="balance" name="balance" required="" placeholder="(0-25000)">
+                                                                            <input type="text" class="form-control" id="balance" name="balance" required="" placeholder="(0-25000)" onkeyup="value = value.replace(/[^\d]/g, ''); if ( value > 25000) { value = 25000; }" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,'')" />
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -420,7 +420,7 @@
                                                                     <div class="form-group">
                                                                         <label class="col-sm-4 control-label">Card number</label>
                                                                         <div class="col-sm-6">
-                                                                            <input type="text" class="form-control" name="number" placeholder="Card number" required="" />
+                                                                            <input type="text" class="form-control" name="number" placeholder="Card number" required="" minlength="13" maxlength="19" />
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group">
@@ -438,7 +438,7 @@
                                                                     <div class="form-group">
                                                                         <label class="col-sm-4 control-label">CVC</label>
                                                                         <div class="col-sm-6">
-                                                                            <input type="text" class="form-control" name="cvc" style="margin:0 0 0 -4px;" placeholder="CVC" required="" />
+                                                                            <input type="text" class="form-control" name="cvc" style="margin:0 0 0 -4px;" placeholder="CVC" required="" maxlength="3"/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group">
@@ -503,13 +503,13 @@
                                                         <div class="form-group">
                                                             <label for="firstName" class="col-sm-4 control-label">First Name</label>
                                                             <div class="col-sm-6">
-                                                                <input type="text" class="form-control" name="firstName" value="" required="" placeholder="first name">
+                                                                <input type="text" class="form-control" name="firstName" required="" minlength="2" maxlength="15" placeholder="first name">
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="account_holder_lastname" class="col-sm-4 control-label">Last Name</label>
                                                             <div class="col-sm-6">
-                                                                <input type="text" class="form-control" id="lastName" name="lastName" required="" placeholder="last name">
+                                                                <input type="text" class="form-control" id="lastName" name="lastName" required="" minlength="2" maxlength="15" placeholder="last name">
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
@@ -519,9 +519,9 @@
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
-                                                            <label for="input2" class="col-sm-4 control-label">Phone</label>
+                                                            <label for="phone" class="col-sm-4 control-label">Phone</label>
                                                             <div class="col-sm-6">
-                                                                <input type="text" class="form-control" id="input2" name="input2" required="" placeholder="(999) 999-9999">
+                                                                <input type="text" class="form-control" id="phone" name="phone" required="" placeholder="(999) 999-9999" maxlength="10" onkeyup="value = value.replace(/[^\d]/g, '')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,'')">
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
