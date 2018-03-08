@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
+using NetworkCommunicationMonitor.Models;
+
 namespace NetworkCommunicationMonitor.Controllers
 {
     public class HomeController : Controller
@@ -16,6 +18,7 @@ namespace NetworkCommunicationMonitor.Controllers
             NetworkCommunicationMonitor.Models.Global.questionIDs = new int[3];
             NetworkCommunicationMonitor.Models.Global.questions = new Stack<string>();
             NetworkCommunicationMonitor.Models.Global.correctAnswers = new Stack<string>();
+
             return View();
         }
 
@@ -28,6 +31,19 @@ namespace NetworkCommunicationMonitor.Controllers
             ViewData["NumStores"] = NetworkCommunicationMonitor.Models.Store.getNumStores();
             ViewData["NumRelays"] = NetworkCommunicationMonitor.Models.Relay.getNumRelays();
             ViewData["NumTransactions"] = NetworkCommunicationMonitor.Models.Transaction.getNumTransactions();
+
+            // Probably a better way to do this, this is just to get a proof of concept
+            List<Object> relays = Relay.getRelaysForMap();
+            List<Object> stores = Models.Store.getStoresForMap();
+            foreach (Models.Store store in stores)
+            {
+                relays.Add(store);
+            }
+            List<Connection> connections = Connection.getConnectionsForMap();
+
+            ViewData["Nodes"] = relays;
+            ViewData["Links"] = connections;
+
             return View();
         }
 

@@ -19,6 +19,7 @@ INSERT INTO Card(card_id, card_firstname, card_lastname, card_expirationMonth, c
 INSERT INTO Account (account_holder_firstname, account_holder_lastname, account_address, account_phone, account_limit, account_balance) VALUES('Adams', 'Darrell', '4402 Hedge Street, Piscataway NJ 08854', '9084066387', 22000, 0.0);
 INSERT INTO Card(card_id, card_firstname, card_lastname, card_expirationMonth, card_expirationYear, card_securityCode, account_id) VALUES('5538572760352094', 'Darrell', 'Adams', '08', '2021', '758', 4);
 INSERT INTO Card(card_id, card_firstname, card_lastname, card_expirationMonth, card_expirationYear, card_securityCode, account_id) VALUES('4485228863864370', 'Dalton', 'Lily', '07', '2018', '259', 4);
+--192.168.0.1 is the processing center, 2,3,4, and 5 are gateways
 INSERT INTO RelayStation(station_id, station_isActive) VALUES('192.168.0.1', 1);
 INSERT INTO RelayStation(station_id, station_isActive) VALUES('192.168.0.2', 1);
 INSERT INTO RelayStation(station_id, station_isActive) VALUES('192.168.0.3', 1);
@@ -29,6 +30,7 @@ INSERT INTO RelayStation(station_id, station_isActive) VALUES('192.168.0.7', 1);
 INSERT INTO RelayStation(station_id, station_isActive) VALUES('192.168.0.8', 1);
 INSERT INTO RelayStation(station_id, station_isActive) VALUES('192.168.0.9', 1);
 INSERT INTO RelayStation(station_id, station_isActive) VALUES('192.168.0.10', 1);
+--Starting stores with the last digits of 100
 INSERT INTO Store(store_id, store_name) VALUES('192.168.0.100', 'Store Name');
 INSERT INTO Store(store_id, store_name) VALUES('192.168.0.101', 'Store Name');
 INSERT INTO Store(store_id, store_name) VALUES('192.168.0.102', 'Store Name');
@@ -59,3 +61,47 @@ INSERT INTO Store(store_id, store_name) VALUES('192.168.0.126', 'Store Name');
 INSERT INTO Store(store_id, store_name) VALUES('192.168.0.127', 'Store Name');
 INSERT INTO Store(store_id, store_name) VALUES('192.168.0.128', 'Store Name');
 INSERT INTO Store(store_id, store_name) VALUES('192.168.0.129', 'Store Name');
+--Connect gateways to processing center
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.2', '192.168.0.1', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.3', '192.168.0.1', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.4', '192.168.0.1', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.5', '192.168.0.1', 1, 1);
+--Connect relays to their gateways
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.6', '192.168.0.2', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.7', '192.168.0.2', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.7', '192.168.0.6', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.8', '192.168.0.3', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.9', '192.168.0.4', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.10', '192.168.0.5', 1, 1);
+--Connect stores to relays
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.100', '192.168.0.2', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.101', '192.168.0.2', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.102', '192.168.0.2', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.103', '192.168.0.3', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.104', '192.168.0.3', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.105', '192.168.0.3', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.106', '192.168.0.4', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.107', '192.168.0.4', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.108', '192.168.0.4', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.109', '192.168.0.5', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.110', '192.168.0.5', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.111', '192.168.0.5', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.112', '192.168.0.6', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.113', '192.168.0.6', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.114', '192.168.0.6', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.115', '192.168.0.7', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.116', '192.168.0.7', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.117', '192.168.0.7', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.118', '192.168.0.8', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.119', '192.168.0.8', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.120', '192.168.0.8', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.121', '192.168.0.9', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.122', '192.168.0.9', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.123', '192.168.0.9', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.124', '192.168.0.10', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.125', '192.168.0.10', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.126', '192.168.0.10', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.127', '192.168.0.6', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.128', '192.168.0.7', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.129', '192.168.0.10', 1, 1);
+

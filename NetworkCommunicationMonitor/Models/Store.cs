@@ -15,7 +15,11 @@ namespace NetworkCommunicationMonitor.Models
     {
 
         public string ipAddress;
+        public string id;
         public string name;
+        public int group;
+
+        public static readonly int STOREGROUP = 1;
 
         public static List<Store> getStores()
         {
@@ -38,7 +42,40 @@ namespace NetworkCommunicationMonitor.Models
                 {
                     Store tempStore = new Store();
                     tempStore.ipAddress = Convert.ToString(row["store_id"]);
+                    tempStore.id = Convert.ToString(row["store_id"]);
                     tempStore.name = Convert.ToString(row["store_name"]);
+                    tempStore.group = STOREGROUP;
+                    stores.Add(tempStore);
+                }
+            }
+
+            return stores;
+        }
+
+        public static List<Object> getStoresForMap()
+        {
+            List<Object> stores = new List<Object>();
+
+            var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
+            using (cn)
+            {
+                DataTable questionTable = new DataTable();
+                DataRowCollection rows;
+                string _sql = @"SELECT store_id, store_name FROM Store";
+                var cmd = new SqlCommand(_sql, cn);
+
+                cn.Open();
+
+                questionTable.Load(cmd.ExecuteReader());
+                rows = questionTable.Rows;
+
+                foreach (DataRow row in rows)
+                {
+                    Store tempStore = new Store();
+                    tempStore.ipAddress = Convert.ToString(row["store_id"]);
+                    tempStore.id = Convert.ToString(row["store_id"]);
+                    tempStore.name = Convert.ToString(row["store_name"]);
+                    tempStore.group = STOREGROUP;
                     stores.Add(tempStore);
                 }
             }

@@ -149,6 +149,7 @@
     </Compile>
     <Compile Include="Models\Account.cs" />
     <Compile Include="Models\Card.cs" />
+    <Compile Include="Models\Connection.cs" />
     <Compile Include="Models\Global.cs" />
     <Compile Include="Models\Relay.cs" />
     <Compile Include="Models\Store.cs" />
