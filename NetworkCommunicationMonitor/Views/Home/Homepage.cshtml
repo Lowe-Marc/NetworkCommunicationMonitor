@@ -200,6 +200,11 @@
             <div class="pageheader">
                 <h1>Network<span class="description" style="font-size:0.6em">  Welcome to Network Communication Monitor</span></h1>
                 <div class="breadcrumb-wrapper hidden-xs">
+                    <!--These are temporary-->
+                    <i class="fa fa-plus" data-toggle="modal" data-target="#add-relay" title="add"></i>
+                    <i class="fa fa-plus" data-toggle="modal" data-target="#add-store" title="add"></i>
+                    <i class="fa fa-plus" data-toggle="modal" data-target="#add-connection" title="add"></i>
+                    <!--These are temporary-->
                     <span class="label">You are here:</span>
                     <ol class="breadcrumb">
                         <li class="active">Network</li>
@@ -208,6 +213,10 @@
             </div>
             <section id="main-content" class="animated fadeInUp">
                 <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                        </div>
+                    </div>
                     <div class="col-md-12 col-lg-12">
                         <div class="row">
                             <div class="col-md-2 col-md-offset-1">
@@ -273,6 +282,173 @@
         </section>
         <!--main content end-->
     </section>
+
+    <!--add relay start-->
+    @using (Html.BeginForm("AddRelay", "Home", FormMethod.Post))
+    {
+        <div class="modal fade" id="add-relay" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h1 class="modal-title" id="myModalLabel"><strong> Add a Relay Station</strong></h1>
+                    </div>
+                    <div class="modal-body">
+                        <!--main content start-->
+                        <section class="main-content-wrapper" style="padding:0">
+                            <section id="main-content" class="animated fadeInUp">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="panel panel-default">
+                                            <div class="panel-body">
+                                                <div class="form-group">
+                                                    <div class="col-sm-12">
+                                                        <h2 style="text-align:center; margin: -10px 0 15px 0;">Relay Info</h2>
+                                                    </div>
+                                                </div>
+                                                <div class="form-horizontal">
+                                                    <div class="form-group">
+                                                        <label for="ipAddress" class="col-sm-4 control-label">IP Address</label>
+                                                        <div class="col-sm-6">
+                                                            <input type="text" class="form-control" name="ipAddress" required="" minlength="7" maxlength="15" placeholder="XXX.XXX.XXX.XXX">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="ipConnectedTo" class="col-sm-4 control-label">IP Address To Connect To</label>
+                                                        <div class="col-sm-6">
+                                                            <input type="text" class="form-control" id="ipConnectedTo" name="ipConnectedTo" required="" minlength="7" maxlength="15" placeholder="XXX.XXX.XXX.XXX">
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <input type="submit" class="btn btn-success btn-block" value="Add To Network" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </section>
+                        <!--main content end-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <!--add relay end-->
+    <!--add store start-->
+    @using (Html.BeginForm("AddStore", "Home", FormMethod.Post))
+    {
+        <div class="modal fade" id="add-store" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h1 class="modal-title" id="myModalLabel"><strong> Add a Store</strong></h1>
+                    </div>
+                    <div class="modal-body">
+                        <!--main content start-->
+                        <section class="main-content-wrapper" style="padding:0">
+                            <section id="main-content" class="animated fadeInUp">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="panel panel-default">
+                                            <div class="panel-body">
+                                                <div class="form-group">
+                                                    <div class="col-sm-12">
+                                                        <h2 style="text-align:center; margin: -10px 0 15px 0;">Store Info</h2>
+                                                    </div>
+                                                </div>
+                                                <div class="form-horizontal">
+                                                    <div class="form-group">
+                                                        <label for="storeName" class="col-sm-4 control-label">Store Name</label>
+                                                        <div class="col-sm-6">
+                                                            <input type="text" class="form-control" id="storeName" name="storeName" required="" minlength="1" maxlength="15" placeholder="Store Name">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="ipAddress" class="col-sm-4 control-label">IP Address</label>
+                                                        <div class="col-sm-6">
+                                                            <input type="text" class="form-control" name="ipAddress" required="" minlength="7" maxlength="15" placeholder="XXX.XXX.XXX.XXX">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="ipConnectedTo" class="col-sm-4 control-label">Relay To Connect</label>
+                                                        <div class="col-sm-6">
+                                                            <input type="text" class="form-control" id="ipConnectedTo" name="ipConnectedTo" required="" minlength="7" maxlength="15" placeholder="XXX.XXX.XXX.XXX">
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <input type="submit" class="btn btn-success btn-block" value="Add To Network" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </section>
+                        <!--main content end-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <!--add store end-->
+    <!--add connection start-->
+    @using (Html.BeginForm("AddConnection", "Home", FormMethod.Post))
+    {
+        <div class="modal fade" id="add-connection" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h1 class="modal-title" id="myModalLabel"><strong> Add a Connection</strong></h1>
+                    </div>
+                    <div class="modal-body">
+                        <!--main content start-->
+                        <section class="main-content-wrapper" style="padding:0">
+                            <section id="main-content" class="animated fadeInUp">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="panel panel-default">
+                                            <div class="panel-body">
+                                                <div class="form-group">
+                                                    <div class="col-sm-12">
+                                                        <h2 style="text-align:center; margin: -10px 0 15px 0;">Connection Info</h2>
+                                                    </div>
+                                                </div>
+                                                <div class="form-horizontal">
+                                                    <div class="form-group">
+                                                        <label for="ipOne" class="col-sm-4 control-label">IP Address One</label>
+                                                        <div class="col-sm-6">
+                                                            <input type="text" class="form-control" name="ipOne" required="" minlength="7" maxlength="15" placeholder="XXX.XXX.XXX.XXX">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="ipTwo" class="col-sm-4 control-label">IP Address Two</label>
+                                                        <div class="col-sm-6">
+                                                            <input type="text" class="form-control" id="ipTwo" name="ipTwo" required="" minlength="7" maxlength="15" placeholder="XXX.XXX.XXX.XXX">
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <input type="submit" class="btn btn-success btn-block" value="Add To Network" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </section>
+                        <!--main content end-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <!--add connection end-->
+
     <!--Config demo-->
     <div id="config" class="config hidden-xs">
         <h4>Settings<a href="javascript:void(0)" class="config-link closed"><i class="icon-settings"></i></a></h4>

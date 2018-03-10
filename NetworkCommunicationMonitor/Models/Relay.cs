@@ -123,5 +123,21 @@ namespace NetworkCommunicationMonitor.Models
 
             return numRelays;
         }
+
+        public static void addRelay(string ipAddress, string ipConnectedTo)
+        {
+            var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
+            using (cn)
+            {
+                string _sql = @"INSERT INTO RelayStation (station_id, station_isActive) VALUES('" + ipAddress + "', '" + 1 + "')";
+                var cmd = new SqlCommand(_sql, cn);
+
+                cn.Open();
+                cmd.ExecuteNonQuery();
+                cn.Close();
+            }
+
+            Connection.addConnection(ipAddress, ipConnectedTo);
+        }
     }
 }

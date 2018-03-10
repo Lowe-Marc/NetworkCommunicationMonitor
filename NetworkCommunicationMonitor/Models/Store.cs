@@ -109,5 +109,21 @@ namespace NetworkCommunicationMonitor.Models
 
             return numStores;
         }
+
+        public static void addStore(string ipAddress, string relayIP, string storeName)
+        {
+            var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
+            using (cn)
+            {
+                string _sql = @"INSERT INTO Store (store_id, store_name) VALUES('" + ipAddress + "', '" + storeName + "')";
+                var cmd = new SqlCommand(_sql, cn);
+
+                cn.Open();
+                cmd.ExecuteNonQuery();
+                cn.Close();
+            }
+
+            Connection.addConnection(ipAddress, relayIP);
+        }
     }
 }
