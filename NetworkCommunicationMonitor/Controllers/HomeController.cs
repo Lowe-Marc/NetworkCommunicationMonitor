@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
+using NetworkCommunicationMonitor.Models;
+
 namespace NetworkCommunicationMonitor.Controllers
 {
     public class HomeController : Controller
@@ -16,6 +18,7 @@ namespace NetworkCommunicationMonitor.Controllers
             NetworkCommunicationMonitor.Models.Global.questionIDs = new int[3];
             NetworkCommunicationMonitor.Models.Global.questions = new Stack<string>();
             NetworkCommunicationMonitor.Models.Global.correctAnswers = new Stack<string>();
+
             return View();
         }
 
@@ -28,6 +31,19 @@ namespace NetworkCommunicationMonitor.Controllers
             ViewData["NumStores"] = NetworkCommunicationMonitor.Models.Store.getNumStores();
             ViewData["NumRelays"] = NetworkCommunicationMonitor.Models.Relay.getNumRelays();
             ViewData["NumTransactions"] = NetworkCommunicationMonitor.Models.Transaction.getNumTransactions();
+
+            // Probably a better way to do this, this is just to get a proof of concept
+            List<Object> relays = Relay.getRelaysForMap();
+            List<Object> stores = Models.Store.getStoresForMap();
+            foreach (Models.Store store in stores)
+            {
+                relays.Add(store);
+            }
+            List<Connection> connections = Connection.getConnectionsForMap();
+
+            ViewData["Nodes"] = relays;
+            ViewData["Links"] = connections;
+
             return View();
         }
 
@@ -195,7 +211,7 @@ namespace NetworkCommunicationMonitor.Controllers
             string firstName = Convert.ToString(collection["firstName"]);
             string lastName = Convert.ToString(collection["lastName"]);
             string address = Convert.ToString(collection["address"]);
-            string phone = Convert.ToString(collection["input2"]);
+            string phone = Convert.ToString(collection["phone"]);
             NetworkCommunicationMonitor.Models.Account.editAccount(accountID, firstName, lastName, address, phone);
 
             return RedirectToAction("Account", "Home");
@@ -260,6 +276,55 @@ namespace NetworkCommunicationMonitor.Controllers
             NetworkCommunicationMonitor.Models.Card.editCard(firstName, lastName, cardNumber);
 
             return RedirectToAction("Card", "Home");
+        }
+
+        public ActionResult AddRelay(FormCollection collection)
+        {
+            ViewData["NumAccounts"] = NetworkCommunicationMonitor.Models.Account.getNumAccounts();
+            ViewData["NumCards"] = NetworkCommunicationMonitor.Models.Card.getNumCards();
+            ViewData["NumStores"] = NetworkCommunicationMonitor.Models.Store.getNumStores();
+            ViewData["NumRelays"] = NetworkCommunicationMonitor.Models.Relay.getNumRelays();
+            ViewData["NumTransactions"] = NetworkCommunicationMonitor.Models.Transaction.getNumTransactions();
+
+            string ipAddress = Convert.ToString(collection["ipAddress"]);
+            string ipConnectedTo = Convert.ToString(collection["ipConnectedTo"]);
+
+            NetworkCommunicationMonitor.Models.Relay.addRelay(ipAddress, ipConnectedTo);
+
+            return RedirectToAction("Homepage", "Home");
+        }
+
+        public ActionResult AddStore(FormCollection collection)
+        {
+            ViewData["NumAccounts"] = NetworkCommunicationMonitor.Models.Account.getNumAccounts();
+            ViewData["NumCards"] = NetworkCommunicationMonitor.Models.Card.getNumCards();
+            ViewData["NumStores"] = NetworkCommunicationMonitor.Models.Store.getNumStores();
+            ViewData["NumRelays"] = NetworkCommunicationMonitor.Models.Relay.getNumRelays();
+            ViewData["NumTransactions"] = NetworkCommunicationMonitor.Models.Transaction.getNumTransactions();
+
+            string storeName = Convert.ToString(collection["storeName"]);
+            string ipAddress = Convert.ToString(collection["ipAddress"]);
+            string ipConnectedTo = Convert.ToString(collection["ipConnectedTo"]);
+
+            NetworkCommunicationMonitor.Models.Store.addStore(ipAddress, ipConnectedTo, storeName);
+
+            return RedirectToAction("Homepage", "Home");
+        }
+
+        public ActionResult AddConnection(FormCollection collection)
+        {
+            ViewData["NumAccounts"] = NetworkCommunicationMonitor.Models.Account.getNumAccounts();
+            ViewData["NumCards"] = NetworkCommunicationMonitor.Models.Card.getNumCards();
+            ViewData["NumStores"] = NetworkCommunicationMonitor.Models.Store.getNumStores();
+            ViewData["NumRelays"] = NetworkCommunicationMonitor.Models.Relay.getNumRelays();
+            ViewData["NumTransactions"] = NetworkCommunicationMonitor.Models.Transaction.getNumTransactions();
+
+            string ipOne = Convert.ToString(collection["ipOne"]);
+            string ipTwo = Convert.ToString(collection["ipTwo"]);
+
+            NetworkCommunicationMonitor.Models.Connection.addConnection(ipOne, ipTwo);
+
+            return RedirectToAction("Homepage", "Home");
         }
     }
 }

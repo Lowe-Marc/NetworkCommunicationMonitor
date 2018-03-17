@@ -149,6 +149,7 @@
     </Compile>
     <Compile Include="Models\Account.cs" />
     <Compile Include="Models\Card.cs" />
+    <Compile Include="Models\Connection.cs" />
     <Compile Include="Models\Global.cs" />
     <Compile Include="Models\Relay.cs" />
     <Compile Include="Models\Store.cs" />
@@ -707,6 +708,7 @@
     <Content Include="img\monitor.ico" />
     <Content Include="js\bg.js" />
     <Content Include="js\card.js" />
+    <Content Include="js\fisheye.js" />
     <Content Include="js\d3.min.js" />
     <Content Include="js\Particleground.js" />
     <Content Include="Scripts\bootstrap.js" />
