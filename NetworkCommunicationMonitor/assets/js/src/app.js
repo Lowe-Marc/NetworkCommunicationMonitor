@@ -12,6 +12,7 @@ var app = function() {
         widgetFlip();
         tooltips();
         switcheryToggle();
+        fullscreenExpand();
         fullscreenWidget();
         fullscreenMode();
 
@@ -393,14 +394,20 @@ var app = function() {
         });
     };
 
+    var fullscreenExpand = function () {
+        $('#svg .fa-expand').click(function () {
+            $('#svg').toggleFullScreen();
+            $(this).toggleClass('fa-expand fa-compress');
+        });
+    };
+
     var fullscreenWidget = function() {
-        $('.panel .fa-expand').click(function() {
+        $('.panel .fa-expand').click(function () {
             var panel = $(this).closest('.panel');
             panel.toggleClass('widget-fullscreen');
             $(this).toggleClass('fa-expand fa-compress');
             $('body').toggleClass('fullscreen-widget-active')
-
-        })
+        });
     };
 
 
@@ -432,5 +439,4 @@ var app = function() {
 
 $(window).resize(function() {
     app.chartJs();
-
 });
