@@ -4,6 +4,6 @@ CREATE TABLE Administrator(admin_id varchar(10) PRIMARY KEY, admin_username varc
 CREATE TABLE Question(question_id varchar(10) PRIMARY KEY, question_question varchar(100), answer varchar(50));
 CREATE TABLE Transactions(trans_id varchar(10) PRIMARY KEY, account_id int, store_id varchar(15), trans_date datetime, trans_amount float, trans_category varchar(20), trans_status bit, response_id varchar(10), status_time datetime, encrypted bit);
 CREATE TABLE Response(response_id varchar(10) PRIMARY KEY, trans_id varchar(10), store_id varchar(15), response_date datetime, status bit);
-CREATE TABLE RelayStation(station_id varchar(15) PRIMARY KEY, station_isActive bit, isGateway bit, region varchar(30), queueLimit int);
+CREATE TABLE RelayStation(station_id varchar(15) PRIMARY KEY, station_isActive bit);
 CREATE TABLE Connection(station_one_id varchar(15), station_two_id varchar(15), connection_isActive bit, weight int);
-CREATE TABLE Store(store_id varchar(15) PRIMARY KEY, store_name varchar(30), region varchar(30));
+CREATE TABLE Store(store_id varchar(15) PRIMARY KEY, store_name varchar(30));

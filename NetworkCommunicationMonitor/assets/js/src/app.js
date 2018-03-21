@@ -395,8 +395,8 @@ var app = function() {
     };
 
     var fullscreenExpand = function () {
-        $('#svg .fa-expand').click(function () {
-            $('#svg').toggleFullScreen();
+        $('#cy .fa-expand').click(function () {
+            $('#cy').toggleFullScreen();
             $(this).toggleClass('fa-expand fa-compress');
         });
     };
