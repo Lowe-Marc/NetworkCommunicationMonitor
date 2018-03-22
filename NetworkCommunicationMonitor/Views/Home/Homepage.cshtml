@@ -36,11 +36,9 @@
     <link href="https://fonts.googleapis.com/css?family=Monda" rel="stylesheet">
     <!-- Feature detection -->
     <script src="~/assets/js/vendor/modernizr-2.6.2.min.js"></script>
-    <script src="~/js/d3.min.js"></script>
-    <!--D3 fisheye-->
-    <script src="~/js/fisheye.js"></script>
     <!-- Cytoscape.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.2.10/cytoscape.min.js"></script>
+    <script src="~/js/cytoscape-cose-bilkent.js"></script>
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
     <script src="assets/js/vendor/html5shiv.js"></script>
@@ -264,182 +262,255 @@
                     </div>
                 </div>
             </section>
-
             <!--SVG start-->
-            <div id="cy" class="animated">
-                <div class="svg-expand pointer">
-                    <i class="fa fa-expand" title="fullscreen"></i>
-                    <i class="fa fa-fw fa-home" data-toggle="modal" data-target="#add-store" title="add store"></i>
-                    <i class="fa fa-fw fa-flag-checkered" data-toggle="modal" data-target="#add-relay" title="add relay"></i>
-                    <i class="fa fa-fw fa-exchange" data-toggle="modal" data-target="#add-connection" title="add connection"></i>
-                    <i class="fa fa-play" title="play"></i>
-                    <i class="fa fa-fw fa-pause hidden" title="pause"></i>
+            <div id="network-view">
+                <div id="operation">
+                    <div class="svg-expand pointer">
+                        <i class="fa fa-fw fa-expand" title="fullscreen"></i>
+                        <i class="fa fa-fw fa-home" data-toggle="modal" data-target="#add-store" title="add store"></i>
+                        <i class="fa fa-fw fa-flag-checkered" data-toggle="modal" data-target="#add-relay" title="add relay"></i>
+                        <i class="fa fa-fw fa-exchange" data-toggle="modal" data-target="#add-connection" title="add connection"></i>
+                        <i class="fa fa-fw fa-th-large" data-toggle="modal" data-target="#add-region" title="add region"></i>
+                        <i class="fa fa-play" title="play"></i>
+                        <i class="fa fa-fw fa-pause hidden" title="pause"></i>
+                    </div>
                 </div>
-            </div>
+                <div id="cy" class="animated"></div>
                 <!--add relay start-->
                 @using (Html.BeginForm("AddRelay", "Home", FormMethod.Post))
-        {
-            <div class="modal fade" id="add-relay" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h1 class="modal-title" id="myModalLabel"><strong> Add a Relay Station</strong></h1>
-                        </div>
-                        <div class="modal-body">
-                            <!--main content start-->
-                            <section class="main-content-wrapper" style="padding:0">
-                                <section id="main-content" class="animated fadeInUp">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="panel panel-default">
-                                                <div class="panel-body">
-                                                    <div class="form-group">
-                                                        <div class="col-sm-12">
-                                                            <h2 style="text-align:center; margin: -10px 0 15px 0;">Relay Info</h2>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-horizontal">
-                                                        <div class="form-group">
-                                                            <label for="ipAddress" class="col-sm-4 control-label">IP Address</label>
-                                                            <div class="col-sm-6">
-                                                                <input type="text" class="form-control" name="ipAddress" required="" minlength="7" maxlength="15" placeholder="XXX.XXX.XXX.XXX">
+                {
+                    <div class="modal fade" id="add-relay" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h1 class="modal-title" id="myModalLabel"><strong> Add a Relay Station</strong></h1>
+                                </div>
+                                <div class="modal-body">
+                                    <!--main content start-->
+                                    <section class="main-content-wrapper" style="padding:0">
+                                        <section id="main-content" class="animated fadeInUp">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-body">
+                                                            <div class="form-group">
+                                                                <div class="col-sm-12">
+                                                                    <h2 style="text-align:center; margin: -10px 0 15px 0;">Relay Info</h2>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="ipConnectedTo" class="col-sm-4 control-label">IP Address To Connect To</label>
-                                                            <div class="col-sm-6">
-                                                                <input type="text" class="form-control" id="ipConnectedTo" name="ipConnectedTo" required="" minlength="7" maxlength="15" placeholder="XXX.XXX.XXX.XXX">
+                                                            <div class="form-horizontal">
+                                                                <div class="form-group">
+                                                                    <label for="ipAddress" class="col-sm-4 control-label">IP Address</label>
+                                                                    <div class="col-sm-6">
+                                                                        <input type="text" class="form-control" id="input5" name="input5" required minlength="11" maxlength="13" placeholder="999-99-9999" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="ipConnectedTo" class="col-sm-4 control-label">IP Address To Connect To</label>
+                                                                    <div class="col-sm-6">
+                                                                        <input type="text" class="form-control ipAddress" id="ipConnectedTo" name="ipConnectedTo" required minlength="11" maxlength="13" data-inputmask-regex="(192[.]168[.]0[.]d{1,3})" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <input type="submit" class="btn btn-success btn-block" value="Add To Network" />
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <input type="submit" class="btn btn-success btn-block" value="Add To Network" />
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </section>
-                            </section>
-                            <!--main content end-->
+                                        </section>
+                                    </section>
+                                    <!--main content end-->
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-}
+                }
                 <!--add relay end-->
+                <!--add region start-->
+                @using (Html.BeginForm("AddRegion", "Home", FormMethod.Post))
+                {
+                    <div class="modal fade" id="add-region" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h1 class="modal-title" id="myModalLabel"><strong> Add a Region</strong></h1>
+                                </div>
+                                <div class="modal-body">
+                                    <!--main content start-->
+                                    <section class="main-content-wrapper" style="padding:0">
+                                        <section id="main-content" class="animated fadeInUp">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-body">
+                                                            <div class="form-group">
+                                                                <div class="col-sm-12">
+                                                                    <h2 style="text-align:center; margin: -10px 0 15px 0;">Region Info</h2>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-horizontal">
+                                                                <div class="form-group">
+                                                                    <label for="ipAddress" class="col-sm-4 control-label">Region Name</label>
+                                                                    <div class="col-sm-6">
+                                                                        <input type="text" class="form-control" name="region-name" required minlength="1" maxlength="15" placeholder="Region Name">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="ipAddress" class="col-sm-4 control-label">Gateway IP Address</label>
+                                                                    <div class="col-sm-6">
+                                                                        <input type="text" class="form-control ipAddress" name="gateway-ipAddress" required minlength="11" maxlength="13" placeholder="192.168.0.XXX">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="ipConnectedTo" class="col-sm-4 control-label">Relay IP Address</label>
+                                                                    <div class="col-sm-6">
+                                                                        <input type="text" class="form-control ipAddress" id="relay-ipaddress" name="relay-ipaddress" required minlength="11" maxlength="13" placeholder="192.168.0.XXX">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="storeName" class="col-sm-4 control-label">Store Name</label>
+                                                                    <div class="col-sm-6">
+                                                                        <input type="text" class="form-control" id="store-name" name="storeName" required minlength="1" maxlength="15" placeholder="Store Name">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="ipConnectedTo" class="col-sm-4 control-label">Store IP Address</label>
+                                                                    <div class="col-sm-6">
+                                                                        <input type="text" class="form-control ipAddress" id="store-ipaddress" name="store-ipaddress" required="" minlength="11" maxlength="13" placeholder="192.168.0.XXX">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <input type="submit" class="btn btn-success btn-block" value="Add To Network" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </section>
+                                    </section>
+                                    <!--main content end-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <!--add region end-->
                 <!--add store start-->
                 @using (Html.BeginForm("AddStore", "Home", FormMethod.Post))
-        {
-            <div class="modal fade" id="add-store" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h1 class="modal-title" id="myModalLabel"><strong> Add a Store</strong></h1>
-                        </div>
-                        <div class="modal-body">
-                            <!--main content start-->
-                            <section class="main-content-wrapper" style="padding:0">
-                                <section id="main-content" class="animated fadeInUp">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="panel panel-default">
-                                                <div class="panel-body">
-                                                    <div class="form-group">
-                                                        <div class="col-sm-12">
-                                                            <h2 style="text-align:center; margin: -10px 0 15px 0;">Store Info</h2>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-horizontal">
-                                                        <div class="form-group">
-                                                            <label for="storeName" class="col-sm-4 control-label">Store Name</label>
-                                                            <div class="col-sm-6">
-                                                                <input type="text" class="form-control" id="storeName" name="storeName" required="" minlength="1" maxlength="15" placeholder="Store Name">
+                {
+                    <div class="modal fade" id="add-store" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h1 class="modal-title" id="myModalLabel"><strong> Add a Store</strong></h1>
+                                </div>
+                                <div class="modal-body">
+                                    <!--main content start-->
+                                    <section class="main-content-wrapper" style="padding:0">
+                                        <section id="main-content" class="animated fadeInUp">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-body">
+                                                            <div class="form-group">
+                                                                <div class="col-sm-12">
+                                                                    <h2 style="text-align:center; margin: -10px 0 15px 0;">Store Info</h2>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="ipAddress" class="col-sm-4 control-label">IP Address</label>
-                                                            <div class="col-sm-6">
-                                                                <input type="text" class="form-control" name="ipAddress" required="" minlength="7" maxlength="15" placeholder="XXX.XXX.XXX.XXX">
+                                                            <div class="form-horizontal">
+                                                                <div class="form-group">
+                                                                    <label for="storeName" class="col-sm-4 control-label">Store Name</label>
+                                                                    <div class="col-sm-6">
+                                                                        <input type="text" class="form-control" id="storeName" name="storeName" required minlength="1" maxlength="15" placeholder="Store Name">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="ipAddress" class="col-sm-4 control-label">IP Address</label>
+                                                                    <div class="col-sm-6">
+                                                                        <input type="text" class="form-control ipAddress" name="ipAddress" required="" minlength="11" maxlength="13" placeholder="192.168.0.XXX">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="ipConnectedTo" class="col-sm-4 control-label">Relay To Connect</label>
+                                                                    <div class="col-sm-6">
+                                                                        <input type="text" class="form-control ipAddress" id="ipConnectedTo" name="ipConnectedTo" required="" minlength="11" maxlength="13" placeholder="192.168.0.XXX">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <input type="submit" class="btn btn-success btn-block" value="Add To Network" />
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="ipConnectedTo" class="col-sm-4 control-label">Relay To Connect</label>
-                                                            <div class="col-sm-6">
-                                                                <input type="text" class="form-control" id="ipConnectedTo" name="ipConnectedTo" required="" minlength="7" maxlength="15" placeholder="XXX.XXX.XXX.XXX">
-                                                            </div>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <input type="submit" class="btn btn-success btn-block" value="Add To Network" />
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </section>
-                            </section>
-                            <!--main content end-->
+                                        </section>
+                                    </section>
+                                    <!--main content end-->
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-}
+                }
                 <!--add store end-->
                 <!--add connection start-->
                 @using (Html.BeginForm("AddConnection", "Home", FormMethod.Post))
-        {
-            <div class="modal fade" id="add-connection" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h1 class="modal-title" id="myModalLabel"><strong> Add a Connection</strong></h1>
-                        </div>
-                        <div class="modal-body">
-                            <!--main content start-->
-                            <section class="main-content-wrapper" style="padding:0">
-                                <section id="main-content" class="animated fadeInUp">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="panel panel-default">
-                                                <div class="panel-body">
-                                                    <div class="form-group">
-                                                        <div class="col-sm-12">
-                                                            <h2 style="text-align:center; margin: -10px 0 15px 0;">Connection Info</h2>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-horizontal">
-                                                        <div class="form-group">
-                                                            <label for="ipOne" class="col-sm-4 control-label">IP Address One</label>
-                                                            <div class="col-sm-6">
-                                                                <input type="text" class="form-control" name="ipOne" required="" minlength="7" maxlength="15" placeholder="XXX.XXX.XXX.XXX">
+                {
+                    <div class="modal fade" id="add-connection" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h1 class="modal-title" id="myModalLabel"><strong> Add a Connection</strong></h1>
+                                </div>
+                                <div class="modal-body">
+                                    <!--main content start-->
+                                    <section class="main-content-wrapper" style="padding:0">
+                                        <section id="main-content" class="animated fadeInUp">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-body">
+                                                            <div class="form-group">
+                                                                <div class="col-sm-12">
+                                                                    <h2 style="text-align:center; margin: -10px 0 15px 0;">Connection Info</h2>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="ipTwo" class="col-sm-4 control-label">IP Address Two</label>
-                                                            <div class="col-sm-6">
-                                                                <input type="text" class="form-control" id="ipTwo" name="ipTwo" required="" minlength="7" maxlength="15" placeholder="XXX.XXX.XXX.XXX">
+                                                            <div class="form-horizontal">
+                                                                <div class="form-group">
+                                                                    <label for="ipOne" class="col-sm-4 control-label">IP Address One</label>
+                                                                    <div class="col-sm-6">
+                                                                        <input type="text" class="form-control ipAddress" name="ipOne" required minlength="13" maxlength="15" placeholder="192.168.0.XXX">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="ipTwo" class="col-sm-4 control-label">IP Address Two</label>
+                                                                    <div class="col-sm-6">
+                                                                        <input type="text" class="form-control ipAddress" id="ipTwo" name="ipTwo" required minlength="13" maxlength="15" placeholder="192.168.0.XXX">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <input type="submit" class="btn btn-success btn-block" value="Add To Network" />
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <input type="submit" class="btn btn-success btn-block" value="Add To Network" />
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </section>
-                            </section>
-                            <!--main content end-->
+                                        </section>
+                                    </section>
+                                    <!--main content end-->
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-}
+                }
                 <!--add connection end-->
             </div>
         </section>
@@ -554,10 +625,7 @@
     <script src="~/assets/plugins/fullscreen/jquery.fullscreen-min.js"></script>
     <script src="~/assets/js/src/app.js"></script>
     <!--Page Level JS-->
-    <script src="~/assets/plugins/countTo/jquery.countTo.js"></script>
-    <script src="~/assets/plugins/weather/js/skycons.js"></script>
-    <script src="~/assets/plugins/daterangepicker/moment.min.js"></script>
-    <script src="~/assets/plugins/daterangepicker/daterangepicker.js"></script>
+    <script src="~/assets/plugins/mask/js/jquery.maskedinput.min.js"></script>
     <!-- ChartJS  -->
     <script src="~/assets/plugins/chartjs/Chart.min.js"></script>
     <!-- Morris  -->
@@ -568,14 +636,8 @@
     <!--Load these page level functions-->
     <script>
         $(document).ready(function () {
-            app.dateRangePicker();
-            app.chartJs();
-            app.weather();
-            app.spinStart();
-            app.spinStop();
         });
     </script>
-
     <!-- Cytoscape-->
     <script>
         const nodes = @Html.Raw(Json.Encode(ViewData["Nodes"]));
@@ -585,7 +647,14 @@
             container: document.getElementById('cy'), // container to render in
 
             elements: convertElements(),
-                
+
+            layout: {
+                name: 'cose-bilkent',
+                animate: false,
+                idealEdgeLength: '100',
+
+            },
+
             style: [ // the stylesheet for the graph
                 {
                     selector: 'node',
@@ -594,7 +663,9 @@
                         'height': 'mapData(baz, 0, 20, 20, 40)',
                         'shape': 'data(shape)',
                         'label': 'data(id)',
-                        'background-color': 'data(color)'
+                        'background-color': 'data(color)',
+                        'border-width': '2px',
+                        'border-color': 'black'
                     }
                 },
 
@@ -603,7 +674,8 @@
                     style: {
                         'width': 3,
                         'label': 'data(weight)',
-                        'line-color': '#grey',
+                        'line-color': 'grey',
+                        'opacity': '0.8'
                     }
                 },
                 {
@@ -616,7 +688,7 @@
                         'opacity': 1
                     }
                 },
-            ], 
+            ],
             zoom: 1,
             pan: { x: 0, y: 0 },
             minZoom: 1e-1,
@@ -627,21 +699,20 @@
         function convertElements() {
             for (var i = 0; i < nodes.length; i++) {
                 if (nodes[i].group == 0) {  //processing center
-                    data.push({ group: 'nodes', data: { id: nodes[i].id, color: 'red', shape: 'barrel', baz: '30' }, position: {} });
+                    data.push({ group: 'nodes', data: { id: nodes[i].id, color: 'red', shape: 'barrel', baz: '30' }, position: { x: '100', y: '100'} });
                 } else if (nodes[i].group == 1) {   //store
-                    data.push({ group: 'nodes', data: { id: nodes[i].id, color: 'green', shape: 'ellipse', baz: '10' }, position: {} });
+                    data.push({ group: 'nodes', data: { id: nodes[i].id, color: 'green', shape: 'ellipse', baz: '10' }, position: { x: '100', y: '100' } });
                 } else if (nodes[i].group == 2) {   //relay
-                    data.push({ group: 'nodes', data: { id: nodes[i].id, color: 'blue', shape: 'triangle ', baz: '20' }, position: {} });
+                    data.push({ group: 'nodes', data: { id: nodes[i].id, color: 'blue', shape: 'triangle ', baz: '20' }, position: { x: '100', y: '100' } });
                 }
             }
 
             for (var i = 0; i < edges.length; i++) {
-                data.push({ group: 'edges', data: { source: edges[i].source, target: edges[i].target, weight: edges[i].distance }, position: {} });
+                data.push({ group: 'edges', data: { source: edges[i].source, target: edges[i].target, weight: edges[i].distance }});
             }
             return data;
         }
     </script>
-
 </body>
 
 </html>

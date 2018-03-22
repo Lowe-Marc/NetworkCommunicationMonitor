@@ -66,6 +66,7 @@ var app = function() {
         $("#input4").mask("99-9999999");
         $("#input5").mask("999-99-9999");
         $("#input6").mask("a*-999-a999");
+        $(".ipAddress").mask('(999) 999-9999');
     }
 
     var weather = function() {
@@ -321,7 +322,7 @@ var app = function() {
                 },
                 input5: {
                     required: true,
-                    min: 5
+                    minlength: 5
                 },
                 input6: {
                     required: true,
@@ -395,8 +396,8 @@ var app = function() {
     };
 
     var fullscreenExpand = function () {
-        $('#cy .fa-expand').click(function () {
-            $('#cy').toggleFullScreen();
+        $('#operation .fa-expand').click(function () {
+            $('#network-view').toggleFullScreen();
             $(this).toggleClass('fa-expand fa-compress');
         });
     };

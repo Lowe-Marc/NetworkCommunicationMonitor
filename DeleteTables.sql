@@ -1,0 +1,9 @@
+DROP TABLE Account
+DROP TABLE Card
+DROP TABLE Administrator
+DROP TABLE Question
+DROP TABLE Transactions
+DROP TABLE Response
+DROP TABLE RelayStation
+DROP TABLE Connection
+DROP TABLE Store

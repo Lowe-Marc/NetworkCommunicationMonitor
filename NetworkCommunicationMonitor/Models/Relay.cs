@@ -21,6 +21,7 @@ namespace NetworkCommunicationMonitor.Models
 
         public static readonly int RELAYGROUP = 2;
         public static readonly int PROCESSINGCENTERGROUP = 0;
+        public static readonly string PROCESSINGCENTERIP = "192.168.0.1";
 
         public static List<Relay> getRelays()
         {
@@ -83,7 +84,7 @@ namespace NetworkCommunicationMonitor.Models
                     tempRelay.ipAddress = Convert.ToString(row["station_id"]);
                     tempRelay.id = Convert.ToString(row["station_id"]);
                     tempRelay.isActive = Convert.ToBoolean(row["station_isActive"]);
-                    if (tempRelay.id.Equals("192.168.0.1", StringComparison.Ordinal))
+                    if (tempRelay.id.Equals(PROCESSINGCENTERIP, StringComparison.Ordinal))
                     {
                         tempRelay.group = PROCESSINGCENTERGROUP;
                     }
@@ -121,15 +122,22 @@ namespace NetworkCommunicationMonitor.Models
                 }
             }
 
-            return numRelays;
+            return numRelays-1;
         }
 
-        public static void addRelay(string ipAddress, string ipConnectedTo)
+        public static void addRelay(string ipAddress, string ipConnectedTo, bool isGateway, string region, int queueLimit)
         {
             var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
             using (cn)
             {
-                string _sql = @"INSERT INTO RelayStation (station_id, station_isActive) VALUES('" + ipAddress + "', '" + 1 + "')";
+                int gatewayBit;
+                if (isGateway)
+                    gatewayBit = 1;
+                else
+                    gatewayBit = 0;
+
+                string _sql = @"INSERT INTO RelayStation (station_id, station_isActive, isGateway, region, queueLimit) VALUES('" + ipAddress + "', '" + 1 + "', '" + gatewayBit + "', '" 
+                    + region +"', '" + queueLimit + "')";
                 var cmd = new SqlCommand(_sql, cn);
 
                 cn.Open();
@@ -138,6 +146,39 @@ namespace NetworkCommunicationMonitor.Models
             }
 
             Connection.addConnection(ipAddress, ipConnectedTo);
+        }
+
+        public static void addRegion(string regionName, string gatewayIP, string relayIP, string storeIP, string storeName)
+        {
+            addRelay(gatewayIP, PROCESSINGCENTERIP, true, regionName, 10);
+            addRelay(relayIP, gatewayIP, false, regionName, 10);
+            Store.addStore(storeIP, relayIP, storeName);
+        }
+
+        public static string getRegion(string ipAddress)
+        {
+            string region = "";
+
+            var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
+            using (cn)
+            {
+                DataTable table = new DataTable();
+                DataRowCollection rows;
+                string _sql = @"SELECT region FROM RelayStation WHERE station_id = '" + ipAddress + "'";
+                var cmd = new SqlCommand(_sql, cn);
+
+                cn.Open();
+
+                table.Load(cmd.ExecuteReader());
+                rows = table.Rows;
+
+                foreach (DataRow row in rows)
+                {
+                    region = Convert.ToString(row["region"]);
+                }
+            }
+
+            return region;
         }
     }
 }

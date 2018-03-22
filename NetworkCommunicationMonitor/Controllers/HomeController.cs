@@ -289,7 +289,28 @@ namespace NetworkCommunicationMonitor.Controllers
             string ipAddress = Convert.ToString(collection["ipAddress"]);
             string ipConnectedTo = Convert.ToString(collection["ipConnectedTo"]);
 
-            NetworkCommunicationMonitor.Models.Relay.addRelay(ipAddress, ipConnectedTo);
+            string region = Relay.getRegion(ipConnectedTo);
+
+            NetworkCommunicationMonitor.Models.Relay.addRelay(ipAddress, ipConnectedTo, false, region, 10);
+
+            return RedirectToAction("Homepage", "Home");
+        }
+
+        public ActionResult AddRegion(FormCollection collection)
+        {
+            ViewData["NumAccounts"] = NetworkCommunicationMonitor.Models.Account.getNumAccounts();
+            ViewData["NumCards"] = NetworkCommunicationMonitor.Models.Card.getNumCards();
+            ViewData["NumStores"] = NetworkCommunicationMonitor.Models.Store.getNumStores();
+            ViewData["NumRelays"] = NetworkCommunicationMonitor.Models.Relay.getNumRelays();
+            ViewData["NumTransactions"] = NetworkCommunicationMonitor.Models.Transaction.getNumTransactions();
+
+            string regionName = Convert.ToString(collection["region-name"]);
+            string gatewayIPAddress = Convert.ToString(collection["gateway-ipAddress"]);
+            string relayIPAddress = Convert.ToString(collection["relay-ipAddress"]);
+            string storeIPAddress = Convert.ToString(collection["store-ipAddress"]);
+            string storeName = Convert.ToString(collection["store-name"]);
+
+            NetworkCommunicationMonitor.Models.Relay.addRegion(regionName, gatewayIPAddress, relayIPAddress, storeIPAddress, storeName);
 
             return RedirectToAction("Homepage", "Home");
         }
