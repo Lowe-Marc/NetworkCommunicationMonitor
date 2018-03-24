@@ -289,13 +289,19 @@ namespace NetworkCommunicationMonitor.Controllers
             setNetworkData();
 
             string storeIP = Convert.ToString(collection["ipAddress"]);
-            int accountNumber = Convert.ToInt32(collection["accountNumber"]);
+            string cardNumber = Convert.ToString(collection["cardNumber"]);
+            DateTime transactionDate = Convert.ToDateTime(collection["transactionDate"]);
+            double transactionAmount = Convert.ToDouble(collection["transactionAmount"]);
+            string transactionCategory = Convert.ToString(collection["transactionCategory"]);
 
-            if (storeIP != null && accountNumber > 0)
-                NetworkCommunicationMonitor.Models.Transaction.addTransaction(accountNumber, storeIP);
+            if (storeIP == null) {
+                return RedirectToAction("Homepage", "Home");
+            } else {
+                NetworkCommunicationMonitor.Models.Transaction.addTransaction(cardNumber, storeIP, transactionDate, transactionAmount, transactionCategory);
+            }
 
             ViewData["TransactionStart"] = storeIP;
-            //return RedirectToAction("Homepage", "Home");
+            
             return View("Homepage");
         }
 
