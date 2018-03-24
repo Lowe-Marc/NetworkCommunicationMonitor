@@ -706,9 +706,10 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="img\monitor.ico" />
+    <Content Include="js\inputmask.binding.js" />
     <Content Include="js\bg.js" />
     <Content Include="js\card.js" />
-    <Content Include="js\fisheye.js" />
+    <Content Include="js\cytoscape-cose-bilkent.js" />
     <Content Include="js\d3.min.js" />
     <Content Include="js\Particleground.js" />
     <Content Include="Scripts\bootstrap.js" />

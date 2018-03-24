@@ -122,7 +122,7 @@ namespace NetworkCommunicationMonitor.Models
                 }
             }
 
-            return numRelays;
+            return numRelays-1;
         }
 
         public static void addRelay(string ipAddress, string ipConnectedTo, bool isGateway, string region, int queueLimit)
