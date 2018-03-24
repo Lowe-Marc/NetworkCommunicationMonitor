@@ -303,13 +303,13 @@
                                                                 <div class="form-group">
                                                                     <label for="ipAddress" class="col-sm-4 control-label">IP Address</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" id="input5" name="input5" required minlength="11" maxlength="13" placeholder="999-99-9999" />
+                                                                        <input type="text" class="form-control" id="ipAddress" name="ipAddress" required minlength="11" maxlength="13" placeholder="192.168.0.XXX" />
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label for="ipConnectedTo" class="col-sm-4 control-label">IP Address To Connect To</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control ipAddress" id="ipConnectedTo" name="ipConnectedTo" required minlength="11" maxlength="13" data-inputmask-regex="(192[.]168[.]0[.]d{1,3})" />
+                                                                        <input type="text" class="form-control" id="ipConnectedTo" name="ipConnectedTo" required minlength="11" maxlength="13" placeholder="192.168.0.XXX" />
                                                                     </div>
                                                                 </div>
                                                                 <div class="modal-footer">
@@ -642,6 +642,8 @@
     <script>
         const nodes = @Html.Raw(Json.Encode(ViewData["Nodes"]));
         const edges = @Html.Raw(Json.Encode(ViewData["Links"]));
+        console.log("nodes: ", nodes);
+        console.log("edges: ", edges);
         var data = [];
         var cy = cytoscape({
             container: document.getElementById('cy'), // container to render in
@@ -699,11 +701,11 @@
         function convertElements() {
             for (var i = 0; i < nodes.length; i++) {
                 if (nodes[i].group == 0) {  //processing center
-                    data.push({ group: 'nodes', data: { id: nodes[i].id, color: 'red', shape: 'barrel', baz: '30' }, position: { x: '100', y: '100'} });
+                    data.push({ group: 'nodes', data: { id: nodes[i].id, parent: nodes[i].region, color: 'red', shape: 'barrel', baz: '30' }, position: { x: '100', y: '100'} });
                 } else if (nodes[i].group == 1) {   //store
-                    data.push({ group: 'nodes', data: { id: nodes[i].id, color: 'green', shape: 'ellipse', baz: '10' }, position: { x: '100', y: '100' } });
+                    data.push({ group: 'nodes', data: { id: nodes[i].id, parent: nodes[i].region, color: 'green', shape: 'ellipse', baz: '10' }, position: { x: '100', y: '100' } });
                 } else if (nodes[i].group == 2) {   //relay
-                    data.push({ group: 'nodes', data: { id: nodes[i].id, color: 'blue', shape: 'triangle ', baz: '20' }, position: { x: '100', y: '100' } });
+                    data.push({ group: 'nodes', data: { id: nodes[i].id, parent: nodes[i].region, color: 'blue', shape: 'triangle ', baz: '20' }, position: { x: '100', y: '100' } });
                 }
             }
 

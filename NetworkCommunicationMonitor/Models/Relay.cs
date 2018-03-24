@@ -17,6 +17,8 @@ namespace NetworkCommunicationMonitor.Models
         public string ipAddress;
         public string id;
         public bool isActive;
+        public bool isGateway;
+        public string region;
         public int group;
 
         public static readonly int RELAYGROUP = 2;
@@ -32,7 +34,7 @@ namespace NetworkCommunicationMonitor.Models
             {
                 DataTable questionTable = new DataTable();
                 DataRowCollection rows;
-                string _sql = @"SELECT station_id, station_isActive FROM RelayStation";
+                string _sql = @"SELECT station_id, station_isActive, region, isGateway FROM RelayStation";
                 var cmd = new SqlCommand(_sql, cn);
 
                 cn.Open();
@@ -45,7 +47,9 @@ namespace NetworkCommunicationMonitor.Models
                     Relay tempRelay = new Relay();
                     tempRelay.ipAddress = Convert.ToString(row["station_id"]);
                     tempRelay.id = Convert.ToString(row["station_id"]);
+                    tempRelay.region = Convert.ToString(row["region"]);
                     tempRelay.isActive = Convert.ToBoolean(row["station_isActive"]);
+                    tempRelay.isGateway = Convert.ToBoolean(row["isGateway"]);
                     if (tempRelay.id.Equals("192.168.0.1", StringComparison.Ordinal))
                     {
                         tempRelay.group = PROCESSINGCENTERGROUP;
@@ -70,7 +74,7 @@ namespace NetworkCommunicationMonitor.Models
             {
                 DataTable questionTable = new DataTable();
                 DataRowCollection rows;
-                string _sql = @"SELECT station_id, station_isActive FROM RelayStation";
+                string _sql = @"SELECT station_id, station_isActive, region, isGateway FROM RelayStation";
                 var cmd = new SqlCommand(_sql, cn);
 
                 cn.Open();
@@ -83,7 +87,9 @@ namespace NetworkCommunicationMonitor.Models
                     Relay tempRelay = new Relay();
                     tempRelay.ipAddress = Convert.ToString(row["station_id"]);
                     tempRelay.id = Convert.ToString(row["station_id"]);
+                    tempRelay.region = Convert.ToString(row["region"]);
                     tempRelay.isActive = Convert.ToBoolean(row["station_isActive"]);
+                    tempRelay.isGateway = Convert.ToBoolean(row["isGateway"]);
                     if (tempRelay.id.Equals(PROCESSINGCENTERIP, StringComparison.Ordinal))
                     {
                         tempRelay.group = PROCESSINGCENTERGROUP;
