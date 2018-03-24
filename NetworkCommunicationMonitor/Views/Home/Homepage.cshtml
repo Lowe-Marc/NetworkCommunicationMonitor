@@ -374,7 +374,7 @@
                                                                 <div class="form-group">
                                                                     <label for="storeName" class="col-sm-4 control-label">Store Name</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" id="store-name" name="storeName" required minlength="1" maxlength="15" placeholder="Store Name">
+                                                                        <input type="text" class="form-control" id="store-name" name="store-name" required minlength="1" maxlength="15" placeholder="Store Name">
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
@@ -770,7 +770,6 @@
         // Given two nodes this will start the round trip animation
         function animPath(startNode, endNode, isReturning) {
             var aStar = cy.elements().aStar({ root: startNode, goal: endNode });
-
             var path = Object.values(aStar.path)
             var start = path.shift();
             anim(start, path, isReturning);
@@ -822,12 +821,6 @@
             animPath(processingCenter, startNode, true);
         }
 
-        //testAnimPath();
-        function testAnimPath() {
-            var n = cy.nodes();
-            animPath(n[0], n[3]);
-        }
-
         // Simple function to return a node from the list based off the ip
         function getNode(ipAddress) {
             var n = cy.nodes();
@@ -845,6 +838,97 @@
         //        y: 100
         //    };
         //});
+
+        testAnimPath();
+        function testAnimPath() {
+            var n = getNode("192.168.0.201");
+            assembleAnim(n);
+        }
+
+        var currentAnimationPlayingIndex = 0;
+        function assembleAnim(storeNode) {
+            var processingCenter = getNode("@NetworkCommunicationMonitor.Models.Relay.PROCESSINGCENTERIP");
+            var path = getPath(storeNode, processingCenter);
+            var n = cy.nodes();
+
+            var animationList = []
+
+            // Assemble list of animations
+            for (var i = 0; i < path.length; i++) {
+                var animation = path[i].animation({
+                    style: {
+                        'background-color': 'black'
+                    },
+                    duration: 1000
+                })
+                animationList.push(animation);
+            }
+
+            newAnim(animationList, 0);
+        }
+
+        // Play the animation and try to continue
+        function newAnim(animationList, currentAnimationPlayingIndex) {
+            var node = animationList[currentAnimationPlayingIndex];
+
+            node
+                .play()
+                .promise('completed').then(function () {
+                    node
+                        .reverse()
+                        .rewind()
+                        .play();
+
+                    if (currentAnimationPlayingIndex < animationList.length - 1) {
+                        currentAnimationPlayingIndex += 1;
+                        newAnim(animationList, currentAnimationPlayingIndex)
+                    }
+                });
+        }
+
+        // Reverse the animation and recur to the next node
+        // For some reason this isn't working when called in the completed promise
+        function continueAnimation(animationList, currentAnimationPlayingIndex) {
+            var node = animationList[currentAnimationPlayingIndex];
+            node
+                .reverse()
+                .rewind()
+                .play();
+
+            if (currentAnimationPlayingIndex < animationList.length - 1) {
+                currentAnimationPlayingIndex += 1;
+                newAnim(animationList, currentAnimationPlayingIndex)
+            }
+        }
+
+        // Calculate the round trip path from start to end
+        function getPath(startNode, endNode) {
+            var aStar = cy.elements().aStar({ root: startNode, goal: endNode });
+            var pathToTruncate = Object.values(aStar.path)
+            var truncatedPath = truncatePath(pathToTruncate);
+            var returnPath = truncatedPath.slice(0);
+            returnPath.reverse();
+
+            //TODO: Seems weird that we have to shift twice to avoid animating the processing center twice
+            returnPath.shift();
+            returnPath.shift();
+            
+            return truncatedPath.concat(returnPath);
+        }
+
+        // The aStar cytoscape function returns a strange object, this extracts the path of nodes
+        function truncatePath(aStarPath) {
+            var truncated = [];
+
+            for (var i = 0; i < aStarPath.length; i++) {
+                if (typeof (aStarPath[i]) == "number")
+                    return truncated;
+                else
+                    truncated.push(aStarPath[i]);
+            }
+
+            return truncated;
+        }
 
         function convertElements() {
             for (var i = 0; i < nodes.length; i++) {
