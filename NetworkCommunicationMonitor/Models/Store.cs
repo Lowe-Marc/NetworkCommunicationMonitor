@@ -112,11 +112,16 @@ namespace NetworkCommunicationMonitor.Models
 
         public static void addStore(string ipAddress, string relayIP, string storeName)
         {
+            string region = Relay.getRegion(relayIP);
+
             var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
             using (cn)
             {
-                string _sql = @"INSERT INTO Store (store_id, store_name) VALUES('" + ipAddress + "', '" + storeName + "')";
+                string _sql = @"INSERT INTO Store (store_id, store_name, region) VALUES(@IPAddress, @StoreName, @Region)";
                 var cmd = new SqlCommand(_sql, cn);
+                cmd.Parameters.Add("@IPAddress", SqlDbType.VarChar).Value = ipAddress;
+                cmd.Parameters.Add("@StoreName", SqlDbType.VarChar).Value = storeName;
+                cmd.Parameters.Add("@Region", SqlDbType.VarChar).Value = region;
 
                 cn.Open();
                 cmd.ExecuteNonQuery();

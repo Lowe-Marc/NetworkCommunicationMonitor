@@ -233,7 +233,7 @@ namespace NetworkCommunicationMonitor.Controllers
         {
             setViewDataDefaults();
 
-            string ipAddress = Convert.ToString(collection["ipAddress"]);
+            string ipAddress = Convert.ToString(collection["input5"]);
             string ipConnectedTo = Convert.ToString(collection["ipConnectedTo"]);
 
             string region = Relay.getRegion(ipConnectedTo);

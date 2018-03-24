@@ -127,6 +127,7 @@ namespace NetworkCommunicationMonitor.Models
 
         public static void addRelay(string ipAddress, string ipConnectedTo, bool isGateway, string region, int queueLimit)
         {
+
             var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
             using (cn)
             {
