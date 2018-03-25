@@ -17,6 +17,7 @@ namespace NetworkCommunicationMonitor.Models
         public string ipAddress;
         public string id;
         public string name;
+        public string region;
         public int group;
 
         public static readonly int STOREGROUP = 1;
@@ -30,7 +31,7 @@ namespace NetworkCommunicationMonitor.Models
             {
                 DataTable questionTable = new DataTable();
                 DataRowCollection rows;
-                string _sql = @"SELECT store_id, store_name FROM Store";
+                string _sql = @"SELECT store_id, store_name, region FROM Store";
                 var cmd = new SqlCommand(_sql, cn);
 
                 cn.Open();
@@ -44,9 +45,11 @@ namespace NetworkCommunicationMonitor.Models
                     tempStore.ipAddress = Convert.ToString(row["store_id"]);
                     tempStore.id = Convert.ToString(row["store_id"]);
                     tempStore.name = Convert.ToString(row["store_name"]);
+                    tempStore.region = Convert.ToString(row["region"]);
                     tempStore.group = STOREGROUP;
                     stores.Add(tempStore);
                 }
+                
             }
 
             return stores;
@@ -61,7 +64,7 @@ namespace NetworkCommunicationMonitor.Models
             {
                 DataTable questionTable = new DataTable();
                 DataRowCollection rows;
-                string _sql = @"SELECT store_id, store_name FROM Store";
+                string _sql = @"SELECT store_id, store_name, region FROM Store";
                 var cmd = new SqlCommand(_sql, cn);
 
                 cn.Open();
@@ -75,6 +78,7 @@ namespace NetworkCommunicationMonitor.Models
                     tempStore.ipAddress = Convert.ToString(row["store_id"]);
                     tempStore.id = Convert.ToString(row["store_id"]);
                     tempStore.name = Convert.ToString(row["store_name"]);
+                    tempStore.region = Convert.ToString(row["region"]);
                     tempStore.group = STOREGROUP;
                     stores.Add(tempStore);
                 }

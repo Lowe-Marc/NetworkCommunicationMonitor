@@ -233,7 +233,7 @@ namespace NetworkCommunicationMonitor.Controllers
         {
             setViewDataDefaults();
 
-            string ipAddress = Convert.ToString(collection["input5"]);
+            string ipAddress = Convert.ToString(collection["ipAddress"]);
             string ipConnectedTo = Convert.ToString(collection["ipConnectedTo"]);
 
             string region = Relay.getRegion(ipConnectedTo);
@@ -293,15 +293,18 @@ namespace NetworkCommunicationMonitor.Controllers
             DateTime transactionDate = Convert.ToDateTime(collection["transactionDate"]);
             double transactionAmount = Convert.ToDouble(collection["transactionAmount"]);
             string transactionCategory = Convert.ToString(collection["transactionCategory"]);
-
-            if (storeIP == null) {
-                return RedirectToAction("Homepage", "Home");
-            } else {
+            
+                        if (storeIP == null)
+            {
+                                return RedirectToAction("Homepage", "Home");
+                        }
+            else
+            {
                 NetworkCommunicationMonitor.Models.Transaction.addTransaction(cardNumber, storeIP, transactionDate, transactionAmount, transactionCategory);
             }
 
             ViewData["TransactionStart"] = storeIP;
-            
+
             return View("Homepage");
         }
 

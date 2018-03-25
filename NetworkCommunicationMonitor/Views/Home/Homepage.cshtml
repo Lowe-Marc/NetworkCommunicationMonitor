@@ -24,8 +24,6 @@
     <link rel="stylesheet" href="~/assets/css/animate.css">
     <!-- Daterange Picker -->
     <link rel="stylesheet" href="~/assets/plugins/daterangepicker/daterangepicker-bs3.css">
-    <!-- Calendar demo -->
-    <link rel="stylesheet" href="~/assets/css/clndr.css">
     <!-- Switchery -->
     <link rel="stylesheet" href="~/assets/plugins/switchery/switchery.min.css">
     <!-- Custom styles for this theme -->
@@ -267,12 +265,20 @@
                 <div id="operation">
                     <div class="svg-expand pointer">
                         <i class="fa fa-fw fa-expand" title="fullscreen"></i>
-                        <i class="fa fa-fw fa-home" data-toggle="modal" data-target="#add-store" title="add store"></i>
+                        <i class="fa fa-fw fa-home" data-toggle="modal" data-target="#add-store" title="Add Store"></i>
                         <i class="fa fa-fw fa-flag-checkered" data-toggle="modal" data-target="#add-relay" title="Add Relay"></i>
                         <i class="fa fa-fw fa-exchange" data-toggle="modal" data-target="#add-connection" title="Add Connection"></i>
                         <i class="fa fa-fw fa-th-large" data-toggle="modal" data-target="#add-region" title="Add Region"></i>
                         <i class="fa fa-play" data-toggle="modal" data-target="#add-transaction" title="Create Transaction"></i>
                         <i class="fa fa-fw fa-pause hidden" title="pause"></i>
+                        <div class="notation pull-right">
+                            <ul class="list-inline list-unstyled">
+                                <li><span style="background: black"></span>Processing Center</li>
+                                <li><span style="background: blue"></span>Relay Station</li>
+                                <li><span style="background: gray"></span>Store</li>
+                                <li><span style="background: red; border: 2px solid blue;"></span>Inactive</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
                 <div id="cy" class="animated"></div>
@@ -303,13 +309,13 @@
                                                                 <div class="form-group">
                                                                     <label for="ipAddress" class="col-sm-4 control-label">IP Address</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" id="input5" name="input5" required minlength="11" maxlength="13" placeholder="192.168.0.XXX" />
+                                                                        <input type="text" class="form-control" id="ipAddress" name="ipAddress" required minlength="11" maxlength="13" placeholder="192.168.0.XXX" />
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label for="ipConnectedTo" class="col-sm-4 control-label">IP Address To Connect To</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control ipAddress" id="ipConnectedTo" name="ipConnectedTo" required minlength="11" maxlength="13" placeholder="192.168.0.XXX" data-inputmask-regex="(192[.]168[.]0[.]d{1,3})" />
+                                                                        <input type="text" class="form-control" id="ipConnectedTo" name="ipConnectedTo" required minlength="11" maxlength="13" placeholder="192.168.0.XXX" data-inputmask-regex="(192[.]168[.]0[.]d{1,3})" />
                                                                     </div>
                                                                 </div>
                                                                 <div class="modal-footer">
@@ -354,33 +360,33 @@
                                                             </div>
                                                             <div class="form-horizontal">
                                                                 <div class="form-group">
-                                                                    <label for="ipAddress" class="col-sm-4 control-label">Region Name</label>
+                                                                    <label for="region-name" class="col-sm-4 control-label">Region Name</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" name="region-name" required minlength="1" maxlength="15" placeholder="Region Name">
+                                                                        <input type="text" class="form-control" id-="region-name" name="region-name" required minlength="1" maxlength="15" placeholder="Region Name">
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
-                                                                    <label for="ipAddress" class="col-sm-4 control-label">Gateway IP Address</label>
+                                                                    <label for="gateway-ipAddress" class="col-sm-4 control-label">Gateway IP Address</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control ipAddress" name="gateway-ipAddress" required minlength="11" maxlength="13" placeholder="192.168.0.XXX">
+                                                                        <input type="text" class="form-control" id="gateway-ipAddress" name="gateway-ipAddress" required minlength="11" maxlength="13" placeholder="192.168.0.XXX">
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
-                                                                    <label for="ipConnectedTo" class="col-sm-4 control-label">Relay IP Address</label>
+                                                                    <label for="relay-ipaddress" class="col-sm-4 control-label">Relay IP Address</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control ipAddress" id="relay-ipaddress" name="relay-ipaddress" required minlength="11" maxlength="13" placeholder="192.168.0.XXX">
+                                                                        <input type="text" class="form-control" id="relay-ipaddress" name="relay-ipaddress" required minlength="11" maxlength="13" placeholder="192.168.0.XXX">
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
-                                                                    <label for="storeName" class="col-sm-4 control-label">Store Name</label>
+                                                                    <label for="store-name" class="col-sm-4 control-label">Store Name</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" id="store-name" name="store-name" required minlength="1" maxlength="15" placeholder="Store Name">
+                                                                        <input type="text" class="form-control" id="store-name" name="storeName" required minlength="1" maxlength="15" placeholder="Store Name">
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label for="ipConnectedTo" class="col-sm-4 control-label">Store IP Address</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control ipAddress" id="store-ipaddress" name="store-ipaddress" required="" minlength="11" maxlength="13" placeholder="192.168.0.XXX">
+                                                                        <input type="text" class="form-control" id="store-ipaddress" name="store-ipaddress" required="" minlength="11" maxlength="13" placeholder="192.168.0.XXX">
                                                                     </div>
                                                                 </div>
                                                                 <div class="modal-footer">
@@ -433,13 +439,13 @@
                                                                 <div class="form-group">
                                                                     <label for="ipAddress" class="col-sm-4 control-label">IP Address</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control ipAddress" name="ipAddress" required="" minlength="11" maxlength="13" placeholder="192.168.0.XXX">
+                                                                        <input type="text" class="form-control" name="ipAddress" required="" minlength="11" maxlength="13" placeholder="192.168.0.XXX">
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label for="ipConnectedTo" class="col-sm-4 control-label">Relay To Connect</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control ipAddress" id="ipConnectedTo" name="ipConnectedTo" required="" minlength="11" maxlength="13" placeholder="192.168.0.XXX">
+                                                                        <input type="text" class="form-control" id="ipConnectedTo" name="ipConnectedTo" required="" minlength="11" maxlength="13" placeholder="192.168.0.XXX">
                                                                     </div>
                                                                 </div>
                                                                 <div class="modal-footer">
@@ -486,13 +492,13 @@
                                                                 <div class="form-group">
                                                                     <label for="ipOne" class="col-sm-4 control-label">IP Address One</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control ipAddress" name="ipOne" required minlength="13" maxlength="15" placeholder="192.168.0.XXX">
+                                                                        <input type="text" class="form-control" name="ipOne" required minlength="13" maxlength="15" placeholder="192.168.0.XXX">
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label for="ipTwo" class="col-sm-4 control-label">IP Address Two</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control ipAddress" id="ipTwo" name="ipTwo" required minlength="13" maxlength="15" placeholder="192.168.0.XXX">
+                                                                        <input type="text" class="form-control" id="ipTwo" name="ipTwo" required minlength="13" maxlength="15" placeholder="192.168.0.XXX">
                                                                     </div>
                                                                 </div>
                                                                 <div class="modal-footer">
@@ -708,14 +714,13 @@
     <!-- Switch -->
     <script src="~/assets/plugins/switchery/switchery.min.js"></script>
     <!--Load these page level functions-->
-    <script>
-        $(document).ready(function () {
-        });
-    </script>
     <!-- Cytoscape-->
     <script>
         const nodes = @Html.Raw(Json.Encode(ViewData["Nodes"]));
         const edges = @Html.Raw(Json.Encode(ViewData["Links"]));
+        console.log("nodes: ", nodes);
+        console.log("edges: ", edges);
+
         var data = [];
         var cy = cytoscape({
             container: document.getElementById('cy'), // container to render in
@@ -725,8 +730,6 @@
             layout: {
                 name: 'cose-bilkent',
                 animate: false,
-                idealEdgeLength: '100',
-
             },
 
             style: [ // the stylesheet for the graph
@@ -748,20 +751,39 @@
                     style: {
                         'width': 3,
                         'label': 'data(weight)',
-                        'line-color': 'grey',
-                        'opacity': '0.8'
+                        'line-color': 'gray',
                     }
                 },
                 {
-                    selector: ':selected',
+                    selector: ':parent',
                     style: {
-                        'background-color': 'black',
-                        'line-color': 'black',
-                        'target-arrow-color': 'black',
-                        'source-arrow-color': 'black',
-                        'opacity': 1
+                        'label': ' ',
+                        'background-opacity': 0.333
                     }
                 },
+                {
+                    selector: 'node:selected',
+                    style: {
+                        'border-color': 'blue',
+                        'background-color': 'red',
+                        'width': '25px',
+                        'height': '25px',
+                        'opacity': '1'
+                    }
+                },
+                {
+                    selector: 'edge:selected',
+                    style: {
+                        'border-color': 'red',
+                        'background-color': 'red',
+                        'line-color': 'red',
+                        'target-arrow-color': 'red',
+                        'source-arrow-color': 'red',
+                        'width': '5px',
+                        'height': '5px',
+                        'opacity': '1'
+                    }
+                }
             ],
             zoom: 1,
             pan: { x: 0, y: 0 },
@@ -770,45 +792,45 @@
             wheelSensitivity: 0.2
         });
 
-        // Given two nodes this will start the round trip animation
-        function animPath(startNode, endNode, isReturning) {
-            var aStar = cy.elements().aStar({ root: startNode, goal: endNode });
-            var path = Object.values(aStar.path)
-            var start = path.shift();
-            anim(start, path, isReturning);
+        // Convert nodes&edges
+        function convertElements() {
+            let temp = [];
+            let arr;
+            for (var i = 0; i < nodes.length; i++) {
+                temp.push(nodes[i].region);
+                if (nodes[i].group == 0) {  // Processing center
+                    data.push({ group: 'nodes', data: { id: nodes[i].id, color: 'black', shape: 'barrel', baz: '30' } });
+                } else if (nodes[i].group == 1) {   // Store
+                    data.push({ group: 'nodes', data: { id: nodes[i].id, color: 'gray', shape: 'ellipse', baz: '10', parent: nodes[i].region } });
+                } else if (nodes[i].group == 2) {   // Relay
+                    data.push({ group: 'nodes', data: { id: nodes[i].id, color: 'blue', shape: 'triangle ', baz: '20', parent: nodes[i].region } });
+                }
+            }
+            arr = unique(temp);
+            arr.sort();
+            for (var i = 0; i < arr.length; i++) { // Region
+                data.push({ group: 'nodes', data: { id: arr[i], color: 'white', shape: 'rectangle', baz: '0' } });
+            }
+
+            for (var i = 0; i < edges.length; i++) {
+                data.push({ group: 'edges', data: { source: edges[i].source, target: edges[i].target, weight: edges[i].distance } });
+            }
+            console.log("arr: ", arr);
+            console.log("data: ", data);
+            return data;
         }
 
-        // Animate a single node then call to the next node if neccessary
-        function anim(node, nextNodes, isReturning) {
-            var originalColor = node.data()["color"];
-
-            node.animate({
-                style: {
-                    'background-color': 'black'
+        function unique(arr) {
+            var result = [];
+            var hash = {};
+            for (var i = 0; i < arr.length; i++) {
+                var key = (typeof arr[i]) + arr[i];
+                if (!hash[key]) {
+                    result.push(arr[i]);
+                    hash[key] = true;
                 }
-            }, {
-                duration: 500,
-                complete: function () {
-                    //console.log("First done");
-                }
-            })
-
-            .animate({
-                style: {
-                    'background-color': originalColor
-                }
-            }, {
-                duration: 500,
-                complete: function () {
-                    var next = nextNodes.shift();
-                    if (typeof (next) == "number" && !isReturning)
-                        process();
-                    else if (typeof (next) == "number" && isReturning)
-                        return;
-                    else
-                        anim(next, nextNodes, isReturning);
-                }
-            });
+            }
+            return result;
         }
 
         // Kicks off an animation when the page is loaded
@@ -843,9 +865,9 @@
         //    };
         //});
 
-        //testAnimPath();
+        testAnimPath();
         function testAnimPath() {
-            var n = getNode("192.168.0.201");
+            var n = getNode("192.168.0.119");
             assembleAnim(n);
         }
 
@@ -861,9 +883,10 @@
             for (var i = 0; i < path.length; i++) {
                 var animation = path[i].animation({
                     style: {
-                        'background-color': 'black',
-                        'width': 25,
-                        'height': 25
+                        'background-color': 'green',
+                        'line-color': 'green',
+                        'width': '10px',
+                        'height': '10px'
                     },
                     duration: 1000
                 })
@@ -910,16 +933,27 @@
         // Calculate the round trip path from start to end
         function getPath(startNode, endNode) {
             var aStar = cy.elements().aStar({ root: startNode, goal: endNode });
-            var pathToTruncate = Object.values(aStar.path)
+            var pathToTruncate = Object.values(aStar.path);
             var truncatedPath = truncatePath(pathToTruncate);
+            truncatedPath = reorderPath(truncatedPath);
+
+            // The return path is simply the reverse of the original path with the first element removed
+            // so the processing center doesn't animate twice.
             var returnPath = truncatedPath.slice(0);
             returnPath.reverse();
+            returnPath.shift();
 
-            //TODO: Seems weird that we have to shift twice to avoid animating the processing center twice
-            returnPath.shift();
-            returnPath.shift();
-            
             return truncatedPath.concat(returnPath);
+        }
+
+        // For some reason the cytoscape aStar path has edges after nodes, this should properly order things
+        function reorderPath(path) {
+            for (var i = 1; i < path.length; i += 2) {
+                var temp = path[i];
+                path[i] = path[i + 1];
+                path[i + 1] = temp;
+            }
+            return path;
         }
 
         // The aStar cytoscape function returns a strange object, this extracts the path of nodes
@@ -934,23 +968,6 @@
             }
 
             return truncated;
-        }
-
-        function convertElements() {
-            for (var i = 0; i < nodes.length; i++) {
-                if (nodes[i].group == 0) {  //processing center
-                    data.push({ group: 'nodes', data: { id: nodes[i].id, color: 'red', shape: 'barrel', baz: '30' }});
-                } else if (nodes[i].group == 1) {   //store
-                    data.push({ group: 'nodes', data: { id: nodes[i].id, color: 'green', shape: 'ellipse', baz: '10' }});
-                } else if (nodes[i].group == 2) {   //relay
-                    data.push({ group: 'nodes', data: { id: nodes[i].id, color: 'blue', shape: 'triangle ', baz: '20' }});
-                }
-            }
-
-            for (var i = 0; i < edges.length; i++) {
-                data.push({ group: 'edges', data: { source: edges[i].source, target: edges[i].target, weight: edges[i].distance }});
-            }
-            return data;
         }
     </script>
 </body>

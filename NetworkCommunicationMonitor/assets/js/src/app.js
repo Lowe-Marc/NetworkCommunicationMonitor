@@ -66,7 +66,6 @@ var app = function() {
         $("#input4").mask("99-9999999");
         $("#input5").mask("999-99-9999");
         $("#input6").mask("a*-999-a999");
-        $(".ipAddress").mask('(999) 999-9999');
     }
 
     var weather = function() {
