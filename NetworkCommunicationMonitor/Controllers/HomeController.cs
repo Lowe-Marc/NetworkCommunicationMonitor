@@ -10,6 +10,8 @@ namespace NetworkCommunicationMonitor.Controllers
 {
     public class HomeController : Controller
     {
+        private string startLocation;
+
         public ActionResult Index()
         {
             Session["user"] = null;
@@ -26,23 +28,11 @@ namespace NetworkCommunicationMonitor.Controllers
         {
             if (Session["username"] == null)
                 return RedirectToAction("Index","Home");
-            ViewData["NumAccounts"] = NetworkCommunicationMonitor.Models.Account.getNumAccounts();
-            ViewData["NumCards"] = NetworkCommunicationMonitor.Models.Card.getNumCards();
-            ViewData["NumStores"] = NetworkCommunicationMonitor.Models.Store.getNumStores();
-            ViewData["NumRelays"] = NetworkCommunicationMonitor.Models.Relay.getNumRelays();
-            ViewData["NumTransactions"] = NetworkCommunicationMonitor.Models.Transaction.getNumTransactions();
+            setViewDataDefaults();
 
-            // Probably a better way to do this, this is just to get a proof of concept
-            List<Object> relays = Relay.getRelaysForMap();
-            List<Object> stores = Models.Store.getStoresForMap();
-            foreach (Models.Store store in stores)
-            {
-                relays.Add(store);
-            }
-            List<Connection> connections = Connection.getConnectionsForMap();
+            setNetworkData();
 
-            ViewData["Nodes"] = relays;
-            ViewData["Links"] = connections;
+            ViewData["TransactionStart"] = startLocation;
 
             return View();
         }
@@ -51,11 +41,8 @@ namespace NetworkCommunicationMonitor.Controllers
         {
             if (Session["username"] == null)
                 return RedirectToAction("Index", "Home");
-            ViewData["NumAccounts"] = NetworkCommunicationMonitor.Models.Account.getNumAccounts();
-            ViewData["NumCards"] = NetworkCommunicationMonitor.Models.Card.getNumCards();
-            ViewData["NumStores"] = NetworkCommunicationMonitor.Models.Store.getNumStores();
-            ViewData["NumRelays"] = NetworkCommunicationMonitor.Models.Relay.getNumRelays();
-            ViewData["NumTransactions"] = NetworkCommunicationMonitor.Models.Transaction.getNumTransactions();
+            setViewDataDefaults();
+
             ViewData["Accounts"] = NetworkCommunicationMonitor.Models.Account.getAccounts();
             return View();
         }
@@ -64,11 +51,8 @@ namespace NetworkCommunicationMonitor.Controllers
         {
             if (Session["username"] == null)
                 return RedirectToAction("Index", "Home");
-            ViewData["NumAccounts"] = NetworkCommunicationMonitor.Models.Account.getNumAccounts();
-            ViewData["NumCards"] = NetworkCommunicationMonitor.Models.Card.getNumCards();
-            ViewData["NumStores"] = NetworkCommunicationMonitor.Models.Store.getNumStores();
-            ViewData["NumRelays"] = NetworkCommunicationMonitor.Models.Relay.getNumRelays();
-            ViewData["NumTransactions"] = NetworkCommunicationMonitor.Models.Transaction.getNumTransactions();
+            setViewDataDefaults();
+
             ViewData["Cards"] = NetworkCommunicationMonitor.Models.Card.getCards();
             ViewData["Accounts"] = NetworkCommunicationMonitor.Models.Account.getAccounts();
             return View();
@@ -78,11 +62,8 @@ namespace NetworkCommunicationMonitor.Controllers
         {
             if (Session["username"] == null)
                 return RedirectToAction("Index", "Home");
-            ViewData["NumAccounts"] = NetworkCommunicationMonitor.Models.Account.getNumAccounts();
-            ViewData["NumCards"] = NetworkCommunicationMonitor.Models.Card.getNumCards();
-            ViewData["NumStores"] = NetworkCommunicationMonitor.Models.Store.getNumStores();
-            ViewData["NumRelays"] = NetworkCommunicationMonitor.Models.Relay.getNumRelays();
-            ViewData["NumTransactions"] = NetworkCommunicationMonitor.Models.Transaction.getNumTransactions();
+            setViewDataDefaults();
+
             ViewData["Relays"] = NetworkCommunicationMonitor.Models.Relay.getRelays();
             return View();
         }
@@ -91,11 +72,8 @@ namespace NetworkCommunicationMonitor.Controllers
         {
             if (Session["username"] == null)
                 return RedirectToAction("Index", "Home");
-            ViewData["NumAccounts"] = NetworkCommunicationMonitor.Models.Account.getNumAccounts();
-            ViewData["NumCards"] = NetworkCommunicationMonitor.Models.Card.getNumCards();
-            ViewData["NumStores"] = NetworkCommunicationMonitor.Models.Store.getNumStores();
-            ViewData["NumRelays"] = NetworkCommunicationMonitor.Models.Relay.getNumRelays();
-            ViewData["NumTransactions"] = NetworkCommunicationMonitor.Models.Transaction.getNumTransactions();
+            setViewDataDefaults();
+
             ViewData["Transactions"] = NetworkCommunicationMonitor.Models.Transaction.getTransactions();
             return View();
         }
@@ -104,11 +82,8 @@ namespace NetworkCommunicationMonitor.Controllers
         {
             if (Session["username"] == null)
                 return RedirectToAction("Index", "Home");
-            ViewData["NumAccounts"] = NetworkCommunicationMonitor.Models.Account.getNumAccounts();
-            ViewData["NumCards"] = NetworkCommunicationMonitor.Models.Card.getNumCards();
-            ViewData["NumStores"] = NetworkCommunicationMonitor.Models.Store.getNumStores();
-            ViewData["NumRelays"] = NetworkCommunicationMonitor.Models.Relay.getNumRelays();
-            ViewData["NumTransactions"] = NetworkCommunicationMonitor.Models.Transaction.getNumTransactions();
+            setViewDataDefaults();
+
             ViewData["Stores"] = NetworkCommunicationMonitor.Models.Store.getStores();
             return View();
         }
@@ -150,11 +125,7 @@ namespace NetworkCommunicationMonitor.Controllers
 
         public ActionResult AddAccount(FormCollection collection)
         {
-            ViewData["NumAccounts"] = NetworkCommunicationMonitor.Models.Account.getNumAccounts();
-            ViewData["NumCards"] = NetworkCommunicationMonitor.Models.Card.getNumCards();
-            ViewData["NumStores"] = NetworkCommunicationMonitor.Models.Store.getNumStores();
-            ViewData["NumRelays"] = NetworkCommunicationMonitor.Models.Relay.getNumRelays();
-            ViewData["NumTransactions"] = NetworkCommunicationMonitor.Models.Transaction.getNumTransactions();
+            setViewDataDefaults();
 
             string firstName = Convert.ToString(collection["firstname"]);
             string lastName = Convert.ToString(collection["lastname"]);
@@ -188,11 +159,7 @@ namespace NetworkCommunicationMonitor.Controllers
 
         public ActionResult DeleteAccount(FormCollection collection)
         {
-            ViewData["NumAccounts"] = NetworkCommunicationMonitor.Models.Account.getNumAccounts();
-            ViewData["NumCards"] = NetworkCommunicationMonitor.Models.Card.getNumCards();
-            ViewData["NumStores"] = NetworkCommunicationMonitor.Models.Store.getNumStores();
-            ViewData["NumRelays"] = NetworkCommunicationMonitor.Models.Relay.getNumRelays();
-            ViewData["NumTransactions"] = NetworkCommunicationMonitor.Models.Transaction.getNumTransactions();
+            setViewDataDefaults();
 
             NetworkCommunicationMonitor.Models.Account.deleteAccount(Convert.ToInt32(collection["accountID"]));
 
@@ -201,11 +168,7 @@ namespace NetworkCommunicationMonitor.Controllers
 
         public ActionResult EditAccount(FormCollection collection)
         {
-            ViewData["NumAccounts"] = NetworkCommunicationMonitor.Models.Account.getNumAccounts();
-            ViewData["NumCards"] = NetworkCommunicationMonitor.Models.Card.getNumCards();
-            ViewData["NumStores"] = NetworkCommunicationMonitor.Models.Store.getNumStores();
-            ViewData["NumRelays"] = NetworkCommunicationMonitor.Models.Relay.getNumRelays();
-            ViewData["NumTransactions"] = NetworkCommunicationMonitor.Models.Transaction.getNumTransactions();
+            setViewDataDefaults();
 
             int accountID = Convert.ToInt32(collection["accountID"]);
             string firstName = Convert.ToString(collection["firstName"]);
@@ -219,11 +182,7 @@ namespace NetworkCommunicationMonitor.Controllers
 
         public ActionResult AddCard(FormCollection collection)
         {
-            ViewData["NumAccounts"] = NetworkCommunicationMonitor.Models.Account.getNumAccounts();
-            ViewData["NumCards"] = NetworkCommunicationMonitor.Models.Card.getNumCards();
-            ViewData["NumStores"] = NetworkCommunicationMonitor.Models.Store.getNumStores();
-            ViewData["NumRelays"] = NetworkCommunicationMonitor.Models.Relay.getNumRelays();
-            ViewData["NumTransactions"] = NetworkCommunicationMonitor.Models.Transaction.getNumTransactions();
+            setViewDataDefaults();
 
             string cardNumber = Convert.ToString(collection["number"]);
             cardNumber = cardNumber.Remove(14, 1);
@@ -250,11 +209,7 @@ namespace NetworkCommunicationMonitor.Controllers
 
         public ActionResult DeleteCard(FormCollection collection)
         {
-            ViewData["NumAccounts"] = NetworkCommunicationMonitor.Models.Account.getNumAccounts();
-            ViewData["NumCards"] = NetworkCommunicationMonitor.Models.Card.getNumCards();
-            ViewData["NumStores"] = NetworkCommunicationMonitor.Models.Store.getNumStores();
-            ViewData["NumRelays"] = NetworkCommunicationMonitor.Models.Relay.getNumRelays();
-            ViewData["NumTransactions"] = NetworkCommunicationMonitor.Models.Transaction.getNumTransactions();
+            setViewDataDefaults();
 
             NetworkCommunicationMonitor.Models.Card.deleteCard(Convert.ToString(collection["delete_cardNumber"]));
 
@@ -263,11 +218,7 @@ namespace NetworkCommunicationMonitor.Controllers
 
         public ActionResult EditCard(FormCollection collection)
         {
-            ViewData["NumAccounts"] = NetworkCommunicationMonitor.Models.Account.getNumAccounts();
-            ViewData["NumCards"] = NetworkCommunicationMonitor.Models.Card.getNumCards();
-            ViewData["NumStores"] = NetworkCommunicationMonitor.Models.Store.getNumStores();
-            ViewData["NumRelays"] = NetworkCommunicationMonitor.Models.Relay.getNumRelays();
-            ViewData["NumTransactions"] = NetworkCommunicationMonitor.Models.Transaction.getNumTransactions();
+            setViewDataDefaults();
 
             string firstName = Convert.ToString(collection["firstName"]);
             string lastName = Convert.ToString(collection["lastName"]);
@@ -280,11 +231,7 @@ namespace NetworkCommunicationMonitor.Controllers
 
         public ActionResult AddRelay(FormCollection collection)
         {
-            ViewData["NumAccounts"] = NetworkCommunicationMonitor.Models.Account.getNumAccounts();
-            ViewData["NumCards"] = NetworkCommunicationMonitor.Models.Card.getNumCards();
-            ViewData["NumStores"] = NetworkCommunicationMonitor.Models.Store.getNumStores();
-            ViewData["NumRelays"] = NetworkCommunicationMonitor.Models.Relay.getNumRelays();
-            ViewData["NumTransactions"] = NetworkCommunicationMonitor.Models.Transaction.getNumTransactions();
+            setViewDataDefaults();
 
             string ipAddress = Convert.ToString(collection["ipAddress"]);
             string ipConnectedTo = Convert.ToString(collection["ipConnectedTo"]);
@@ -298,11 +245,7 @@ namespace NetworkCommunicationMonitor.Controllers
 
         public ActionResult AddRegion(FormCollection collection)
         {
-            ViewData["NumAccounts"] = NetworkCommunicationMonitor.Models.Account.getNumAccounts();
-            ViewData["NumCards"] = NetworkCommunicationMonitor.Models.Card.getNumCards();
-            ViewData["NumStores"] = NetworkCommunicationMonitor.Models.Store.getNumStores();
-            ViewData["NumRelays"] = NetworkCommunicationMonitor.Models.Relay.getNumRelays();
-            ViewData["NumTransactions"] = NetworkCommunicationMonitor.Models.Transaction.getNumTransactions();
+            setViewDataDefaults();
 
             string regionName = Convert.ToString(collection["region-name"]);
             string gatewayIPAddress = Convert.ToString(collection["gateway-ipAddress"]);
@@ -317,11 +260,7 @@ namespace NetworkCommunicationMonitor.Controllers
 
         public ActionResult AddStore(FormCollection collection)
         {
-            ViewData["NumAccounts"] = NetworkCommunicationMonitor.Models.Account.getNumAccounts();
-            ViewData["NumCards"] = NetworkCommunicationMonitor.Models.Card.getNumCards();
-            ViewData["NumStores"] = NetworkCommunicationMonitor.Models.Store.getNumStores();
-            ViewData["NumRelays"] = NetworkCommunicationMonitor.Models.Relay.getNumRelays();
-            ViewData["NumTransactions"] = NetworkCommunicationMonitor.Models.Transaction.getNumTransactions();
+            setViewDataDefaults();
 
             string storeName = Convert.ToString(collection["storeName"]);
             string ipAddress = Convert.ToString(collection["ipAddress"]);
@@ -334,11 +273,7 @@ namespace NetworkCommunicationMonitor.Controllers
 
         public ActionResult AddConnection(FormCollection collection)
         {
-            ViewData["NumAccounts"] = NetworkCommunicationMonitor.Models.Account.getNumAccounts();
-            ViewData["NumCards"] = NetworkCommunicationMonitor.Models.Card.getNumCards();
-            ViewData["NumStores"] = NetworkCommunicationMonitor.Models.Store.getNumStores();
-            ViewData["NumRelays"] = NetworkCommunicationMonitor.Models.Relay.getNumRelays();
-            ViewData["NumTransactions"] = NetworkCommunicationMonitor.Models.Transaction.getNumTransactions();
+            setViewDataDefaults();
 
             string ipOne = Convert.ToString(collection["ipOne"]);
             string ipTwo = Convert.ToString(collection["ipTwo"]);
@@ -346,6 +281,54 @@ namespace NetworkCommunicationMonitor.Controllers
             NetworkCommunicationMonitor.Models.Connection.addConnection(ipOne, ipTwo);
 
             return RedirectToAction("Homepage", "Home");
+        }
+
+        public ActionResult AddTransaction(FormCollection collection)
+        {
+            setViewDataDefaults();
+            setNetworkData();
+
+            string storeIP = Convert.ToString(collection["ipAddress"]);
+            string cardNumber = Convert.ToString(collection["cardNumber"]);
+            DateTime transactionDate = Convert.ToDateTime(collection["transactionDate"]);
+            double transactionAmount = Convert.ToDouble(collection["transactionAmount"]);
+            string transactionCategory = Convert.ToString(collection["transactionCategory"]);
+            
+                        if (storeIP == null)
+            {
+                                return RedirectToAction("Homepage", "Home");
+                        }
+            else
+            {
+                NetworkCommunicationMonitor.Models.Transaction.addTransaction(cardNumber, storeIP, transactionDate, transactionAmount, transactionCategory);
+            }
+
+            ViewData["TransactionStart"] = storeIP;
+
+            return View("Homepage");
+        }
+
+        private void setNetworkData()
+        {
+            List<Object> relays = Relay.getRelaysForMap();
+            List<Object> stores = Models.Store.getStoresForMap();
+            foreach (Models.Store store in stores)
+            {
+                relays.Add(store);
+            }
+            List<Connection> connections = Connection.getConnectionsForMap();
+
+            ViewData["Nodes"] = relays;
+            ViewData["Links"] = connections;
+        }
+
+        private void setViewDataDefaults()
+        {
+            ViewData["NumAccounts"] = NetworkCommunicationMonitor.Models.Account.getNumAccounts();
+            ViewData["NumCards"] = NetworkCommunicationMonitor.Models.Card.getNumCards();
+            ViewData["NumStores"] = NetworkCommunicationMonitor.Models.Store.getNumStores();
+            ViewData["NumRelays"] = NetworkCommunicationMonitor.Models.Relay.getNumRelays();
+            ViewData["NumTransactions"] = NetworkCommunicationMonitor.Models.Transaction.getNumTransactions();
         }
     }
 }

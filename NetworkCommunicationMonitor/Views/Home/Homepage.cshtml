@@ -24,8 +24,6 @@
     <link rel="stylesheet" href="~/assets/css/animate.css">
     <!-- Daterange Picker -->
     <link rel="stylesheet" href="~/assets/plugins/daterangepicker/daterangepicker-bs3.css">
-    <!-- Calendar demo -->
-    <link rel="stylesheet" href="~/assets/css/clndr.css">
     <!-- Switchery -->
     <link rel="stylesheet" href="~/assets/plugins/switchery/switchery.min.css">
     <!-- Custom styles for this theme -->
@@ -267,12 +265,20 @@
                 <div id="operation">
                     <div class="svg-expand pointer">
                         <i class="fa fa-fw fa-expand" title="fullscreen"></i>
-                        <i class="fa fa-fw fa-home" data-toggle="modal" data-target="#add-store" title="add store"></i>
-                        <i class="fa fa-fw fa-flag-checkered" data-toggle="modal" data-target="#add-relay" title="add relay"></i>
-                        <i class="fa fa-fw fa-exchange" data-toggle="modal" data-target="#add-connection" title="add connection"></i>
-                        <i class="fa fa-fw fa-th-large" data-toggle="modal" data-target="#add-region" title="add region"></i>
-                        <i class="fa fa-play" title="play"></i>
+                        <i class="fa fa-fw fa-home" data-toggle="modal" data-target="#add-store" title="Add Store"></i>
+                        <i class="fa fa-fw fa-flag-checkered" data-toggle="modal" data-target="#add-relay" title="Add Relay"></i>
+                        <i class="fa fa-fw fa-exchange" data-toggle="modal" data-target="#add-connection" title="Add Connection"></i>
+                        <i class="fa fa-fw fa-th-large" data-toggle="modal" data-target="#add-region" title="Add Region"></i>
+                        <i class="fa fa-play" data-toggle="modal" data-target="#add-transaction" title="Create Transaction"></i>
                         <i class="fa fa-fw fa-pause hidden" title="pause"></i>
+                        <div class="notation pull-right">
+                            <ul class="list-inline list-unstyled">
+                                <li><span style="background: black"></span>Processing Center</li>
+                                <li><span style="background: blue"></span>Relay Station</li>
+                                <li><span style="background: gray"></span>Store</li>
+                                <li><span style="background: red; border: 2px solid blue;"></span>Inactive</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
                 <div id="cy" class="animated"></div>
@@ -309,7 +315,7 @@
                                                                 <div class="form-group">
                                                                     <label for="ipConnectedTo" class="col-sm-4 control-label">IP Address To Connect To</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" id="ipConnectedTo" name="ipConnectedTo" required minlength="11" maxlength="13" placeholder="192.168.0.XXX" />
+                                                                        <input type="text" class="form-control" id="ipConnectedTo" name="ipConnectedTo" required minlength="11" maxlength="13" placeholder="192.168.0.XXX" data-inputmask-regex="(192[.]168[.]0[.]d{1,3})" />
                                                                     </div>
                                                                 </div>
                                                                 <div class="modal-footer">
@@ -354,25 +360,25 @@
                                                             </div>
                                                             <div class="form-horizontal">
                                                                 <div class="form-group">
-                                                                    <label for="ipAddress" class="col-sm-4 control-label">Region Name</label>
+                                                                    <label for="region-name" class="col-sm-4 control-label">Region Name</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" name="region-name" required minlength="1" maxlength="15" placeholder="Region Name">
+                                                                        <input type="text" class="form-control" id-="region-name" name="region-name" required minlength="1" maxlength="15" placeholder="Region Name">
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
-                                                                    <label for="ipAddress" class="col-sm-4 control-label">Gateway IP Address</label>
+                                                                    <label for="gateway-ipAddress" class="col-sm-4 control-label">Gateway IP Address</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control ipAddress" name="gateway-ipAddress" required minlength="11" maxlength="13" placeholder="192.168.0.XXX">
+                                                                        <input type="text" class="form-control" id="gateway-ipAddress" name="gateway-ipAddress" required minlength="11" maxlength="13" placeholder="192.168.0.XXX">
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
-                                                                    <label for="ipConnectedTo" class="col-sm-4 control-label">Relay IP Address</label>
+                                                                    <label for="relay-ipaddress" class="col-sm-4 control-label">Relay IP Address</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control ipAddress" id="relay-ipaddress" name="relay-ipaddress" required minlength="11" maxlength="13" placeholder="192.168.0.XXX">
+                                                                        <input type="text" class="form-control" id="relay-ipaddress" name="relay-ipaddress" required minlength="11" maxlength="13" placeholder="192.168.0.XXX">
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
-                                                                    <label for="storeName" class="col-sm-4 control-label">Store Name</label>
+                                                                    <label for="store-name" class="col-sm-4 control-label">Store Name</label>
                                                                     <div class="col-sm-6">
                                                                         <input type="text" class="form-control" id="store-name" name="storeName" required minlength="1" maxlength="15" placeholder="Store Name">
                                                                     </div>
@@ -380,7 +386,7 @@
                                                                 <div class="form-group">
                                                                     <label for="ipConnectedTo" class="col-sm-4 control-label">Store IP Address</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control ipAddress" id="store-ipaddress" name="store-ipaddress" required="" minlength="11" maxlength="13" placeholder="192.168.0.XXX">
+                                                                        <input type="text" class="form-control" id="store-ipaddress" name="store-ipaddress" required="" minlength="11" maxlength="13" placeholder="192.168.0.XXX">
                                                                     </div>
                                                                 </div>
                                                                 <div class="modal-footer">
@@ -433,13 +439,13 @@
                                                                 <div class="form-group">
                                                                     <label for="ipAddress" class="col-sm-4 control-label">IP Address</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control ipAddress" name="ipAddress" required="" minlength="11" maxlength="13" placeholder="192.168.0.XXX">
+                                                                        <input type="text" class="form-control" name="ipAddress" required="" minlength="11" maxlength="13" placeholder="192.168.0.XXX">
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label for="ipConnectedTo" class="col-sm-4 control-label">Relay To Connect</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control ipAddress" id="ipConnectedTo" name="ipConnectedTo" required="" minlength="11" maxlength="13" placeholder="192.168.0.XXX">
+                                                                        <input type="text" class="form-control" id="ipConnectedTo" name="ipConnectedTo" required="" minlength="11" maxlength="13" placeholder="192.168.0.XXX">
                                                                     </div>
                                                                 </div>
                                                                 <div class="modal-footer">
@@ -486,13 +492,13 @@
                                                                 <div class="form-group">
                                                                     <label for="ipOne" class="col-sm-4 control-label">IP Address One</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control ipAddress" name="ipOne" required minlength="13" maxlength="15" placeholder="192.168.0.XXX">
+                                                                        <input type="text" class="form-control" name="ipOne" required minlength="13" maxlength="15" placeholder="192.168.0.XXX">
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label for="ipTwo" class="col-sm-4 control-label">IP Address Two</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control ipAddress" id="ipTwo" name="ipTwo" required minlength="13" maxlength="15" placeholder="192.168.0.XXX">
+                                                                        <input type="text" class="form-control" id="ipTwo" name="ipTwo" required minlength="13" maxlength="15" placeholder="192.168.0.XXX">
                                                                     </div>
                                                                 </div>
                                                                 <div class="modal-footer">
@@ -512,6 +518,80 @@
                     </div>
                 }
                 <!--add connection end-->
+                 <!-- add transaction start-->
+                @using (Html.BeginForm("AddTransaction", "Home", FormMethod.Post))
+                {
+                    <div class="modal fade" id="add-transaction" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h1 class="modal-title" id="myModalLabel"><strong> Create a Transaction</strong></h1>
+                                </div>
+                                <div class="modal-body">
+                                    <!--main content start-->
+                                    <section class="main-content-wrapper" style="padding:0">
+                                        <section id="main-content" class="animated fadeInUp">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-body">
+                                                            <div class="form-group">
+                                                                <div class="col-sm-12">
+                                                                    <h2 style="text-align:center; margin: -10px 0 15px 0;">Transaction Info</h2>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-horizontal">
+                                                                <div class="form-group">
+                                                                    <label for="ipAddress" class="col-sm-4 control-label">IP Address of Store</label>
+                                                                    <div class="col-sm-6">
+                                                                        <input type="text" class="form-control" name="ipAddress" required="" minlength="7" maxlength="15" placeholder="192.168.0.XXX">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="cardNumber" class="col-sm-4 control-label">Card number</label>
+                                                                    <div class="col-sm-7">
+                                                                        <input type="text" class="form-control" name="cardNumber" placeholder="Card number" maxlength="19" onkeyup="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,'')" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="transactionAmount" class="col-sm-4 control-label">Transaction Amount</label>
+                                                                    <div class="col-sm-6">
+                                                                        <input type="text" class="form-control" id="transactionAmount" name="transactionAmount" required="" minlength="1" maxlength="9" placeholder="$0.00">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="transactionDate" class="col-sm-4 control-label">Transaction Date</label>
+                                                                    <div class="col-sm-6">
+                                                                        <input type="text" class="form-control" id="transactionDate" name="transactionDate" required="" minlength="10" maxlength="10" placeholder="MM/DD/YYYY">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="transactionCategory" class="col-sm-4 control-label">Transaction Category</label>
+                                                                    <div class="col-sm-6">
+                                                                        <select class="form-control" style="padding:0;" id="transactionCategory" name="transactionCategory">
+                                                                            <option>Credit</option>
+                                                                            <option>Debit</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <input type="submit" class="btn btn-success btn-block" value="Add To Network" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </section>
+                                    </section>
+                                    <!--main content end-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            <!-- add transaction end-->
             </div>
         </section>
         <!--main content end-->
@@ -634,16 +714,13 @@
     <!-- Switch -->
     <script src="~/assets/plugins/switchery/switchery.min.js"></script>
     <!--Load these page level functions-->
-    <script>
-        $(document).ready(function () {
-        });
-    </script>
     <!-- Cytoscape-->
     <script>
         const nodes = @Html.Raw(Json.Encode(ViewData["Nodes"]));
         const edges = @Html.Raw(Json.Encode(ViewData["Links"]));
         console.log("nodes: ", nodes);
         console.log("edges: ", edges);
+
         var data = [];
         var cy = cytoscape({
             container: document.getElementById('cy'), // container to render in
@@ -653,8 +730,6 @@
             layout: {
                 name: 'cose-bilkent',
                 animate: false,
-                idealEdgeLength: '100',
-
             },
 
             style: [ // the stylesheet for the graph
@@ -676,20 +751,39 @@
                     style: {
                         'width': 3,
                         'label': 'data(weight)',
-                        'line-color': 'grey',
-                        'opacity': '0.8'
+                        'line-color': 'gray',
                     }
                 },
                 {
-                    selector: ':selected',
+                    selector: ':parent',
                     style: {
-                        'background-color': 'black',
-                        'line-color': 'black',
-                        'target-arrow-color': 'black',
-                        'source-arrow-color': 'black',
-                        'opacity': 1
+                        'label': ' ',
+                        'background-opacity': 0.333
                     }
                 },
+                {
+                    selector: 'node:selected',
+                    style: {
+                        'border-color': 'blue',
+                        'background-color': 'red',
+                        'width': '25px',
+                        'height': '25px',
+                        'opacity': '1'
+                    }
+                },
+                {
+                    selector: 'edge:selected',
+                    style: {
+                        'border-color': 'red',
+                        'background-color': 'red',
+                        'line-color': 'red',
+                        'target-arrow-color': 'red',
+                        'source-arrow-color': 'red',
+                        'width': '5px',
+                        'height': '5px',
+                        'opacity': '1'
+                    }
+                }
             ],
             zoom: 1,
             pan: { x: 0, y: 0 },
@@ -698,21 +792,225 @@
             wheelSensitivity: 0.2
         });
 
+        // Convert nodes&edges
         function convertElements() {
+            let temp = [];
+            let arr;
             for (var i = 0; i < nodes.length; i++) {
-                if (nodes[i].group == 0) {  //processing center
-                    data.push({ group: 'nodes', data: { id: nodes[i].id, parent: nodes[i].region, color: 'red', shape: 'barrel', baz: '30' }, position: { x: '100', y: '100'} });
-                } else if (nodes[i].group == 1) {   //store
-                    data.push({ group: 'nodes', data: { id: nodes[i].id, parent: nodes[i].region, color: 'green', shape: 'ellipse', baz: '10' }, position: { x: '100', y: '100' } });
-                } else if (nodes[i].group == 2) {   //relay
-                    data.push({ group: 'nodes', data: { id: nodes[i].id, parent: nodes[i].region, color: 'blue', shape: 'triangle ', baz: '20' }, position: { x: '100', y: '100' } });
+                temp.push(nodes[i].region);
+                if (nodes[i].group == 0) {  // Processing center
+                    data.push({ group: 'nodes', data: { id: nodes[i].id, color: 'black', shape: 'barrel', baz: '30' } });
+                } else if (nodes[i].group == 1) {   // Store
+                    data.push({ group: 'nodes', data: { id: nodes[i].id, color: 'gray', shape: 'ellipse', baz: '10', parent: nodes[i].region } });
+                } else if (nodes[i].group == 2) {   // Relay
+                    data.push({ group: 'nodes', data: { id: nodes[i].id, color: 'blue', shape: 'triangle ', baz: '20', parent: nodes[i].region } });
                 }
+            }
+            arr = unique(temp);
+            arr.sort();
+            for (var i = 0; i < arr.length; i++) { // Region
+                data.push({ group: 'nodes', data: { id: arr[i], color: 'white', shape: 'rectangle', baz: '0' } });
             }
 
             for (var i = 0; i < edges.length; i++) {
-                data.push({ group: 'edges', data: { source: edges[i].source, target: edges[i].target, weight: edges[i].distance }});
+                data.push({ group: 'edges', data: { source: edges[i].source, target: edges[i].target, weight: edges[i].distance } });
             }
+            console.log("arr: ", arr);
+            console.log("data: ", data);
             return data;
+        }
+
+        function unique(arr) {
+            var result = [];
+            var hash = {};
+            for (var i = 0; i < arr.length; i++) {
+                var key = (typeof arr[i]) + arr[i];
+                if (!hash[key]) {
+                    result.push(arr[i]);
+                    hash[key] = true;
+                }
+            }
+            return result;
+        }
+
+        // Given two nodes this will start the round trip animation
+        function animPath(startNode, endNode, isReturning) {
+            var aStar = cy.elements().aStar({ root: startNode, goal: endNode });
+
+            var path = Object.values(aStar.path)
+            var start = path.shift();
+            anim(start, path, isReturning);
+        }
+
+        // Animate a single node then call to the next node if neccessary
+        function anim(node, nextNodes, isReturning) {
+            var originalColor = node.data()["color"];
+
+            node.animate({
+                style: {
+                    'background-color': 'red',
+                    'line-color': 'red',
+                    'width': '10px',
+                    'height': '10px'
+                }
+            }, {
+                duration: 500,
+                complete: function () {
+                    //console.log("First done");
+                }
+            })
+
+            .animate({
+                style: {
+                    'background-color': 'red',
+                    'line-color': 'red',
+                    'width': '10px',
+                    'height': '10px'
+                }
+            }, {
+                duration: 500,
+                complete: function () {
+                    var next = nextNodes.shift();
+                    if (typeof (next) == "number" && !isReturning)
+                        process();
+                    else if (typeof (next) == "number" && isReturning)
+                        return;
+                    else
+                        anim(next, nextNodes, isReturning);
+                }
+            });
+        }
+
+        // Kicks off an animation when the page is loaded
+        var transactionStart = @Html.Raw(Json.Encode(ViewData["TransactionStart"]));
+        if (transactionStart != null) {
+            var processingCenter = getNode("@NetworkCommunicationMonitor.Models.Relay.PROCESSINGCENTERIP");
+            var startNode = getNode(transactionStart);
+            //animPath(startNode, processingCenter, false);
+            assembleAnim(startNode);
+        }
+
+        // Will be used to handle what happens at the processing center
+        function process(hasProcessed) {
+            animPath(processingCenter, startNode, true);
+        }
+
+        //testAnimPath();
+        function testAnimPath() {
+            var n = cy.nodes();
+            animPath(n[0], n[3]);
+        }
+
+        // Simple function to return a node from the list based off the ip
+        function getNode(ipAddress) {
+            var n = cy.nodes();
+            for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i]["ipAddress"] == ipAddress) {
+                    return n[i];
+                }
+            }
+        }
+
+        // This allows you to change the position of nodes at runtime
+        //cy.nodes().positions(function (node, i) {
+        //    return {
+        //        x: 300 + i * 200,
+        //        y: 100
+        //    };
+        //});
+
+        //testAnimPath();
+        function testAnimPath() {
+            var n = getNode("192.168.0.20");
+            assembleAnim(n);
+        }
+
+        var currentAnimationPlayingIndex = 0;
+        function assembleAnim(storeNode) {
+            var processingCenter = getNode("@NetworkCommunicationMonitor.Models.Relay.PROCESSINGCENTERIP");
+            var path = getPath(storeNode, processingCenter);
+            var n = cy.nodes();
+
+            var animationList = []
+
+            // Assemble list of animations
+            for (var i = 0; i < path.length; i++) {
+                var animation = path[i].animation({
+                    style: {
+                        'background-color': 'red',
+                        'line-color': 'red',
+                        'width': '10px',
+                        'height': '10px'
+                    },
+                    duration: 1000
+                })
+                animationList.push(animation);
+            }
+
+            newAnim(animationList, 0);
+        }
+
+        // Play the animation and try to continue
+        function newAnim(animationList, currentAnimationPlayingIndex) {
+            var node = animationList[currentAnimationPlayingIndex];
+
+            node
+                .play()
+                .promise('completed').then(function () {
+                    node
+                        .reverse()
+                        .rewind()
+                        .play();
+
+                    if (currentAnimationPlayingIndex < animationList.length - 1) {
+                        currentAnimationPlayingIndex += 1;
+                        newAnim(animationList, currentAnimationPlayingIndex)
+                    }
+                });
+        }
+
+        // Reverse the animation and recur to the next node
+        // For some reason this isn't working when called in the completed promise
+        function continueAnimation(animationList, currentAnimationPlayingIndex) {
+            var node = animationList[currentAnimationPlayingIndex];
+            node
+                .reverse()
+                .rewind()
+                .play();
+
+            if (currentAnimationPlayingIndex < animationList.length - 1) {
+                currentAnimationPlayingIndex += 1;
+                newAnim(animationList, currentAnimationPlayingIndex)
+            }
+        }
+
+        // Calculate the round trip path from start to end
+        function getPath(startNode, endNode) {
+            var aStar = cy.elements().aStar({ root: startNode, goal: endNode });
+            var pathToTruncate = Object.values(aStar.path)
+            var truncatedPath = truncatePath(pathToTruncate);
+            var returnPath = truncatedPath.slice(0);
+            returnPath.reverse();
+
+            //TODO: Seems weird that we have to shift twice to avoid animating the processing center twice
+            returnPath.shift();
+            returnPath.shift();
+
+            return truncatedPath.concat(returnPath);
+        }
+
+        // The aStar cytoscape function returns a strange object, this extracts the path of nodes
+        function truncatePath(aStarPath) {
+            var truncated = [];
+
+            for (var i = 0; i < aStarPath.length; i++) {
+                if (typeof (aStarPath[i]) == "number")
+                    return truncated;
+                else
+                    truncated.push(aStarPath[i]);
+            }
+
+            return truncated;
         }
     </script>
 </body>

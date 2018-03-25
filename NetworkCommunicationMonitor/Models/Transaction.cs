@@ -15,7 +15,7 @@ namespace NetworkCommunicationMonitor.Models
     {
 
         public string transactionID;
-        public int accountID;
+        public string cardID;
         public string storeID;
         public DateTime transactionDate;
         public double amount;
@@ -40,7 +40,7 @@ namespace NetworkCommunicationMonitor.Models
             {
                 DataTable questionTable = new DataTable();
                 DataRowCollection rows;
-                string _sql = @"SELECT trans_id, account_id, store_id, trans_date, trans_amount, trans_category, trans_status, response_id, status_time, encrypted FROM Transactions";
+                string _sql = @"SELECT trans_id, card_id, store_id, trans_date, trans_amount, trans_category, trans_status, response_id, status_time, encrypted FROM Transactions";
                 var cmd = new SqlCommand(_sql, cn);
 
                 cn.Open();
@@ -52,7 +52,7 @@ namespace NetworkCommunicationMonitor.Models
                 {
                     Transaction tempTransaction = new Transaction();
                     tempTransaction.transactionID = Convert.ToString(row["trans_id"]);
-                    tempTransaction.accountID = Convert.ToInt32(row["account_id"]);
+                    tempTransaction.cardID = Convert.ToString(row["card_id"]);
                     tempTransaction.storeID = Convert.ToString(row["store_id"]);
                     tempTransaction.transactionDate = Convert.ToDateTime(row["trans_date"]);
                     tempTransaction.amount = Convert.ToDouble(row["trans_amount"]);
@@ -93,6 +93,40 @@ namespace NetworkCommunicationMonitor.Models
             }
 
             return numTransactions;
+        }
+
+        public static void addTransaction(string cardNumber, string storeIP, DateTime transactionDate, double transactionAmount, string transactionCategory)
+        {
+            var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
+            using (cn)
+            {
+
+                //DateTime transactionDate = new DateTime(2018, 1, 1);
+                //double transactionAmount = 0.0;
+                //string transactionCategory = "Credit";
+                int transactionStatus = 0;
+                string responseID = "-1";
+                DateTime statusTime = new DateTime(2018, 1, 1);
+                int encrypted = 0;
+
+                string _sql = @"INSERT INTO Transactions (card_id, store_id, trans_date, trans_amount, trans_category, trans_status, response_id, status_time, encrypted) VALUES("
+                    + "@AccountNumber, @StoreIP, @TransactionDate, @TransactionAmount, @TransactionCategory, @TransactionStatus, @ResponseID, @StatusTime, @Encrypted)";
+
+                var cmd = new SqlCommand(_sql, cn);
+                cmd.Parameters.Add("@AccountNumber", SqlDbType.VarChar).Value = cardNumber;
+                cmd.Parameters.Add("@StoreIP", SqlDbType.VarChar).Value = storeIP;
+                cmd.Parameters.Add("@TransactionDate", SqlDbType.DateTime).Value = transactionDate;
+                cmd.Parameters.Add("@TransactionAmount", SqlDbType.Float).Value = transactionAmount;
+                cmd.Parameters.Add("@TransactionCategory", SqlDbType.VarChar).Value = transactionCategory;
+                cmd.Parameters.Add("@TransactionStatus", SqlDbType.Bit).Value = transactionStatus;
+                cmd.Parameters.Add("@ResponseID", SqlDbType.VarChar).Value = responseID;
+                cmd.Parameters.Add("@StatusTime", SqlDbType.DateTime).Value = statusTime;
+                cmd.Parameters.Add("@Encrypted", SqlDbType.Bit).Value = encrypted;
+
+                cn.Open();
+                cmd.ExecuteNonQuery();
+                cn.Close();
+            }
         }
     }
 }

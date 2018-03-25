@@ -34,7 +34,7 @@ namespace NetworkCommunicationMonitor.Models
             {
                 DataTable questionTable = new DataTable();
                 DataRowCollection rows;
-                string _sql = @"SELECT station_id, station_isActive, region, isGateway FROM RelayStation";
+                string _sql = @"SELECT station_id, station_isActive, isGateway, region FROM RelayStation";
                 var cmd = new SqlCommand(_sql, cn);
 
                 cn.Open();
@@ -74,7 +74,7 @@ namespace NetworkCommunicationMonitor.Models
             {
                 DataTable questionTable = new DataTable();
                 DataRowCollection rows;
-                string _sql = @"SELECT station_id, station_isActive, region, isGateway FROM RelayStation";
+                string _sql = @"SELECT station_id, station_isActive, isGateway, region FROM RelayStation";
                 var cmd = new SqlCommand(_sql, cn);
 
                 cn.Open();
