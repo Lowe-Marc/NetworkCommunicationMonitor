@@ -9,12 +9,14 @@
     <link rel="shortcut icon" type="image/x-icon" href="~/favicon.ico" media="screen" />
     <link rel="Bookmark" href="~/favicon.ico" />
     <link rel="stylesheet" href="~/css/login.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Monda" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <style>
         body {
             height: 100%;
             /*background: #16a085;*/
-            background: #662d91;
+            /*background: #662d91;*/
+            background: rgb(33,33,33);
             overflow: hidden;
         }
 
@@ -28,33 +30,30 @@
 <body>
     <div class="container">
         <div id="loginbox" class="mainbox admin_login col-md-4 col-md-offset-4 col-sm-8 col-sm-offset-2">
-            <div class="panel panel-info">
+            <div class="panel">
                 <div class="panel-heading">
-                    <div class="panel-title text-center" style="color: #662d91;">
-                        <strong>This account has been blocked.</strong>
+                    <div class="panel-title text-center" style="color: rgb(33,33,33); margin-top:10px;">
+                        <strong style="font-family: 'Monda', sans-serif;">This account has been blocked.</strong>
                     </div>
                 </div>
-
                 <div style="padding-top:10px" class="panel-body">
-
                     <div style="display:none" id="login-alert" class="alert alert-danger col-sm-12"></div>
-
                     @using (Html.BeginForm("Index", "Home", FormMethod.Post))
-                    {
-                        <div class="row">
-                            <div style="margin-bottom: 10px" class="col-md-12 controls">
-                                <input id="btn-login" type="submit" class="btn btn-success btn-block" value="Return to login" />
-                            </div>
-                        </div>
-                        <div class="panel panel-default" style="margin: 0;">
-                            <div class="panel-body text-center">
-                                © 2018 Mars
-                            </div>
-                        </div>
-                    }
+        {
+            <div class="row">
+                <div style="margin-bottom: 10px" class="col-md-12 controls">
+                    <input id="btn-login" type="submit" class="btn btn-success btn-block" value="Return to login" />
                 </div>
             </div>
-        </div>
+            <div class="panel panel-default" style="margin: 0;">
+                <div class="panel-body text-center">
+                    © 2018 Mars
+                </div>
+            </div>
+}
+                </div>
+            </div>
+            </div>
     </div>
     <script src="~/assets/js/vendor/jquery-1.11.1.min.js"></script>
     <script src="~/js/Particleground.js" tppabs="js/Particleground.js"></script>

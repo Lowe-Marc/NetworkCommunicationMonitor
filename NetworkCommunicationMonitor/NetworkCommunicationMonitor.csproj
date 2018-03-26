@@ -706,6 +706,8 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="img\monitor.ico" />
+    <Content Include="img\monitoring-white.svg" />
+    <Content Include="img\monitoring-black.svg" />
     <Content Include="js\inputmask.binding.js" />
     <Content Include="js\bg.js" />
     <Content Include="js\card.js" />

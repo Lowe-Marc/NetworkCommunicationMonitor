@@ -170,7 +170,7 @@
 		dotColor: "#666666",
 		lineColor: "#666666",
 		particleRadius: 7,
-		lineWidth: 1,
+		lineWidth: 0.5,
 		curvedLines: !1,
 		proximity: 100,
 		parallax: !0,

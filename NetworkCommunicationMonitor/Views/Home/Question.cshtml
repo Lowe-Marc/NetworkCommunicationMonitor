@@ -19,8 +19,8 @@
     <style>
         body {
             height: 100%;
-            /*background: #16a085;*/
-            background: #662d91;
+            background: #16a085;
+            /*background: #662d91;*/
             overflow: hidden;
         }
 
@@ -36,7 +36,7 @@
         <div id="loginbox" class="mainbox admin_login col-md-4 col-md-offset-4 col-sm-8 col-sm-offset-2">
             <div class="panel panel-info">
                 <div class="panel-heading">
-                    <div class="panel-title text-center" style="color: #662d91;">
+                    <div class="panel-title text-center" style="color: rgb(33,33,33);">
                         <strong>Network Communication Monitor</strong>
                     </div>
                 </div>
@@ -48,13 +48,13 @@
                     @using (Html.BeginForm("ValidateQuestion", "User", FormMethod.Post))
                     {
                         <fieldset disabled>
-							<label for="basic-url" style="color: #662d91;">Security Question</label>
+							<label for="basic-url" style="color: rgb(33,33,33);">Security Question</label>
 							<div class="form-group" style="margin: 0 0 10px 0; font-family:'Frijole', cursive; font-size: 25px;">
                                   @ViewData["Question"]
 						    </div>
 						    </fieldset>
 
-                        <label for="basic-url" style="color: #662d91;">Answer</label>
+                        <label for="basic-url" style="color: rgb(33,33,33);">Answer</label>
                         <div style="margin-bottom: 10px" class="input-group">
                             <span class="input-group-addon"><i class="glyphicon glyphicon-info-sign"></i></span>
                             <input type="text" class="form-control" name="answerProvided" value="" placeholder="answer">
