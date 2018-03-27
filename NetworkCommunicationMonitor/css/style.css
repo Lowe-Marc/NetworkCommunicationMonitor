@@ -90,7 +90,7 @@ hr{
 }
 
 .notation ul li .process-label {
-    background: black;
+    background: orange;
     width: 24px!important;
     height: 24px!important;
     border-radius: 3px;
@@ -100,20 +100,20 @@ hr{
     width: 0;
     height: 0;
     border-style: solid;
-    border-width: 0 14px 24.2px 14px;
-    border-color: transparent transparent blue transparent;
+    border-width: 0 12px 25px 12px;
+    border-color: transparent transparent green transparent;
 }
 
 .notation ul li .store-label {
-    background: gray;
+    background: blueviolet ;
     width: 25px!important;
     height: 25px!important;
     border-radius: 50%;
 }
 
 .notation ul li .inactive-label {
-    background: red;
-    width: 32px!important;
-    height: 25px!important;
-    border: 2px solid blue;
+    background: black;
+    width: 24px!important;
+    height: 24px!important;
+    border-radius: 3px;
 }
