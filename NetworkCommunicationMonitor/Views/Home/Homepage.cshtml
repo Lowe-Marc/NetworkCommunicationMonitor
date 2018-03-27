@@ -34,9 +34,8 @@
     <link href="https://fonts.googleapis.com/css?family=Monda" rel="stylesheet">
     <!-- Feature detection -->
     <script src="~/assets/js/vendor/modernizr-2.6.2.min.js"></script>
-    <!-- Cytoscape.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.2.10/cytoscape.min.js"></script>
-    <script src="~/js/cytoscape-cose-bilkent.js"></script>
+    <!-- Cytoscape.css -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/qtip2/3.0.3/jquery.qtip.min.css" rel="stylesheet" type="text/css" />
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
     <script src="assets/js/vendor/html5shiv.js"></script>
@@ -264,21 +263,22 @@
             <div id="network-view">
                 <div id="operation">
                     <div class="svg-expand pointer">
-                        <i class="fa fa-fw fa-expand" title="fullscreen"></i>
-                        <i class="fa fa-fw fa-home" data-toggle="modal" data-target="#add-store" title="Add Store"></i>
-                        <i class="fa fa-fw fa-flag-checkered" data-toggle="modal" data-target="#add-relay" title="Add Relay"></i>
-                        <i class="fa fa-fw fa-exchange" data-toggle="modal" data-target="#add-connection" title="Add Connection"></i>
-                        <i class="fa fa-fw fa-th-large" data-toggle="modal" data-target="#add-region" title="Add Region"></i>
-                        <i class="fa fa-play" data-toggle="modal" data-target="#add-transaction" title="Create Transaction"></i>
-                        <i class="fa fa-fw fa-pause hidden" title="pause"></i>
-                        <div class="notation pull-right">
-                            <ul class="list-inline list-unstyled">
-                                <li><span style="background: black"></span>Processing Center</li>
-                                <li><span style="background: blue"></span>Relay Station</li>
-                                <li><span style="background: gray"></span>Store</li>
-                                <li><span style="background: red; border: 2px solid blue;"></span>Inactive</li>
-                            </ul>
-                        </div>
+                        <i class="fa fa-fw fa-expand" title="Fullscreen"></i>
+                        <i class="fa fa-fw fa-home" data-toggle="modal" data-target="#add-store" title="Create Store"></i>
+                        <i class="fa fa-fw fa-flag-checkered" data-toggle="modal" data-target="#add-relay" title="Create Relay"></i>
+                        <i class="fa fa-fw fa-th-large" data-toggle="modal" data-target="#add-region" title="Create Region"></i>
+                        <i class="fa fa-fw fa-arrows-h" data-toggle="modal" data-target="#add-connection" title="Create Connection"></i>
+                        <i class="fa fa-exchange" data-toggle="modal" data-target="#add-transaction" title="Create Transaction"></i>
+                        <i class="fa fa-play" title="Play"></i>
+                        <i class="fa fa-fw fa-pause" title="Pause"></i>
+                    </div>
+                    <div class="notation pull-right">
+                        <ul class="list-inline list-unstyled">
+                            <li><span class="process-label"></span>Processing Center</li>
+                            <li><span class="relay-label"></span>Relay Station</li>
+                            <li><span class="store-label"></span>Store</li>
+                            <li><span class="inactive-label"></span>Inactive</li>
+                        </ul>
                     </div>
                 </div>
                 <div id="cy" class="animated"></div>
@@ -380,7 +380,7 @@
                                                                 <div class="form-group">
                                                                     <label for="store-name" class="col-sm-4 control-label">Store Name</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" id="store-name" name="storeName" required minlength="1" maxlength="15" placeholder="Store Name">
+                                                                        <input type="text" class="form-control" id="store-name" name="store-name" required minlength="1" maxlength="15" placeholder="Store Name">
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
@@ -492,13 +492,13 @@
                                                                 <div class="form-group">
                                                                     <label for="ipOne" class="col-sm-4 control-label">IP Address One</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" name="ipOne" required minlength="13" maxlength="15" placeholder="192.168.0.XXX">
+                                                                        <input type="text" class="form-control" name="ipOne" required minlength="11" maxlength="13" placeholder="192.168.0.XXX">
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label for="ipTwo" class="col-sm-4 control-label">IP Address Two</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" id="ipTwo" name="ipTwo" required minlength="13" maxlength="15" placeholder="192.168.0.XXX">
+                                                                        <input type="text" class="form-control" id="ipTwo" name="ipTwo" required minlength="11" maxlength="13" placeholder="192.168.0.XXX">
                                                                     </div>
                                                                 </div>
                                                                 <div class="modal-footer">
@@ -518,7 +518,7 @@
                     </div>
                 }
                 <!--add connection end-->
-                 <!-- add transaction start-->
+                <!-- add transaction start-->
                 @using (Html.BeginForm("AddTransaction", "Home", FormMethod.Post))
                 {
                     <div class="modal fade" id="add-transaction" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -545,12 +545,12 @@
                                                                 <div class="form-group">
                                                                     <label for="ipAddress" class="col-sm-4 control-label">IP Address of Store</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" name="ipAddress" required="" minlength="7" maxlength="15" placeholder="192.168.0.XXX">
+                                                                        <input type="text" class="form-control" name="ipAddress" required="" minlength="11" maxlength="13" placeholder="192.168.0.XXX">
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label for="cardNumber" class="col-sm-4 control-label">Card number</label>
-                                                                    <div class="col-sm-7">
+                                                                    <div class="col-sm-6">
                                                                         <input type="text" class="form-control" name="cardNumber" placeholder="Card number" maxlength="19" onkeyup="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,'')" />
                                                                     </div>
                                                                 </div>
@@ -591,7 +591,7 @@
                         </div>
                     </div>
                 }
-            <!-- add transaction end-->
+                <!-- add transaction end-->
             </div>
         </section>
         <!--main content end-->
@@ -713,67 +713,60 @@
     <script src="~/assets/plugins/morris/js/raphael.2.1.0.min.js"></script>
     <!-- Switch -->
     <script src="~/assets/plugins/switchery/switchery.min.js"></script>
-    <!--Load these page level functions-->
+    <!-- Cytoscape.js -->
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.3/fastclick.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.2.10/cytoscape.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qtip2/3.0.3/jquery.qtip.min.js"></script>
+    <script src="https://cdn.rawgit.com/cytoscape/cytoscape.js-qtip/2.7.0/cytoscape-qtip.js"></script>
+    <script src="~/js/cytoscape-cose-bilkent.js"></script>
     <!-- Cytoscape-->
     <script>
-        const nodes = @Html.Raw(Json.Encode(ViewData["Nodes"]));
-        const edges = @Html.Raw(Json.Encode(ViewData["Links"]));
-        console.log("nodes: ", nodes);
-        console.log("edges: ", edges);
 
-        var data = [];
-        var cy = cytoscape({
-            container: document.getElementById('cy'), // container to render in
+        $(function () { // on dom ready
+            const nodes = @Html.Raw(Json.Encode(ViewData["Nodes"]));
+            const edges = @Html.Raw(Json.Encode(ViewData["Links"]));
+            //console.log("nodes: ", nodes);
+            //console.log("edges: ", edges);
+            var data = [];
+            var cy = cytoscape({
+                container: document.getElementById('cy'), // container to render in
 
-            elements: convertElements(),
+                elements: convertElements(),
 
-            layout: {
-                name: 'cose-bilkent',
-                animate: false,
-            },
-
-            style: [ // the stylesheet for the graph
-                {
-                    selector: 'node',
-                    style: {
-                        'width': 'mapData(baz, 0, 20, 20, 40)',
-                        'height': 'mapData(baz, 0, 20, 20, 40)',
-                        'shape': 'data(shape)',
+                layout: {
+                    name: 'cose-bilkent',
+                    animate: true,
+                },
+                style: cytoscape.stylesheet() // the stylesheet for the graph
+                    .selector("node[category != '0']")
+                    .css({
                         'label': 'data(id)',
+                        'width': 'data(width)',
+                        'height': 'data(height)',
+                        'shape': 'data(shape)',
                         'background-color': 'data(color)',
                         'border-width': '2px',
                         'border-color': 'black'
-                    }
-                },
-
-                {
-                    selector: 'edge',
-                    style: {
+                    })
+                    .selector('edge')
+                    .css({
                         'width': 3,
                         'label': 'data(weight)',
                         'line-color': 'gray',
-                    }
-                },
-                {
-                    selector: ':parent',
-                    style: {
+                    })
+                    .selector("node[category='0']")
+                    .css({
                         'label': ' ',
-                        'background-opacity': 0.333
-                    }
-                },
-                {
-                    selector: 'node:selected',
-                    style: {
+                        'background-opacity': 0.4
+                        })
+                    .selector('node:selected')
+                    .css({
                         'border-color': 'blue',
                         'background-color': 'red',
-                        'width': '25px',
-                        'height': '25px',
                         'opacity': '1'
-                    }
-                },
-                {
-                    selector: 'edge:selected',
-                    style: {
+                        })
+                    .selector('edge:selected')
+                    .css({
                         'border-color': 'red',
                         'background-color': 'red',
                         'line-color': 'red',
@@ -782,193 +775,249 @@
                         'width': '5px',
                         'height': '5px',
                         'opacity': '1'
-                    }
-                }
-            ],
-            zoom: 1,
-            pan: { x: 0, y: 0 },
-            minZoom: 1e-1,
-            maxZoom: 1e1,
-            wheelSensitivity: 0.2
-        });
+                    })
+                    .selector('.outline')
+                    .css({
+                        "text-outline-color": '#e6e6e6',
+                        "text-outline-width": 3
+                    }),
+                zoom: 1,
+                pan: { x: 0, y: 0 },
+                minZoom: 1e-1,
+                maxZoom: 1e1,
+                wheelSensitivity: 0.2
+            });
+            bindRouters();
 
-        // Convert nodes&edges
-        function convertElements() {
-            let temp = [];
-            let arr;
-            for (var i = 0; i < nodes.length; i++) {
-                temp.push(nodes[i].region);
-                if (nodes[i].group == 0) {  // Processing center
-                    data.push({ group: 'nodes', data: { id: nodes[i].id, color: 'black', shape: 'barrel', baz: '30' } });
-                } else if (nodes[i].group == 1) {   // Store
-                    data.push({ group: 'nodes', data: { id: nodes[i].id, color: 'gray', shape: 'ellipse', baz: '10', parent: nodes[i].region } });
-                } else if (nodes[i].group == 2) {   // Relay
-                    data.push({ group: 'nodes', data: { id: nodes[i].id, color: 'blue', shape: 'triangle ', baz: '20', parent: nodes[i].region } });
-                }
-            }
-            arr = unique(temp);
-            arr.sort();
-            for (var i = 0; i < arr.length; i++) { // Region
-                data.push({ group: 'nodes', data: { id: arr[i], color: 'white', shape: 'rectangle', baz: '0' } });
-            }
+            function bindRouters() {
+                // qtip
+                cy.elements("node[category= '2']").qtip({
+                    content: {
+                        text: function () {
+                            var $ctr = $('<div class="select-buttons"></div>');
+                            var $inactive = $('<button id="inactive">Inactive</button>');
+                            var $active = $('<button id="active" class="hidden">Active</button>');
 
-            for (var i = 0; i < edges.length; i++) {
-                data.push({ group: 'edges', data: { source: edges[i].source, target: edges[i].target, weight: edges[i].distance } });
-            }
-            console.log("arr: ", arr);
-            console.log("data: ", data);
-            return data;
-        }
+                            $inactive.on('click', function () {
+                                var n = cy.$('node:selected');
+                                inactive = node;
+                                inactive.addClass('hidden');
+                                //n.qtip('api').hide();
+                            });
 
-        function unique(arr) {
-            var result = [];
-            var hash = {};
-            for (var i = 0; i < arr.length; i++) {
-                var key = (typeof arr[i]) + arr[i];
-                if (!hash[key]) {
-                    result.push(arr[i]);
-                    hash[key] = true;
-                }
-            }
-            return result;
-        }
-
-        // Kicks off an animation when the page is loaded
-        var transactionStart = @Html.Raw(Json.Encode(ViewData["TransactionStart"]));
-        if (transactionStart != null) {
-            var processingCenter = getNode("@NetworkCommunicationMonitor.Models.Relay.PROCESSINGCENTERIP");
-            var startNode = getNode(transactionStart);
-            //animPath(startNode, processingCenter, false);
-            assembleAnim(startNode);
-        }
-
-        // Will be used to handle what happens at the processing center
-        function process(hasProcessed) {
-            animPath(processingCenter, startNode, true);
-        }
-
-        // Simple function to return a node from the list based off the ip
-        function getNode(ipAddress) {
-            var n = cy.nodes();
-            for (var i = 0; i < nodes.length; i++) {
-                if (nodes[i]["ipAddress"] == ipAddress) {
-                    return n[i];
-                }
-            }
-        }
-
-        // This allows you to change the position of nodes at runtime
-        //cy.nodes().positions(function (node, i) {
-        //    return {
-        //        x: 300 + i * 200,
-        //        y: 100
-        //    };
-        //});
-
-        testAnimPath();
-        function testAnimPath() {
-            var n = getNode("192.168.0.119");
-            assembleAnim(n);
-        }
-
-        var currentAnimationPlayingIndex = 0;
-        function assembleAnim(storeNode) {
-            var processingCenter = getNode("@NetworkCommunicationMonitor.Models.Relay.PROCESSINGCENTERIP");
-            var path = getPath(storeNode, processingCenter);
-            var n = cy.nodes();
-
-            var animationList = []
-
-            // Assemble list of animations
-            for (var i = 0; i < path.length; i++) {
-                var animation = path[i].animation({
-                    style: {
-                        'background-color': 'green',
-                        'line-color': 'green',
-                        'width': '10px',
-                        'height': '10px'
+                            $active.on('click', function () {
+                                var n = cy.$('node:selected');
+                                active = node;
+                                active.addClass('hidden');
+                                //n.qtip('api').hide();
+                            });
+                            $('#network-view').append($ctr);
+                            $ctr.append($active).append($inactive);
+                            return $ctr;
+                        }
                     },
-                    duration: 1000
-                })
-                animationList.push(animation);
-            }
-
-            newAnim(animationList, 0);
-        }
-
-        // Play the animation and try to continue
-        function newAnim(animationList, currentAnimationPlayingIndex) {
-            var node = animationList[currentAnimationPlayingIndex];
-
-            node
-                .play()
-                .promise('completed').then(function () {
-                    node
-                        .reverse()
-                        .rewind()
-                        .play();
-
-                    if (currentAnimationPlayingIndex < animationList.length - 1) {
-                        currentAnimationPlayingIndex += 1;
-                        newAnim(animationList, currentAnimationPlayingIndex)
-                    }
+                    show: { solo: true },
+                    position: {
+                        my: 'top center',
+                        at: 'bottom center',
+                        adjust: { method: 'flip' },
+                        effect: false,
+                        viewport: $('#network-view')
+                        //adjust: {
+                        //    method: 'none shift'
+                        //}
+                    },
+                    style: {
+                        classes: 'qtip-bootstrap',
+                        tip: {
+                            width: 16,
+                            height: 8
+                        }
+                    },
                 });
-        }
-
-        // Reverse the animation and recur to the next node
-        // For some reason this isn't working when called in the completed promise
-        function continueAnimation(animationList, currentAnimationPlayingIndex) {
-            var node = animationList[currentAnimationPlayingIndex];
-            node
-                .reverse()
-                .rewind()
-                .play();
-
-            if (currentAnimationPlayingIndex < animationList.length - 1) {
-                currentAnimationPlayingIndex += 1;
-                newAnim(animationList, currentAnimationPlayingIndex)
-            }
-        }
-
-        // Calculate the round trip path from start to end
-        function getPath(startNode, endNode) {
-            var aStar = cy.elements().aStar({ root: startNode, goal: endNode });
-            var pathToTruncate = Object.values(aStar.path);
-            var truncatedPath = truncatePath(pathToTruncate);
-            truncatedPath = reorderPath(truncatedPath);
-
-            // The return path is simply the reverse of the original path with the first element removed
-            // so the processing center doesn't animate twice.
-            var returnPath = truncatedPath.slice(0);
-            returnPath.reverse();
-            returnPath.shift();
-
-            return truncatedPath.concat(returnPath);
-        }
-
-        // For some reason the cytoscape aStar path has edges after nodes, this should properly order things
-        function reorderPath(path) {
-            for (var i = 1; i < path.length; i += 2) {
-                var temp = path[i];
-                path[i] = path[i + 1];
-                path[i + 1] = temp;
-            }
-            return path;
-        }
-
-        // The aStar cytoscape function returns a strange object, this extracts the path of nodes
-        function truncatePath(aStarPath) {
-            var truncated = [];
-
-            for (var i = 0; i < aStarPath.length; i++) {
-                if (typeof (aStarPath[i]) == "number")
-                    return truncated;
-                else
-                    truncated.push(aStarPath[i]);
             }
 
-            return truncated;
-        }
+            // Convert nodes&edges
+            function convertElements() {
+                let temp = [];
+                let arr = [];
+                for (var i = 0; i < nodes.length; i++) {
+                    temp.push(nodes[i].region);
+                    let tempId = nodes[i].id.slice(10);
+                    
+                    if (nodes[i].group == 0) {  // Processing center
+                        data.push({ group: 'nodes', data: { id: tempId, color: 'black', shape: 'barrel', width: '50', height: '50', category: '1' }, classes: 'outline' });
+                    } else if (nodes[i].group == 1) {   // Store
+                        data.push({ group: 'nodes', data: { id: tempId, color: 'gray', shape: 'ellipse', width: '20', height: '20', category: '3', parent: nodes[i].region }, classes: 'outline' });
+                    } else if (nodes[i].group == 2) {   // Relay
+                        data.push({ group: 'nodes', data: { id: tempId, color: 'blue', shape: 'triangle ', width: '35', height: '35', category: '2', parent: nodes[i].region }, classes: 'outline' });
+                    }
+                }
+                arr = unique(temp);
+                arr.sort();
+                for (var i = 0; i < arr.length; i++) { // Region
+                    data.push({ group: 'nodes', data: { id: arr[i], color: 'white', shape: 'rectangle', width: '0', height: '0', category: '0' } });
+                }
+
+                for (var i = 0; i < edges.length; i++) { // Edges
+                    let sourceId = edges[i].source.slice(10);
+                    let targetId = edges[i].target.slice(10);
+                    data.push({ group: 'edges', data: { source: sourceId, target: targetId, weight: edges[i].distance} });
+                }
+                //console.log("arr: ", arr);
+                console.log("data: ", data);
+                return data;
+            }
+
+             function unique(arr) {
+                var result = [];
+                var hash = {};
+                for (var i = 0; i < arr.length; i++) {
+                    var key = (typeof arr[i]) + arr[i];
+                    if (!hash[key]) {
+                        result.push(arr[i]);
+                        hash[key] = true;
+                    }
+                }
+                return result;
+            }
+
+            // Kicks off an animation when the page is loaded
+            var transactionStart = @Html.Raw(Json.Encode(ViewData["TransactionStart"]));
+            if (transactionStart != null) {
+                var processingCenter = getNode("@NetworkCommunicationMonitor.Models.Relay.PROCESSINGCENTERIP");
+                var startNode = getNode(transactionStart);
+                //animPath(startNode, processingCenter, false);
+                assembleAnim(startNode);
+            }
+
+            // Will be used to handle what happens at the processing center
+            function process(hasProcessed) {
+                animPath(processingCenter, startNode, true);
+            }
+
+            // Simple function to return a node from the list based off the ip
+            function getNode(ipAddress) {
+                var n = cy.nodes();
+                for (var i = 0; i < nodes.length; i++) {
+                    if (nodes[i]["ipAddress"] == ipAddress) {
+                        return n[i];
+                    }
+                }
+            }
+
+            // This allows you to change the position of nodes at runtime
+            //cy.nodes().positions(function (node, i) {
+            //    return {
+            //        x: 300 + i * 200,
+            //        y: 100
+            //    };
+            //});
+
+            //testAnimPath();
+            //function testAnimPath() {
+            //    var n = getNode("192.168.0.119");
+            //    assembleAnim(n);
+            //}
+
+            var currentAnimationPlayingIndex = 0;
+            function assembleAnim(storeNode) {
+                var processingCenter = getNode("@NetworkCommunicationMonitor.Models.Relay.PROCESSINGCENTERIP");
+                var path = getPath(storeNode, processingCenter);
+                var n = cy.nodes();
+
+                var animationList = []
+
+                // Assemble list of animations
+                for (var i = 0; i < path.length; i++) {
+                    var animation = path[i].animation({
+                        style: {
+                            'background-color': 'red',
+                            'line-color': 'red',
+                            'width': '10px',
+                            'height': '10px'
+                        },
+                        duration: 1000
+                    })
+                    animationList.push(animation);
+                }
+                newAnim(animationList, 0);
+            }
+
+            // Play the animation and try to continue
+            function newAnim(animationList, currentAnimationPlayingIndex) {
+                var node = animationList[currentAnimationPlayingIndex];
+
+                node
+                    .play()
+                    .promise('completed').then(function () {
+                        node
+                            .reverse()
+                            .rewind()
+                            .play();
+
+                        if (currentAnimationPlayingIndex < animationList.length - 1) {
+                            currentAnimationPlayingIndex += 1;
+                            newAnim(animationList, currentAnimationPlayingIndex)
+                        }
+                    });
+            }
+
+            // Reverse the animation and recur to the next node
+            // For some reason this isn't working when called in the completed promise
+            function continueAnimation(animationList, currentAnimationPlayingIndex) {
+                var node = animationList[currentAnimationPlayingIndex];
+                node
+                    .reverse()
+                    .rewind()
+                    .play();
+
+                if (currentAnimationPlayingIndex < animationList.length - 1) {
+                    currentAnimationPlayingIndex += 1;
+                    newAnim(animationList, currentAnimationPlayingIndex)
+                }
+            }
+
+            // Calculate the round trip path from start to end
+            function getPath(startNode, endNode) {
+                var aStar = cy.elements().aStar({ root: startNode, goal: endNode });
+                var pathToTruncate = Object.values(aStar.path);
+                var truncatedPath = truncatePath(pathToTruncate);
+                truncatedPath = reorderPath(truncatedPath);
+
+                // The return path is simply the reverse of the original path with the first element removed
+                // so the processing center doesn't animate twice.
+                var returnPath = truncatedPath.slice(0);
+                returnPath.reverse();
+                returnPath.shift();
+
+                return truncatedPath.concat(returnPath);
+            }
+
+            // For some reason the cytoscape aStar path has edges after nodes, this should properly order things
+            function reorderPath(path) {
+                for (var i = 1; i < path.length; i += 2) {
+                    var temp = path[i];
+                    path[i] = path[i + 1];
+                    path[i + 1] = temp;
+                }
+                return path;
+            }
+
+            // The aStar cytoscape function returns a strange object, this extracts the path of nodes
+            function truncatePath(aStarPath) {
+                var truncated = [];
+
+                for (var i = 0; i < aStarPath.length; i++) {
+                    if (typeof (aStarPath[i]) == "number")
+                        return truncated;
+                    else
+                        truncated.push(aStarPath[i]);
+                }
+
+                return truncated;
+            }
+        }); // on dom ready
     </script>
 </body>
 

@@ -255,8 +255,8 @@
                                                             </td>
                                                             <td>@account.accountAddress</td>
                                                             <td>@account.phoneNumber</td>
-                                                            <td>@account.accountLimit</td>
-                                                            <td>@account.accountBalance</td>
+                                                            <td>@String.Format("{0:C}", account.accountLimit)</td>
+                                                            <td>@String.Format("{0:C}", account.accountBalance)</td>
                                                         </tr>
                                                     }
                                                 }
