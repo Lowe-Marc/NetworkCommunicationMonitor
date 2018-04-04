@@ -519,8 +519,8 @@
                 }
                 <!--add connection end-->
                 <!-- add transaction start-->
-                @using (Html.BeginForm("AddTransaction", "Home", FormMethod.Post))
-                {
+                @*@using (Html.BeginForm("AddTransaction", "Home", FormMethod.Post))
+                {*@
                     <div class="modal fade" id="add-transaction" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -545,13 +545,13 @@
                                                                 <div class="form-group">
                                                                     <label for="ipAddress" class="col-sm-4 control-label">IP Address of Store</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" name="ipAddress" required minlength="7" maxlength="15" value="192.168.0.">
+                                                                        <input type="text" class="form-control" id="transactionIPAddress" name="transactionIPAddress" required minlength="7" maxlength="15" value="192.168.0.">
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label for="cardNumber" class="col-sm-4 control-label">Card number</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" name="cardNumber" placeholder="Card number" maxlength="19" onkeyup="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,'')" required/>
+                                                                        <input type="text" class="form-control" id="transactionCardNumber" name="transactionCardNumber" placeholder="Card number" maxlength="19" onkeyup="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,'')" required/>
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
@@ -577,7 +577,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="modal-footer">
-                                                                    <input type="submit" class="btn btn-success btn-block" value="Add To Network" />
+                                                                    <input id="transactionSubmit" type="submit" class="btn btn-success btn-block" value="Add To Network" />
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -591,7 +591,7 @@
                             </div>
                         </div>
                     </div>
-                }
+                @*}*@
                 <!-- add transaction end-->
             </div>
         </section>
@@ -804,16 +804,44 @@
             /*=====================================================================================================
                                                         Animations
             ======================================================================================================*/
-            // Kicks off an animation when the page is loaded
-            var animationList = [];
-            var currentAnimationPlayingIndex = 0;
-            var transactionStart = @Html.Raw(Json.Encode(ViewData["TransactionStart"]));
-            if (transactionStart != null) {
-                var processingCenter = getNode("@NetworkCommunicationMonitor.Models.Relay.PROCESSINGCENTERIP");
+
+            // When a new transaction is created, it will animate right away
+            $('#transactionSubmit').click(function () {
+                handleTransaction();
+            })
+
+            function handleTransaction() {
+                //Collect values
+                console.log("Handling transactions");
+                var transaction = new Object();
+                transaction.cardNumber = $('#transactionCardNumber').val();
+                var transactionStart = $('#transactionIPAddress').val();
+                transaction.storeIP = transactionStart;
+                transaction.transactionDate = $('#transactionDate').val();
+                transaction.amount = $('#transactionAmount').val();
+                transaction.category = $('#transactionCategory').val();
+
+                //Database insertion
+                $.ajax({
+                    type: "POST",
+                    url: "/Home/AddTransaction",
+                    data: transaction,
+                    dataType: "json",
+                    success: function (data) {
+                        console.log("Successful ajax request");
+                    },
+                    error: function (result) {
+                        console.log("Error on ajax request");
+                        console.log(result);
+                    }
+                })
+
+                //Kick off animation
+                console.log("Kicking off animation for: " + transactionStart);
                 var startNode = getNode(transactionStart);
-                //animPath(startNode, processingCenter, false);
                 assembleAnim(startNode);
             }
+            
             //pauseAnimation();
             function pauseAnimation(node) {
                 node.play();
@@ -900,12 +928,12 @@
                     let tempId = nodes[i].id.slice(10);
 
                     if (nodes[i].group == 0) {  // Processing center
-                        data.push({ group: 'nodes', data: { id: tempId, color: 'orange', shape: 'barrel', width: '50', height: '50', category: '1' } });
+                        data.push({ group: 'nodes', data: { id: tempId, color: 'orange', shape: 'barrel', width: '50', height: '50', category: '1', queue: [] } });
                     } else if (nodes[i].group == 1) {   // Store
                         data.push({ group: 'nodes', data: { id: tempId, color: 'blueviolet', shape: 'ellipse', width: '20', height: '20', category: '3', parent: nodes[i].region } });
                     } else if (nodes[i].group == 2) {   // Relay
                         if (nodes[i].isActive) { status = 'active'; } else { status = 'inactive';}
-                        data.push({ group: 'nodes', data: { id: tempId, color: 'green', shape: 'triangle ', width: '35', height: '35', category: '2', status: status, parent: nodes[i].region } });
+                        data.push({ group: 'nodes', data: { id: tempId, color: 'green', shape: 'triangle ', width: '35', height: '35', category: '2', status: status, parent: nodes[i].region, queue: [] } });
                     }
                 }
                 arr = unique(temp);
@@ -917,7 +945,7 @@
                 for (var i = 0; i < edges.length; i++) { // Edges
                     let sourceId = edges[i].source.slice(10);
                     let targetId = edges[i].target.slice(10);
-                    data.push({ group: 'edges', data: { source: sourceId, target: targetId, weight: edges[i].distance} });
+                    data.push({ group: 'edges', data: { source: sourceId, target: targetId, weight: edges[i].distance, queue: []} });
                 }
                 //console.log("arr: ", arr);
                 //console.log("data: ", data);
@@ -956,7 +984,7 @@
                 var processingCenter = getNode("@NetworkCommunicationMonitor.Models.Relay.PROCESSINGCENTERIP");
                 var path = getPath(storeNode, processingCenter);
                 var n = cy.nodes();
-                //var animationList = []
+                var animationList = []
                 // Assemble list of animations
                 for (var i = 0; i < path.length; i++) {
                     var animation = path[i].animation({
@@ -970,7 +998,23 @@
                     });
                     animationList.push(animation);
                 }
+                console.log("starting newAnim: ")
+                console.log(animationList)
                 newAnim(animationList, 0);
+            }
+
+            // This is used to remove stores and inactive relays/connecitons from a path
+            function correctPath(path) {
+                console.log("correcting path:")
+                console.log(path)
+
+                //for (var i = 0; i < path.length; i++) {
+                //    console.log(i)
+                //    console.log(path[i].data('shape'))
+                //    console.log(path[i].data('queue'))
+                //}
+
+                return path
             }
 
             // Play the animation and try to continue
@@ -982,9 +1026,14 @@
                         node
                             .reverse()
                             .rewind()
-                            .play();
+                        .play();
+                        //node.data('queue').push("Test");
+                        console.log("Animating a node")
+                        //console.log(node.data('queue'));
                         if (currentAnimationPlayingIndex < animationList.length - 1) {
                             currentAnimationPlayingIndex += 1;
+                            //node.data('queue').shift()
+                            //console.log(node.data('queue'));
                             newAnim(animationList, currentAnimationPlayingIndex);
                         }
                     });
@@ -1012,7 +1061,9 @@
                 returnPath.reverse();
                 returnPath.shift();
 
-                return truncatedPath.concat(returnPath);
+                var path = truncatedPath.concat(returnPath);
+
+                return correctPath(path);
             }
 
             // For some reason the cytoscape aStar path has edges after nodes, this should properly order things
@@ -1038,6 +1089,7 @@
 
                 return truncated;
             }
+
         }); // on dom ready
     </script>
 </body>

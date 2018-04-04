@@ -283,29 +283,29 @@ namespace NetworkCommunicationMonitor.Controllers
             return RedirectToAction("Homepage", "Home");
         }
 
-        public ActionResult AddTransaction(FormCollection collection)
+        public void AddTransaction(FormCollection collection)
         {
             setViewDataDefaults();
             setNetworkData();
 
-            string storeIP = Convert.ToString(collection["ipAddress"]);
+            string storeIP = Convert.ToString(collection["storeIP"]);
             string cardNumber = Convert.ToString(collection["cardNumber"]);
             DateTime transactionDate = Convert.ToDateTime(collection["transactionDate"]);
-            double transactionAmount = Convert.ToDouble(collection["transactionAmount"]);
-            string transactionCategory = Convert.ToString(collection["transactionCategory"]);
+            double transactionAmount = Convert.ToDouble(collection["amount"]);
+            string transactionCategory = Convert.ToString(collection["category"]);
             
-                        if (storeIP == null)
+            if (storeIP == null)
             {
-                                return RedirectToAction("Homepage", "Home");
-                        }
+                    //return RedirectToAction("Homepage", "Home");
+            }
             else
             {
                 NetworkCommunicationMonitor.Models.Transaction.addTransaction(cardNumber, storeIP, transactionDate, transactionAmount, transactionCategory);
             }
 
-            ViewData["TransactionStart"] = storeIP;
+            //ViewData["TransactionStart"] = storeIP;
 
-            return View("Homepage");
+            //return View("Homepage");
         }
 
         private void setNetworkData()
