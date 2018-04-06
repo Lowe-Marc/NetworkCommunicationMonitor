@@ -727,6 +727,11 @@
             const nodes = @Html.Raw(Json.Encode(ViewData["Nodes"]));
             const edges = @Html.Raw(Json.Encode(ViewData["Links"]));
             const relayColor = 'green';
+
+            var stores = [];
+            var relays = [];
+            var currentAnimations = [];
+
             var data = [];
             var cy = cytoscape({
                 ready: function () { window.cy = this; },
@@ -800,28 +805,30 @@
             });
 
             //popOver();
+            //This handles deactivating of relays
             cy.on('click', 'node', function (evt) {
-                if (this.data('status') == 'active') {
-                    console.log('locking: ' + this.id());
-                    this.data('status', 'inactive');
-                    this.data('color', 'black');
-                    console.log(this);
-                    console.log(this.data('color'));
-                    var edges = this.connectedEdges();
-                    for (var i = 0; i < edges.length; i++) {
-                        var temp = edges[i].data('activeWeight');
-                        edges[i].data('activeWeight', temp + WEIGHTOFFSET);
+                if (relays.includes(this.data('id')))
+                    if (this.data('status') == 'active') {
+                        console.log('locking: ' + this.id());
+                        this.data('status', 'inactive');
+                        this.data('color', 'black');
+                        var edges = this.connectedEdges();
+                        console.log("numEdges: " + edges.length);
+                        for (var i = 0; i < edges.length; i++) {
+                            var temp = edges[i].data('activeWeight');
+                            edges[i].data('activeWeight', temp + WEIGHTOFFSET);
+                        }
+                    } else {
+                        console.log("unlocking: " + this.id());
+                        this.data('status', 'active');
+                        this.data('color', relayColor);
+                        var edges = this.connectedEdges();
+                        console.log("numEdges: " + edges.length);
+                        for (var i = 0; i < edges.length; i++) {
+                            var temp = edges[i].data('activeWeight');
+                            edges[i].data('activeWeight', temp - WEIGHTOFFSET);
+                        }
                     }
-                } else {
-                    console.log(this.id() + " is already locked")
-                    this.data('status', 'active');
-                    this.data('color', relayColor);
-                    var edges = this.connectedEdges();
-                    for (var i = 0; i < edges.length; i++) {
-                        var temp = edges[i].data('activeWeight');
-                        edges[i].data('activeWeight', temp - WEIGHTOFFSET);
-                    }
-                }
             });
 
             /*=====================================================================================================
@@ -946,7 +953,6 @@
                 let temp = [];
                 let arr = [];
                 let status;
-                var stores = [];
                 for (var i = 0; i < nodes.length; i++) {
                     temp.push(nodes[i].region);
                     let tempId = nodes[i].id.slice(10);
@@ -957,6 +963,7 @@
                         stores.push(tempId);
                         data.push({ group: 'nodes', data: { id: tempId, color: 'blueviolet', shape: 'ellipse', width: '20', height: '20', category: '3', parent: nodes[i].region } });
                     } else if (nodes[i].group == 2) {   // Relay
+                        relays.push(tempId);
                         if (nodes[i].isActive) { status = 'active'; } else { status = 'inactive';}
                         data.push({ group: 'nodes', data: { id: tempId, color: 'green', shape: 'triangle ', width: '35', height: '35', category: '2', status: status, parent: nodes[i].region, queue: [] } });
                     }
@@ -1018,8 +1025,12 @@
                     // If an inactive edge is in the path, we will drop the packet.
                     // An edge is inactive if the activeWeight is >= the WEIGHTOFFSET
                     var edgeActiveWeight = path[i].data('activeWeight');
+                    var shouldDropPacket = (i > 1 && i < path.length - 2 && edgeActiveWeight >= WEIGHTOFFSET);
+                    //if (i == 1 && path.length >= 3 && path[i + 2].data('activeWeight') >= WEIGHTOFFSET) {
+                    //    shouldDropPacket = true;
+                    //}
                     console.log("activeWeight: " + edgeActiveWeight);
-                    if (i > 1 && i < path.length - 2 && edgeActiveWeight >= WEIGHTOFFSET) {
+                    if (shouldDropPacket) {
                         break;
                     } else {
                         var animation = path[i].animation({
