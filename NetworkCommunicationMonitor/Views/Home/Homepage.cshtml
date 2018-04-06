@@ -722,8 +722,8 @@
     <script src="~/js/cytoscape-cose-bilkent.js"></script>
     <!-- Cytoscape-->
     <script>
-
         $(function () { // on dom ready
+            const WEIGHTOFFSET = 100000000; // This is used to inactivate relays/connections and to prevent a path from routing through a store
             const nodes = @Html.Raw(Json.Encode(ViewData["Nodes"]));
             const edges = @Html.Raw(Json.Encode(ViewData["Links"]));
             //console.log("nodes: ", nodes);
@@ -923,6 +923,7 @@
                 let temp = [];
                 let arr = [];
                 let status;
+                var stores = [];
                 for (var i = 0; i < nodes.length; i++) {
                     temp.push(nodes[i].region);
                     let tempId = nodes[i].id.slice(10);
@@ -930,6 +931,7 @@
                     if (nodes[i].group == 0) {  // Processing center
                         data.push({ group: 'nodes', data: { id: tempId, color: 'orange', shape: 'barrel', width: '50', height: '50', category: '1', queue: [] } });
                     } else if (nodes[i].group == 1) {   // Store
+                        stores.push(tempId);
                         data.push({ group: 'nodes', data: { id: tempId, color: 'blueviolet', shape: 'ellipse', width: '20', height: '20', category: '3', parent: nodes[i].region } });
                     } else if (nodes[i].group == 2) {   // Relay
                         if (nodes[i].isActive) { status = 'active'; } else { status = 'inactive';}
@@ -945,10 +947,13 @@
                 for (var i = 0; i < edges.length; i++) { // Edges
                     let sourceId = edges[i].source.slice(10);
                     let targetId = edges[i].target.slice(10);
-                    data.push({ group: 'edges', data: { source: sourceId, target: targetId, weight: edges[i].distance, queue: []} });
+                    if (stores.includes(sourceId) || stores.includes(targetId)) {
+                        data.push({ group: 'edges', data: { source: sourceId, target: targetId, weight: edges[i].distance, activeWeight: (edges[i].distance + WEIGHTOFFSET), queue: [] } });
+                    } else {
+                        data.push({ group: 'edges', data: { source: sourceId, target: targetId, weight: edges[i].distance, activeWeight: edges[i].distance, queue: [] } });
+                    }
                 }
-                //console.log("arr: ", arr);
-                //console.log("data: ", data);
+                
                 return data;
             }
 
@@ -1003,16 +1008,16 @@
                 newAnim(animationList, 0);
             }
 
-            // This is used to remove stores and inactive relays/connecitons from a path
+            // This is used to remove stores and inactive relays/connections from a path
             function correctPath(path) {
                 console.log("correcting path:")
                 console.log(path)
 
-                //for (var i = 0; i < path.length; i++) {
-                //    console.log(i)
-                //    console.log(path[i].data('shape'))
-                //    console.log(path[i].data('queue'))
-                //}
+                for (var i = 0; i < path.length; i++) {
+                    console.log(i)
+                    console.log(path[i].data('shape'))
+                    console.log(path[i].data('queue'))
+                }
 
                 return path
             }
@@ -1021,7 +1026,6 @@
             function newAnim(animationList, currentAnimationPlayingIndex) {
                 var node = animationList[currentAnimationPlayingIndex];
                 pauseAnimation(node);
-                //node.play()
                 node.promise('completed').then(function () {
                         node
                             .reverse()
@@ -1039,18 +1043,9 @@
                     });
             }
 
-
-            // This allows you to change the position of nodes at runtime
-            //cy.nodes().positions(function (node, i) {
-            //    return {
-            //        x: 300 + i * 200,
-            //        y: 100
-            //    };
-            //});
-
             // Calculate the round trip path from start to end
             function getPath(startNode, endNode) {
-                var aStar = cy.elements().aStar({ root: startNode, goal: endNode });
+                var aStar = cy.elements().aStar({ root: startNode, goal: endNode, weight: function (edge) {return edge.data('activeWeight')} });
                 var pathToTruncate = Object.values(aStar.path);
                 var truncatedPath = truncatePath(pathToTruncate);
                 truncatedPath = reorderPath(truncatedPath);
@@ -1089,6 +1084,14 @@
 
                 return truncated;
             }
+
+            // This allows you to change the position of nodes at runtime
+            //cy.nodes().positions(function (node, i) {
+            //    return {
+            //        x: 300 + i * 200,
+            //        y: 100
+            //    };
+            //});
 
         }); // on dom ready
     </script>
