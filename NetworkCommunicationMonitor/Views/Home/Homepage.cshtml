@@ -726,8 +726,7 @@
             const WEIGHTOFFSET = 100000000; // This is used to inactivate relays/connections and to prevent a path from routing through a store
             const nodes = @Html.Raw(Json.Encode(ViewData["Nodes"]));
             const edges = @Html.Raw(Json.Encode(ViewData["Links"]));
-            //console.log("nodes: ", nodes);
-            //console.log("edges: ", edges);
+            const relayColor = 'green';
             var data = [];
             var cy = cytoscape({
                 ready: function () { window.cy = this; },
@@ -801,6 +800,30 @@
             });
 
             //popOver();
+            cy.on('click', 'node', function (evt) {
+                if (this.data('status') == 'active') {
+                    console.log('locking: ' + this.id());
+                    this.data('status', 'inactive');
+                    this.data('color', 'black');
+                    console.log(this);
+                    console.log(this.data('color'));
+                    var edges = this.connectedEdges();
+                    for (var i = 0; i < edges.length; i++) {
+                        var temp = edges[i].data('activeWeight');
+                        edges[i].data('activeWeight', temp + WEIGHTOFFSET);
+                    }
+                } else {
+                    console.log(this.id() + " is already locked")
+                    this.data('status', 'active');
+                    this.data('color', relayColor);
+                    var edges = this.connectedEdges();
+                    for (var i = 0; i < edges.length; i++) {
+                        var temp = edges[i].data('activeWeight');
+                        edges[i].data('activeWeight', temp - WEIGHTOFFSET);
+                    }
+                }
+            });
+
             /*=====================================================================================================
                                                         Animations
             ======================================================================================================*/
@@ -992,16 +1015,25 @@
                 var animationList = []
                 // Assemble list of animations
                 for (var i = 0; i < path.length; i++) {
-                    var animation = path[i].animation({
-                        style: {
-                            'background-color': 'red',
-                            'line-color': 'red',
-                            'width': '10px',
-                            'height': '10px'
-                        },
-                        duration: 1000
-                    });
-                    animationList.push(animation);
+                    // If an inactive edge is in the path, we will drop the packet.
+                    // An edge is inactive if the activeWeight is >= the WEIGHTOFFSET
+                    var edgeActiveWeight = path[i].data('activeWeight');
+                    console.log("activeWeight: " + edgeActiveWeight);
+                    if (i > 1 && i < path.length - 2 && edgeActiveWeight >= WEIGHTOFFSET) {
+                        break;
+                    } else {
+                        var animation = path[i].animation({
+                            style: {
+                                'background-color': 'red',
+                                'line-color': 'red',
+                                'width': '10px',
+                                'height': '10px'
+                            },
+                            duration: 1000
+                        });
+                        animationList.push(animation);
+                    }
+                    
                 }
                 console.log("starting newAnim: ")
                 console.log(animationList)
@@ -1024,15 +1056,15 @@
 
             // Play the animation and try to continue
             function newAnim(animationList, currentAnimationPlayingIndex) {
-                var node = animationList[currentAnimationPlayingIndex];
-                pauseAnimation(node);
-                node.promise('completed').then(function () {
-                        node
+                var animation = animationList[currentAnimationPlayingIndex];
+                pauseAnimation(animation);
+                animation.promise('completed').then(function () {
+                        animation
                             .reverse()
                             .rewind()
-                        .play();
+                            .play();
                         //node.data('queue').push("Test");
-                        console.log("Animating a node")
+                        console.log("Animating a node");
                         //console.log(node.data('queue'));
                         if (currentAnimationPlayingIndex < animationList.length - 1) {
                             currentAnimationPlayingIndex += 1;
