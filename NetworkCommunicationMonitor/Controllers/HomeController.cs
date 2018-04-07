@@ -31,7 +31,7 @@ namespace NetworkCommunicationMonitor.Controllers
             setViewDataDefaults();
 
             setNetworkData();
-
+            ViewData["Cards"] = NetworkCommunicationMonitor.Models.Card.getCards();
             ViewData["TransactionStart"] = startLocation;
 
             return View();
@@ -233,8 +233,8 @@ namespace NetworkCommunicationMonitor.Controllers
         {
             setViewDataDefaults();
 
-            string ipAddress = Convert.ToString(collection["ipAddress"]);
-            string ipConnectedTo = Convert.ToString(collection["ipConnectedTo"]);
+            string ipAddress = Convert.ToString(collection["relayIpAddress"]);
+            string ipConnectedTo = Convert.ToString(collection["relayIpConnectedTo"]);
 
             string region = Relay.getRegion(ipConnectedTo);
 
@@ -263,8 +263,8 @@ namespace NetworkCommunicationMonitor.Controllers
             setViewDataDefaults();
 
             string storeName = Convert.ToString(collection["storeName"]);
-            string ipAddress = Convert.ToString(collection["ipAddress"]);
-            string ipConnectedTo = Convert.ToString(collection["ipConnectedTo"]);
+            string ipAddress = Convert.ToString(collection["storeIpAddress"]);
+            string ipConnectedTo = Convert.ToString(collection["storeIpConnectedTo"]);
 
             NetworkCommunicationMonitor.Models.Store.addStore(ipAddress, ipConnectedTo, storeName);
 
@@ -283,29 +283,30 @@ namespace NetworkCommunicationMonitor.Controllers
             return RedirectToAction("Homepage", "Home");
         }
 
-        public ActionResult AddTransaction(FormCollection collection)
+        public void AddTransaction(FormCollection collection)
         {
             setViewDataDefaults();
             setNetworkData();
 
-            string storeIP = Convert.ToString(collection["ipAddress"]);
-            string cardNumber = Convert.ToString(collection["cardNumber"]);
+            string storeIP = Convert.ToString(collection["storeIP"]);
+            string card_number = Convert.ToString(collection["cardNumber"]);
+            string cardNumber = card_number.Replace(" ", "");
             DateTime transactionDate = Convert.ToDateTime(collection["transactionDate"]);
-            double transactionAmount = Convert.ToDouble(collection["transactionAmount"]);
-            string transactionCategory = Convert.ToString(collection["transactionCategory"]);
+            double transactionAmount = Convert.ToDouble(collection["amount"]);
+            string transactionCategory = Convert.ToString(collection["category"]);
             
-                        if (storeIP == null)
+            if (storeIP == null)
             {
-                                return RedirectToAction("Homepage", "Home");
-                        }
+                    //return RedirectToAction("Homepage", "Home");
+            }
             else
             {
                 NetworkCommunicationMonitor.Models.Transaction.addTransaction(cardNumber, storeIP, transactionDate, transactionAmount, transactionCategory);
             }
 
-            ViewData["TransactionStart"] = storeIP;
+            //ViewData["TransactionStart"] = storeIP;
 
-            return View("Homepage");
+            //return View("Homepage");
         }
 
         private void setNetworkData()

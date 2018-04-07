@@ -269,8 +269,8 @@
                         <i class="fa fa-fw fa-th-large" data-toggle="modal" data-target="#add-region" title="Create Region"></i>
                         <i class="fa fa-fw fa-arrows-h" data-toggle="modal" data-target="#add-connection" title="Create Connection"></i>
                         <i class="fa fa-exchange" data-toggle="modal" data-target="#add-transaction" title="Create Transaction"></i>
-                        <i class="fa fa-play hidden" id="play" title="Play"></i>
-                        <i class="fa fa-fw fa-pause " id="pause" title="Pause"></i>
+                        @*<i class="fa fa-play hidden" id="play" title="Play"></i>
+                        <i class="fa fa-fw fa-pause " id="pause" title="Pause"></i>*@
                     </div>
                     <div class="notation pull-right">
                         <ul class="list-inline list-unstyled">
@@ -307,15 +307,15 @@
                                                             </div>
                                                             <div class="form-horizontal">
                                                                 <div class="form-group">
-                                                                    <label for="ipAddress" class="col-sm-4 control-label">IP Address</label>
+                                                                    <label for="relayIpAddress" class="col-sm-4 control-label">IP Address</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" id="ipAddress" name="ipAddress" minlength="11" maxlength="13" value="192.168.0." required/>
+                                                                        <input type="text" class="form-control" id="relayIpAddress" name="relayIpAddress" minlength="11" maxlength="13" value="192.168.0." required/>
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
-                                                                    <label for="ipConnectedTo" class="col-sm-4 control-label">IP Address To Connect To</label>
+                                                                    <label for="relayIpConnectedTo" class="col-sm-4 control-label">IP Address To Connect To</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" id="ipConnectedTo" name="ipConnectedTo" minlength="11" maxlength="13" value="192.168.0." required/>
+                                                                        <select class="form-control" id="relayIpConnectedTo" name="relayIpConnectedTo" style="padding:0;"></select>
                                                                     </div>
                                                                 </div>
                                                                 <div class="modal-footer">
@@ -437,15 +437,21 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
-                                                                    <label for="ipAddress" class="col-sm-4 control-label">IP Address</label>
+                                                                    <label for="storeWeight" class="col-sm-4 control-label">Weight</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" name="ipAddress" required="" minlength="11" maxlength="13" value="192.168.0.">
+                                                                        <input type="text" class="form-control" id="storeWeight" name="storeWeight" minlength="1" maxlength="2" placeholder="Weight of Connection">
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
-                                                                    <label for="ipConnectedTo" class="col-sm-4 control-label">Relay To Connect</label>
+                                                                    <label for="storeIpAddress" class="col-sm-4 control-label">IP Address</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" id="ipConnectedTo" name="ipConnectedTo" required="" minlength="11" maxlength="13" value="192.168.0.">
+                                                                        <input type="text" class="form-control" id="storeIpAddress" name="storeIpAddress" required minlength="11" maxlength="13" value="192.168.0.">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="storeIpConnectedTo" class="col-sm-4 control-label">Relay To Connect</label>
+                                                                    <div class="col-sm-6">
+                                                                        <select class="form-control" id="storeIpConnectedTo" name="storeIpConnectedTo" style="padding:0;"></select>
                                                                     </div>
                                                                 </div>
                                                                 <div class="modal-footer">
@@ -519,13 +525,13 @@
                 }
                 <!--add connection end-->
                 <!-- add transaction start-->
-                @using (Html.BeginForm("AddTransaction", "Home", FormMethod.Post))
-                {
+                @*@using (Html.BeginForm("AddTransaction", "Home", FormMethod.Post))
+                {*@
                     <div class="modal fade" id="add-transaction" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <button type="button" id="close-transaction" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                                     <h1 class="modal-title" id="myModalLabel"><strong> Create a Transaction</strong></h1>
                                 </div>
                                 <div class="modal-body">
@@ -543,21 +549,33 @@
                                                             </div>
                                                             <div class="form-horizontal">
                                                                 <div class="form-group">
-                                                                    <label for="ipAddress" class="col-sm-4 control-label">IP Address of Store</label>
+                                                                    <label for="transactionIPAddress" class="col-sm-4 control-label">IP Address of Store</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" name="ipAddress" required minlength="7" maxlength="15" value="192.168.0.">
+                                                                        <select class="form-control" id="transactionIPAddress" name="transactionIPAddress" style="padding:0;"></select>
                                                                     </div>
                                                                 </div>
+                                                            @{
+                                                                List<NetworkCommunicationMonitor.Models.Card> cards = (List<NetworkCommunicationMonitor.Models.Card>)ViewData["Cards"];
                                                                 <div class="form-group">
-                                                                    <label for="cardNumber" class="col-sm-4 control-label">Card number</label>
+                                                                    <label for="transactionCardNumber" class="col-sm-4 control-label">Card number</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" name="cardNumber" placeholder="Card number" maxlength="19" onkeyup="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,'')" required/>
+                                                                        <select class="form-control" id="transactionCardNumber" name="transactionCardNumber" style="padding:0;">
+                                                                        @{
+                                                                            foreach (NetworkCommunicationMonitor.Models.Card card in cards)
+                                                                            {
+                                                                            @*<input type="text" class="form-control" id="transactionCardNumber" name="transactionCardNumber" placeholder="Card number" maxlength="19" onkeyup="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,'')" required />*@
+                                                                            <option>@card.cardNumber</option>
+                                                                                }
+                                                                            }
+                                                                        </select>
                                                                     </div>
                                                                 </div>
+                                                            }
                                                                 <div class="form-group">
                                                                     <label for="transactionAmount" class="col-sm-4 control-label">Transaction Amount</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" id="transactionAmount" name="transactionAmount" required minlength="1" maxlength="6" placeholder="$0.00" onkeyup="value = value.replace(/[^\d]/g, ''); if ( value > 25000) { value = 25000; }" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,'')" >
+                                                                        @*<input type="text" class="form-control" id="transactionAmount" name="transactionAmount" required minlength="1" maxlength="6" placeholder="$0.00" onkeyup="value = value.replace(/[^\d]/g, ''); if ( value > 25000) { value = 25000; }" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,'')">*@
+                                                                        <input type="text" class="form-control" id="transactionAmount" name="transactionAmount" required minlength="1" maxlength="6" placeholder="$0.00" onkeyup="if ( value > 25000) { value = 25000; }" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,'')">
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
@@ -576,7 +594,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="modal-footer">
-                                                                    <input type="submit" class="btn btn-success btn-block" value="Add To Network" />
+                                                                    <input id="transactionSubmit" type="submit" class="btn btn-success btn-block" value="Add To Network" />
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -590,7 +608,7 @@
                             </div>
                         </div>
                     </div>
-                }
+                @*}*@
                 <!-- add transaction end-->
             </div>
         </section>
@@ -721,19 +739,35 @@
     <script src="~/js/cytoscape-cose-bilkent.js"></script>
     <!-- Cytoscape-->
     <script>
-
         $(function () { // on dom ready
+            
             const nodes = @Html.Raw(Json.Encode(ViewData["Nodes"]));
             const edges = @Html.Raw(Json.Encode(ViewData["Links"]));
-            //console.log("nodes: ", nodes);
-            //console.log("edges: ", edges);
-            var data = [];
+            const data = [];
+            const relayColor = 'green';
+            const WEIGHTOFFSET = 100000000; // This is used to inactivate relays/connections and to prevent a path from routing through a store
+
+            var stores = [];
+            var relays = [];
+
+            var storeList = [];
+            var relayList = [];
+            var gatewayList = [];
+            var ipSet = []; // from 192.168.0.1 to 192.168.0.254
+            var remainIpSet = []; // ip addresses not include store or relay
+            var currentAnimations = [];
+            convertElements();
+            console.log("nodes:", nodes);
+            console.log("data:", data);
+            console.log("storeList:", storeList);
+            console.log("relayList:", relayList);
+
             var cy = cytoscape({
                 ready: function () { window.cy = this; },
 
                 container: document.getElementById('cy'), // container to render in
 
-                elements: convertElements(),
+                elements: data,
 
                 layout: {
                     name: 'cose-bilkent',
@@ -800,19 +834,82 @@
             });
 
             //popOver();
+            //This handles deactivating of relays
+            cy.on('click', 'node', function (evt) {
+                if (relays.includes(this.data('id')))
+                    if (this.data('status') == 'active') {
+                        console.log('locking: ' + this.id());
+                        this.data('status', 'inactive');
+                        this.data('color', 'black');
+                        var edges = this.connectedEdges();
+                        console.log("numEdges: " + edges.length);
+                        for (var i = 0; i < edges.length; i++) {
+                            var temp = edges[i].data('activeWeight');
+                            edges[i].data('activeWeight', temp + WEIGHTOFFSET);
+                        }
+                    } else {
+                        console.log("unlocking: " + this.id());
+                        this.data('status', 'active');
+                        this.data('color', relayColor);
+                        var edges = this.connectedEdges();
+                        console.log("numEdges: " + edges.length);
+                        for (var i = 0; i < edges.length; i++) {
+                            var temp = edges[i].data('activeWeight');
+                            edges[i].data('activeWeight', temp - WEIGHTOFFSET);
+                        }
+                    }
+            });
+
             /*=====================================================================================================
                                                         Animations
             ======================================================================================================*/
-            // Kicks off an animation when the page is loaded
-            var animationList = [];
-            var currentAnimationPlayingIndex = 0;
-            var transactionStart = @Html.Raw(Json.Encode(ViewData["TransactionStart"]));
-            if (transactionStart != null) {
-                var processingCenter = getNode("@NetworkCommunicationMonitor.Models.Relay.PROCESSINGCENTERIP");
+
+            // When a new transaction is created, it will animate right away
+            $('#transactionSubmit').click(function () {
+                handleTransaction();
+            });
+
+            function handleTransaction() {
+                //Collect values
+                console.log("Handling transactions");
+                var transaction = new Object();
+                transaction.cardNumber = $('#transactionCardNumber').val();
+                var transactionStart = $('#transactionIPAddress').val();
+                transaction.storeIP = transactionStart;
+                transaction.transactionDate = $('#transactionDate').val();
+                transaction.amount = $('#transactionAmount').val();
+                transaction.category = $('#transactionCategory').val();
+
+                //Kick off animation
+                console.log("Kicking off animation for: " + transactionStart);
+                
+                //assembleAnim(startNode);
+
+                //Database insertion
+                $.ajax({
+                    method: "POST",
+                    url: "/Home/AddTransaction",
+                    data: transaction,
+                    success: closeClick,
+                    //function (data) {
+                    //    closeClick();
+                    //    $('#close-transaction').click();
+                    //    console.log("Successful ajax request");
+                    //},
+                    error: (result) => {
+                        console.log("Error on ajax request");
+                        console.log(result);
+                    }
+                });
+            }
+
+            function closeClick() {
+                $('#close-transaction').click();
+                var transactionStart = $('#transactionIPAddress').val();
                 var startNode = getNode(transactionStart);
-                //animPath(startNode, processingCenter, false);
                 assembleAnim(startNode);
             }
+            
             //pauseAnimation();
             function pauseAnimation(node) {
                 node.play();
@@ -894,17 +991,23 @@
                 let temp = [];
                 let arr = [];
                 let status;
+
+                // Convert Nodes
                 for (var i = 0; i < nodes.length; i++) {
                     temp.push(nodes[i].region);
                     let tempId = nodes[i].id.slice(10);
 
                     if (nodes[i].group == 0) {  // Processing center
-                        data.push({ group: 'nodes', data: { id: tempId, color: 'orange', shape: 'barrel', width: '50', height: '50', category: '1' } });
+                        data.push({ group: 'nodes', data: { id: tempId, color: 'orange', shape: 'barrel', width: '50', height: '50', category: '1', queue: [] } });
                     } else if (nodes[i].group == 1) {   // Store
+                        stores.push(tempId);
+                        storeList.push(nodes[i].id);
                         data.push({ group: 'nodes', data: { id: tempId, color: 'blueviolet', shape: 'ellipse', width: '20', height: '20', category: '3', parent: nodes[i].region } });
                     } else if (nodes[i].group == 2) {   // Relay
+                        relays.push(tempId);
+                        relayList.push(nodes[i].id);
                         if (nodes[i].isActive) { status = 'active'; } else { status = 'inactive';}
-                        data.push({ group: 'nodes', data: { id: tempId, color: 'green', shape: 'triangle ', width: '35', height: '35', category: '2', status: status, parent: nodes[i].region } });
+                        data.push({ group: 'nodes', data: { id: tempId, color: 'green', shape: 'triangle ', width: '35', height: '35', category: '2', status: status, parent: nodes[i].region, queue: [] } });
                     }
                 }
                 arr = unique(temp);
@@ -913,27 +1016,16 @@
                     data.push({ group: 'nodes', data: { id: arr[i], color: 'white', shape: 'rectangle', width: '0', height: '0', category: '0' } });
                 }
 
+                // Convert Edges
                 for (var i = 0; i < edges.length; i++) { // Edges
                     let sourceId = edges[i].source.slice(10);
                     let targetId = edges[i].target.slice(10);
-                    data.push({ group: 'edges', data: { source: sourceId, target: targetId, weight: edges[i].distance} });
-                }
-                //console.log("arr: ", arr);
-                //console.log("data: ", data);
-                return data;
-            }
-
-             function unique(arr) {
-                var result = [];
-                var hash = {};
-                for (var i = 0; i < arr.length; i++) {
-                    var key = (typeof arr[i]) + arr[i];
-                    if (!hash[key]) {
-                        result.push(arr[i]);
-                        hash[key] = true;
+                    if (stores.includes(sourceId) || stores.includes(targetId)) {
+                        data.push({ group: 'edges', data: { source: sourceId, target: targetId, weight: edges[i].distance, activeWeight: (edges[i].distance + WEIGHTOFFSET), queue: [] } });
+                    } else {
+                        data.push({ group: 'edges', data: { source: sourceId, target: targetId, weight: edges[i].distance, activeWeight: edges[i].distance, queue: [] } });
                     }
                 }
-                return result;
             }
 
             // Will be used to handle what happens at the processing center
@@ -955,52 +1047,76 @@
                 var processingCenter = getNode("@NetworkCommunicationMonitor.Models.Relay.PROCESSINGCENTERIP");
                 var path = getPath(storeNode, processingCenter);
                 var n = cy.nodes();
-                //var animationList = []
+                var animationList = []
                 // Assemble list of animations
                 for (var i = 0; i < path.length; i++) {
-                    var animation = path[i].animation({
-                        style: {
-                            'background-color': 'red',
-                            'line-color': 'red',
-                            'width': '10px',
-                            'height': '10px'
-                        },
-                        duration: 1000
-                    });
-                    animationList.push(animation);
+                    // If an inactive edge is in the path, we will drop the packet.
+                    // An edge is inactive if the activeWeight is >= the WEIGHTOFFSET
+                    var edgeActiveWeight = path[i].data('activeWeight');
+                    var shouldDropPacket = (i > 1 && i < path.length - 2 && edgeActiveWeight >= WEIGHTOFFSET);
+                    //if (i == 1 && path.length >= 3 && path[i + 2].data('activeWeight') >= WEIGHTOFFSET) {
+                    //    shouldDropPacket = true;
+                    //}
+                    console.log("activeWeight: " + edgeActiveWeight);
+                    if (shouldDropPacket) {
+                        break;
+                    } else {
+                        var animation = path[i].animation({
+                            style: {
+                                'background-color': 'red',
+                                'line-color': 'red',
+                                'width': '10px',
+                                'height': '10px'
+                            },
+                            duration: 1000
+                        });
+                        animationList.push(animation);
+                    }
+                    
                 }
+                console.log("starting newAnim: ")
+                console.log(animationList)
                 newAnim(animationList, 0);
+            }
+
+            // This is used to remove stores and inactive relays/connections from a path
+            function correctPath(path) {
+                console.log("correcting path:")
+                console.log(path)
+
+                for (var i = 0; i < path.length; i++) {
+                    console.log(i)
+                    console.log(path[i].data('shape'))
+                    console.log(path[i].data('queue'))
+                }
+
+                return path
             }
 
             // Play the animation and try to continue
             function newAnim(animationList, currentAnimationPlayingIndex) {
-                var node = animationList[currentAnimationPlayingIndex];
-                pauseAnimation(node);
-                //node.play()
-                node.promise('completed').then(function () {
-                        node
+                var animation = animationList[currentAnimationPlayingIndex];
+                pauseAnimation(animation);
+                animation.promise('completed').then(function () {
+                        animation
                             .reverse()
                             .rewind()
                             .play();
+                        //node.data('queue').push("Test");
+                        console.log("Animating a node");
+                        //console.log(node.data('queue'));
                         if (currentAnimationPlayingIndex < animationList.length - 1) {
                             currentAnimationPlayingIndex += 1;
+                            //node.data('queue').shift()
+                            //console.log(node.data('queue'));
                             newAnim(animationList, currentAnimationPlayingIndex);
                         }
                     });
             }
 
-
-            // This allows you to change the position of nodes at runtime
-            //cy.nodes().positions(function (node, i) {
-            //    return {
-            //        x: 300 + i * 200,
-            //        y: 100
-            //    };
-            //});
-
             // Calculate the round trip path from start to end
             function getPath(startNode, endNode) {
-                var aStar = cy.elements().aStar({ root: startNode, goal: endNode });
+                var aStar = cy.elements().aStar({ root: startNode, goal: endNode, weight: function (edge) {return edge.data('activeWeight')} });
                 var pathToTruncate = Object.values(aStar.path);
                 var truncatedPath = truncatePath(pathToTruncate);
                 truncatedPath = reorderPath(truncatedPath);
@@ -1011,7 +1127,9 @@
                 returnPath.reverse();
                 returnPath.shift();
 
-                return truncatedPath.concat(returnPath);
+                var path = truncatedPath.concat(returnPath);
+
+                return correctPath(path);
             }
 
             // For some reason the cytoscape aStar path has edges after nodes, this should properly order things
@@ -1036,6 +1154,50 @@
                 }
 
                 return truncated;
+            }
+
+            function unique(arr) {
+                var result = [];
+                var hash = {};
+                for (var i = 0; i < arr.length; i++) {
+                    var key = (typeof arr[i]) + arr[i];
+                    if (!hash[key]) {
+                        result.push(arr[i]);
+                        hash[key] = true;
+                    }
+                }
+                return result;
+            }
+            // This allows you to change the position of nodes at runtime
+            //cy.nodes().positions(function (node, i) {
+            //    return {
+            //        x: 300 + i * 200,
+            //        y: 100
+            //    };
+            //});
+            validateInput();
+
+            function validateInput() {
+                let date = new Date();
+                let day = date.getDay() + 1;
+                let month = date.getMonth() + 1 ;
+                let year = date.getFullYear();
+                let transActionDate = day + "/" + month + "/" + year;
+
+                for (var i = 1; i < 255; i++) {
+                    ipSet.push("192.168.0." + i);
+                }
+                for (var i = 0; i < storeList.length; i++) {
+                    $('#transactionIPAddress').append('<option>' + storeList[i] + '</option>');
+                }
+
+                for (var i = 0; i < relayList.length; i++) {
+                    $('#storeIpConnectedTo').append('<option>' + relayList[i] + '</option>');
+                    $('#relayIpConnectedTo').append('<option>' + relayList[i] + '</option>');
+                }
+
+                $('#transactionDate').val(transActionDate);
+                
             }
         }); // on dom ready
     </script>
