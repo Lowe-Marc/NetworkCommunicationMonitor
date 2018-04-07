@@ -817,6 +817,8 @@
             });
 
             function tryLockNetworkElement(element) {
+                console.log("trying to lock:")
+                console.log(element);
                 if (relayIds.includes(element.data('id')) || connectionIds.includes(element.data('connectionId')))
                     if (element.data('isActive') == true) {
                         console.log('locking: ' + element.id());
@@ -829,6 +831,12 @@
                             },
                             duration: 500
                         }).play();
+                        var connectedEdges = element.connectedEdges();
+                        for (var i = 0; i < connectedEdges.length; i++) {
+                            console.log(connectedEdges[i].data('connectionId'));
+                            weight = connectedEdges[i].data('activeWeight');
+                            connectedEdges[i].data('activeWeight', weight + WEIGHTOFFSET)
+                        }
                         element.data('isActive', false);
                     } else {
                         console.log("unlocking: " + element.id());
@@ -841,6 +849,12 @@
                             },
                             duration: 500
                         }).play();
+                        var connectedEdges = element.connectedEdges();
+                        for (var i = 0; i < connectedEdges.length; i++) {
+                            console.log(connectedEdges[i].data('connectionId'));
+                            weight = connectedEdges[i].data('activeWeight');
+                            connectedEdges[i].data('activeWeight', weight - WEIGHTOFFSET)
+                        }
                         element.data('isActive', true);
                     }
             }
@@ -975,7 +989,7 @@
                         data.push({ group: 'nodes', data: { id: tempId, color: 'orange', shape: 'barrel', width: '50', height: '50', category: '1', queue: [], isActive: true } });
                     } else if (nodes[i].group == 1) {   // Store
                         storeIds.push(tempId);
-                        data.push({ group: 'nodes', data: { id: tempId, color: 'blueviolet', shape: 'ellipse', width: '20', height: '20', category: '3', parent: nodes[i].region, isActive: true } });
+                        data.push({ group: 'nodes', data: { id: tempId, color: 'blueviolet', shape: 'ellipse', width: '20', height: '20', category: '3', parent: nodes[i].region, isActive: false } });
                     } else if (nodes[i].group == 2) {   // Relay
                         relayIds.push(tempId);
                         if (nodes[i].isActive) { status = 'active'; } else { status = 'inactive';}
@@ -995,7 +1009,7 @@
                     var tempId = edges[i].id
                     connectionIds.push(tempId)
                     if (storeIds.includes(sourceId) || storeIds.includes(targetId)) {
-                        data.push({ group: 'edges', data: { source: sourceId, target: targetId, weight: edges[i].distance, activeWeight: (edges[i].distance + WEIGHTOFFSET), isActive: true, queue: [], connecitonId: tempId } });
+                        data.push({ group: 'edges', data: { source: sourceId, target: targetId, weight: edges[i].distance, activeWeight: (edges[i].distance + WEIGHTOFFSET), isActive: false, queue: [], connectionId: tempId } });
                     } else {
                         data.push({ group: 'edges', data: { source: sourceId, target: targetId, weight: edges[i].distance, activeWeight: edges[i].distance, isActive: true, queue: [], connectionId: tempId } });
                     }
@@ -1045,13 +1059,11 @@
                     console.log(path[i])
                     // If an inactive edge is in the path, we will drop the packet.
                     // An edge is inactive if the activeWeight is >= the WEIGHTOFFSET
-                    var edgeActiveWeight = path[i].data('activeWeight');
-                    var shouldDropPacket = (i > 1 && i < path.length - 2 && edgeActiveWeight >= WEIGHTOFFSET);
-                    //if (i == 1 && path.length >= 3 && path[i + 2].data('activeWeight') >= WEIGHTOFFSET) {
-                    //    shouldDropPacket = true;
-                    //}
-                    //console.log("activeWeight: " + edgeActiveWeight);
-                    if (!path[i].data('isActive')) {
+                    var elementIsActive = path[i].data('isActive');
+                    console.log("i : " + i)
+                    console.log(elementIsActive)
+                    var shouldDropPacket = (i > 1 && i < path.length - 2) && !elementIsActive;
+                    if (shouldDropPacket) {
                         break;
                     } else {
                         var animation = path[i].animation({

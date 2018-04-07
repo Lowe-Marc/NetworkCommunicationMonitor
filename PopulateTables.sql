@@ -34,6 +34,9 @@ INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueL
 -- INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueLimit) VALUES('192.168.0.55', 1, 0, 'Three', 1);
 INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueLimit) VALUES('192.168.0.56', 1, 0, 'Four', 1);
 INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueLimit) VALUES('192.168.0.57', 1, 0, 'Four', 1);
+INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueLimit) VALUES('192.168.0.58', 1, 0, 'Four', 1);
+INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueLimit) VALUES('192.168.0.59', 1, 0, 'Four', 1);
+INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueLimit) VALUES('192.168.0.60', 1, 0, 'Four', 1);
 -- Starting stores with the last digits of 100
 INSERT INTO Store(store_id, store_name, region) VALUES('192.168.0.100', 'Store 0', 'One');
 INSERT INTO Store(store_id, store_name, region) VALUES('192.168.0.101', 'Store 1', 'One');
@@ -65,6 +68,8 @@ INSERT INTO Store(store_id, store_name, region) VALUES('192.168.0.126', 'Store 2
 INSERT INTO Store(store_id, store_name, region) VALUES('192.168.0.127', 'Store 27', 'Four');
 INSERT INTO Store(store_id, store_name, region) VALUES('192.168.0.128', 'Store 28', 'Four');
 INSERT INTO Store(store_id, store_name, region) VALUES('192.168.0.129', 'Store 29', 'Four');
+INSERT INTO Store(store_id, store_name, region) VALUES('192.168.0.130', 'Store 30', 'Four');
+INSERT INTO Store(store_id, store_name, region) VALUES('192.168.0.131', 'Store 31', 'Four');
 --Connect gateways to processing center
 INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.2', '192.168.0.1', 1, 1);
 INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.3', '192.168.0.1', 1, 1);
@@ -79,6 +84,10 @@ INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weig
 INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.54', '192.168.0.4', 1, 1);
 INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.56', '192.168.0.57', 1, 1);
 INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.57', '192.168.0.5', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.56', '192.168.0.58', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.58', '192.168.0.5', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.58', '192.168.0.59', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.59', '192.168.0.60', 1, 1);
 --Connect stores to relays
 INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.100', '192.168.0.2', 1, 1);
 INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.101', '192.168.0.50', 1, 1);
@@ -113,3 +122,6 @@ INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weig
 INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.127', '192.168.0.57', 1, 1);
 INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.128', '192.168.0.57', 1, 1);
 INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.129', '192.168.0.57', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.130', '192.168.0.5', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.130', '192.168.0.60', 1, 1);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.131', '192.168.0.60', 1, 1);
