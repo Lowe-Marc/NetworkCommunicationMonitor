@@ -307,13 +307,19 @@
                                                             </div>
                                                             <div class="form-horizontal">
                                                                 <div class="form-group">
-                                                                    <label for="relayIpAddress" class="col-sm-4 control-label">IP Address</label>
+                                                                    <label for="relayWeight" class="col-sm-4 control-label">Weight</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" id="relayIpAddress" name="relayIpAddress" minlength="11" maxlength="13" value="192.168.0." required/>
+                                                                        <select class="form-control" id="relayWeight" name="relayWeight" style="padding:0;"></select>
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
-                                                                    <label for="relayIpConnectedTo" class="col-sm-4 control-label">IP Address To Connect To</label>
+                                                                    <label for="relayIpAddress" class="col-sm-4 control-label">IP Address</label>
+                                                                    <div class="col-sm-6">
+                                                                        <select class="form-control" id="relayIpAddress" name="relayIpAddress" style="padding:0;"></select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="relayIpConnectedTo" class="col-sm-4 control-label">Connect To</label>
                                                                     <div class="col-sm-6">
                                                                         <select class="form-control" id="relayIpConnectedTo" name="relayIpConnectedTo" style="padding:0;"></select>
                                                                     </div>
@@ -368,13 +374,19 @@
                                                                 <div class="form-group">
                                                                     <label for="gateway-ipAddress" class="col-sm-4 control-label">Gateway IP Address</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" id="gateway-ipAddress" name="gateway-ipAddress" required minlength="11" maxlength="13" value="192.168.0.">
+                                                                        <select class="form-control" id="gateway-ipAddress" name="gateway-ipAddress" style="padding:0;"></select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="gateway-relay" class="col-sm-4 control-label">Gateway - Relay</label>
+                                                                    <div class="col-sm-6">
+                                                                        <select class="form-control" id="gateway-relay" name="gateway-relay" style="padding:0;"></select>
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label for="relay-ipaddress" class="col-sm-4 control-label">Relay IP Address</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" id="relay-ipaddress" name="relay-ipaddress" required minlength="11" maxlength="13" value="192.168.0.">
+                                                                        <select class="form-control" id="relay-ipAddress" name="relay-ipAddress" style="padding:0;"></select>
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
@@ -384,9 +396,15 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
+                                                                    <label for="store-relay" class="col-sm-4 control-label">Store-Relay</label>
+                                                                    <div class="col-sm-6">
+                                                                        <select class="form-control" id="store-relay" name="store-relay" style="padding:0;"></select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
                                                                     <label for="store-ipaddress" class="col-sm-4 control-label">Store IP Address</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" id="store-ipaddress" name="store-ipaddress" required="" minlength="11" maxlength="13" value="192.168.0.">
+                                                                        <select class="form-control" id="store-ipAddress" name="store-ipAddress" style="padding:0;"></select>
                                                                     </div>
                                                                 </div>
                                                                 <div class="modal-footer">
@@ -439,13 +457,13 @@
                                                                 <div class="form-group">
                                                                     <label for="storeWeight" class="col-sm-4 control-label">Weight</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" id="storeWeight" name="storeWeight" minlength="1" maxlength="2" placeholder="Weight of Connection">
+                                                                        <select class="form-control" id="storeWeight" name="storeWeight" style="padding:0;"></select>
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label for="storeIpAddress" class="col-sm-4 control-label">IP Address</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" id="storeIpAddress" name="storeIpAddress" required minlength="11" maxlength="13" value="192.168.0.">
+                                                                        <select class="form-control" id="storeIpAddress" name="storeIpAddress" style="padding:0;"></select>
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
@@ -496,15 +514,21 @@
                                                             </div>
                                                             <div class="form-horizontal">
                                                                 <div class="form-group">
+                                                                    <label for="connectionWeight" class="col-sm-4 control-label">Weight</label>
+                                                                    <div class="col-sm-6">
+                                                                        <select class="form-control" id="connectionWeight" name="connectionWeight" style="padding:0;"></select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
                                                                     <label for="ipOne" class="col-sm-4 control-label">IP Address One</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" name="ipOne" required minlength="11" maxlength="13" value="192.168.0.">
+                                                                        <select class="form-control" id="ipOne" name="ipOne" style="padding:0;"></select>
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label for="ipTwo" class="col-sm-4 control-label">IP Address Two</label>
                                                                     <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" id="ipTwo" name="ipTwo" required minlength="11" maxlength="13" value="192.168.0.">
+                                                                        <select class="form-control" id="ipTwo" name="ipTwo" style="padding:0;"></select>
                                                                     </div>
                                                                 </div>
                                                                 <div class="modal-footer">
@@ -740,27 +764,33 @@
     <!-- Cytoscape-->
     <script>
         $(function () { // on dom ready
-            
+
             const nodes = @Html.Raw(Json.Encode(ViewData["Nodes"]));
             const edges = @Html.Raw(Json.Encode(ViewData["Links"]));
             const data = [];
             const relayColor = 'green';
             const WEIGHTOFFSET = 100000000; // This is used to inactivate relays/connections and to prevent a path from routing through a store
 
-            var stores = [];
-            var relays = [];
+            var storeIds = [];
+            var relayIds = [];
+            var connectionIds = [];
 
             var storeList = [];
             var relayList = [];
             var gatewayList = [];
             var ipSet = []; // from 192.168.0.1 to 192.168.0.254
-            var remainIpSet = []; // ip addresses not include store or relay
+            var existIpSet = []; // ip addresses include both stores and relays
+            var remainIpSet = []; // ip addresses not include stores and relays
             var currentAnimations = [];
             convertElements();
-            console.log("nodes:", nodes);
-            console.log("data:", data);
+            getRemainingIp();
+            validateInput();
+
             console.log("storeList:", storeList);
             console.log("relayList:", relayList);
+            console.log("ipSet:", ipSet);
+            console.log("existIpSet:", existIpSet);
+            console.log("remainIpSet:", remainIpSet);
 
             var cy = cytoscape({
                 ready: function () { window.cy = this; },
@@ -836,30 +866,54 @@
             //popOver();
             //This handles deactivating of relays
             cy.on('click', 'node', function (evt) {
-                if (relays.includes(this.data('id')))
-                    if (this.data('status') == 'active') {
-                        console.log('locking: ' + this.id());
-                        this.data('status', 'inactive');
-                        this.data('color', 'black');
-                        var edges = this.connectedEdges();
-                        console.log("numEdges: " + edges.length);
-                        for (var i = 0; i < edges.length; i++) {
-                            var temp = edges[i].data('activeWeight');
-                            edges[i].data('activeWeight', temp + WEIGHTOFFSET);
-                        }
-                    } else {
-                        console.log("unlocking: " + this.id());
-                        this.data('status', 'active');
-                        this.data('color', relayColor);
-                        var edges = this.connectedEdges();
-                        console.log("numEdges: " + edges.length);
-                        for (var i = 0; i < edges.length; i++) {
-                            var temp = edges[i].data('activeWeight');
-                            edges[i].data('activeWeight', temp - WEIGHTOFFSET);
-                        }
-                    }
+                tryLockNetworkElement(this);
+            });
+            cy.on('click', 'edge', function (evt) {
+                tryLockNetworkElement(this);
             });
 
+            function tryLockNetworkElement(element) {
+                console.log("trying to lock:")
+                console.log(element);
+                if (relayIds.includes(element.data('id')) || connectionIds.includes(element.data('connectionId')))
+                    if (element.data('isActive') == true) {
+                        console.log('locking: ' + element.id());
+                        element.data('status', 'inactive');
+                        //element.data('color', 'black');
+                        element.animation({
+                            style: {
+                                'background-color': 'black',
+                                'line-color': 'black'
+                            },
+                            duration: 500
+                        }).play();
+                        var connectedEdges = element.connectedEdges();
+                        for (var i = 0; i < connectedEdges.length; i++) {
+                            console.log(connectedEdges[i].data('connectionId'));
+                            weight = connectedEdges[i].data('activeWeight');
+                            connectedEdges[i].data('activeWeight', weight + WEIGHTOFFSET)
+                        }
+                        element.data('isActive', false);
+                    } else {
+                        console.log("unlocking: " + element.id());
+                        element.data('status', 'active');
+                        //element.data('color', relayColor);
+                        element.animation({
+                            style: {
+                                'background-color': relayColor,
+                                'line-color': 'grey'
+                            },
+                            duration: 500
+                        }).play();
+                        var connectedEdges = element.connectedEdges();
+                        for (var i = 0; i < connectedEdges.length; i++) {
+                            console.log(connectedEdges[i].data('connectionId'));
+                            weight = connectedEdges[i].data('activeWeight');
+                            connectedEdges[i].data('activeWeight', weight - WEIGHTOFFSET)
+                        }
+                        element.data('isActive', true);
+                    }
+            }
             /*=====================================================================================================
                                                         Animations
             ======================================================================================================*/
@@ -882,7 +936,6 @@
 
                 //Kick off animation
                 console.log("Kicking off animation for: " + transactionStart);
-                
                 //assembleAnim(startNode);
 
                 //Database insertion
@@ -891,11 +944,6 @@
                     url: "/Home/AddTransaction",
                     data: transaction,
                     success: closeClick,
-                    //function (data) {
-                    //    closeClick();
-                    //    $('#close-transaction').click();
-                    //    console.log("Successful ajax request");
-                    //},
                     error: (result) => {
                         console.log("Error on ajax request");
                         console.log(result);
@@ -909,7 +957,7 @@
                 var startNode = getNode(transactionStart);
                 assembleAnim(startNode);
             }
-            
+
             //pauseAnimation();
             function pauseAnimation(node) {
                 node.play();
@@ -998,16 +1046,16 @@
                     let tempId = nodes[i].id.slice(10);
 
                     if (nodes[i].group == 0) {  // Processing center
-                        data.push({ group: 'nodes', data: { id: tempId, color: 'orange', shape: 'barrel', width: '50', height: '50', category: '1', queue: [] } });
+                        data.push({ group: 'nodes', data: { id: tempId, color: 'orange', shape: 'barrel', width: '50', height: '50', category: '1', queue: [], isActive: true } });
                     } else if (nodes[i].group == 1) {   // Store
-                        stores.push(tempId);
-                        storeList.push(nodes[i].id);
-                        data.push({ group: 'nodes', data: { id: tempId, color: 'blueviolet', shape: 'ellipse', width: '20', height: '20', category: '3', parent: nodes[i].region } });
+                        storeIds.push(tempId);
+                        storeList.push(tempId);
+                        data.push({ group: 'nodes', data: { id: tempId, color: 'blueviolet', shape: 'ellipse', width: '20', height: '20', category: '3', parent: nodes[i].region, isActive: false } });
                     } else if (nodes[i].group == 2) {   // Relay
-                        relays.push(tempId);
-                        relayList.push(nodes[i].id);
+                        relayIds.push(tempId);
+                        relayList.push(tempId);
                         if (nodes[i].isActive) { status = 'active'; } else { status = 'inactive';}
-                        data.push({ group: 'nodes', data: { id: tempId, color: 'green', shape: 'triangle ', width: '35', height: '35', category: '2', status: status, parent: nodes[i].region, queue: [] } });
+                        data.push({ group: 'nodes', data: { id: tempId, color: 'green', shape: 'triangle ', width: '35', height: '35', category: '2', status: status, parent: nodes[i].region, queue: [], isActive: true } });
                     }
                 }
                 arr = unique(temp);
@@ -1020,10 +1068,13 @@
                 for (var i = 0; i < edges.length; i++) { // Edges
                     let sourceId = edges[i].source.slice(10);
                     let targetId = edges[i].target.slice(10);
-                    if (stores.includes(sourceId) || stores.includes(targetId)) {
-                        data.push({ group: 'edges', data: { source: sourceId, target: targetId, weight: edges[i].distance, activeWeight: (edges[i].distance + WEIGHTOFFSET), queue: [] } });
+                    //console.log(edges[i])
+                    var tempId = edges[i].id
+                    connectionIds.push(tempId)
+                    if (storeIds.includes(sourceId) || storeIds.includes(targetId)) {
+                        data.push({ group: 'edges', data: { source: sourceId, target: targetId, weight: edges[i].distance, activeWeight: (edges[i].distance + WEIGHTOFFSET), isActive: false, queue: [], connectionId: tempId } });
                     } else {
-                        data.push({ group: 'edges', data: { source: sourceId, target: targetId, weight: edges[i].distance, activeWeight: edges[i].distance, queue: [] } });
+                        data.push({ group: 'edges', data: { source: sourceId, target: targetId, weight: edges[i].distance, activeWeight: edges[i].distance, isActive: true, queue: [], connectionId: tempId } });
                     }
                 }
             }
@@ -1044,20 +1095,22 @@
             }
 
             function assembleAnim(storeNode) {
+                console.log("Assembling animation")
+
                 var processingCenter = getNode("@NetworkCommunicationMonitor.Models.Relay.PROCESSINGCENTERIP");
                 var path = getPath(storeNode, processingCenter);
                 var n = cy.nodes();
                 var animationList = []
                 // Assemble list of animations
                 for (var i = 0; i < path.length; i++) {
+                    console.log(i + ": ")
+                    console.log(path[i])
                     // If an inactive edge is in the path, we will drop the packet.
                     // An edge is inactive if the activeWeight is >= the WEIGHTOFFSET
-                    var edgeActiveWeight = path[i].data('activeWeight');
-                    var shouldDropPacket = (i > 1 && i < path.length - 2 && edgeActiveWeight >= WEIGHTOFFSET);
-                    //if (i == 1 && path.length >= 3 && path[i + 2].data('activeWeight') >= WEIGHTOFFSET) {
-                    //    shouldDropPacket = true;
-                    //}
-                    console.log("activeWeight: " + edgeActiveWeight);
+                    var elementIsActive = path[i].data('isActive');
+                    console.log("i : " + i)
+                    console.log(elementIsActive)
+                    var shouldDropPacket = (i > 1 && i < path.length - 2) && !elementIsActive;
                     if (shouldDropPacket) {
                         break;
                     } else {
@@ -1072,22 +1125,22 @@
                         });
                         animationList.push(animation);
                     }
-                    
+
                 }
-                console.log("starting newAnim: ")
-                console.log(animationList)
+                //console.log("starting newAnim: ")
+                //console.log(animationList)
                 newAnim(animationList, 0);
             }
 
             // This is used to remove stores and inactive relays/connections from a path
             function correctPath(path) {
-                console.log("correcting path:")
-                console.log(path)
+                //console.log("correcting path:")
+                //console.log(path)
 
                 for (var i = 0; i < path.length; i++) {
-                    console.log(i)
-                    console.log(path[i].data('shape'))
-                    console.log(path[i].data('queue'))
+                    //console.log(i)
+                    //console.log(path[i].data('shape'))
+                    //console.log(path[i].data('queue'))
                 }
 
                 return path
@@ -1168,14 +1221,51 @@
                 }
                 return result;
             }
-            // This allows you to change the position of nodes at runtime
-            //cy.nodes().positions(function (node, i) {
-            //    return {
-            //        x: 300 + i * 200,
-            //        y: 100
-            //    };
-            //});
-            validateInput();
+
+            function getRemainingIp() {
+                for (var i = 1; i < 255; i++) {
+                    ipSet.push(i);
+                }
+                for (var i = 0; i < ipSet.length; i++) {
+                    remainIpSet.push(ipSet[i]);
+                }
+                for (var i = remainIpSet.length - 1; i >= 0; i--) {
+                    a = remainIpSet[i];
+                    for (var j = storeList.length - 1; j >= 0; j--) {
+                        b = storeList[j];
+                        if (a == b) {
+                            remainIpSet.splice(i, 1);
+                            break;
+                        }
+                    }
+                }
+                for (var i = remainIpSet.length - 1; i >= 0; i--) {
+                    a = remainIpSet[i];
+                    for (var j = relayList.length - 1; j >= 0; j--) {
+                        b = relayList[j];
+                        if (a == b) {
+                            remainIpSet.splice(i, 1);
+                            break;
+                        }
+                    }
+                }
+                for (var i = remainIpSet.length - 1; i >= 0; i--) {
+                    a = remainIpSet[i];
+                    for (var j = relayList.length - 1; j >= 0; j--) {
+                        b = relayList[j];
+                        if (a == b) {
+                            remainIpSet.splice(i, 1);
+                            break;
+                        }
+                    }
+                }
+                existIpSet = storeList.concat(relayList);
+                sortByLength(storeList);
+                sortByLength(relayList);
+                sortByLength(ipSet);
+                sortByLength(existIpSet);
+                sortByLength(remainIpSet);
+            }
 
             function validateInput() {
                 let date = new Date();
@@ -1184,21 +1274,43 @@
                 let year = date.getFullYear();
                 let transActionDate = day + "/" + month + "/" + year;
 
-                for (var i = 1; i < 255; i++) {
-                    ipSet.push("192.168.0." + i);
-                }
                 for (var i = 0; i < storeList.length; i++) {
                     $('#transactionIPAddress').append('<option>' + storeList[i] + '</option>');
                 }
-
                 for (var i = 0; i < relayList.length; i++) {
                     $('#storeIpConnectedTo').append('<option>' + relayList[i] + '</option>');
                     $('#relayIpConnectedTo').append('<option>' + relayList[i] + '</option>');
                 }
+                for (var i = 0; i < remainIpSet.length; i++) {
+                    $('#storeIpAddress').append('<option>' + remainIpSet[i] + '</option>');
+                    $('#relayIpAddress').append('<option>' + remainIpSet[i] + '</option>');
+                    $('#gateway-ipAddress').append('<option>' + remainIpSet[i] + '</option>');
+                    $('#relay-ipAddress').append('<option>' + remainIpSet[i] + '</option>');
+                    $('#store-ipAddress').append('<option>' + remainIpSet[i] + '</option>');
+                }
+                for (var i = 0; i < existIpSet.length; i++) {
+                    $('#ipOne').append('<option>' + existIpSet[i] + '</option>');
+                    $('#ipTwo').append('<option>' + existIpSet[i] + '</option>');
+                }
+                for (var i = 1; i < 11; i++) {
+                    $('#storeWeight').append('<option>' + i + '</option>');
+                    $('#relayWeight').append('<option>' + i + '</option>');
+                    $('#connectionWeight').append('<option>' + i + '</option>');
+                    $('#store-relay').append('<option>' + i + '</option>');
+                    $('#gateway-relay').append('<option>' + i + '</option>');
+                }
 
                 $('#transactionDate').val(transActionDate);
-                
             }
+
+            // transfer ip with prefix and sort them by length and letters
+            function sortByLength(arr) {
+                arr.sort(function (a, b) { return a - b });
+                for (var i = 0; i < arr.length; i++) {
+                    arr[i] = "192.168.0." + arr[i];
+                }
+            }
+
         }); // on dom ready
     </script>
 </body>
