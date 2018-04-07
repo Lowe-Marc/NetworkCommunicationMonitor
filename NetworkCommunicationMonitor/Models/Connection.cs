@@ -14,6 +14,7 @@ namespace NetworkCommunicationMonitor.Models
 {
     public class Connection
     {
+        public int id;
         public string ipOne;
         public string source;
         public string ipTwo;
@@ -35,7 +36,7 @@ namespace NetworkCommunicationMonitor.Models
             {
                 DataTable questionTable = new DataTable();
                 DataRowCollection rows;
-                string _sql = @"SELECT station_one_id, station_two_id FROM Connection";
+                string _sql = @"SELECT connection_id, station_one_id, station_two_id FROM Connection";
                 var cmd = new SqlCommand(_sql, cn);
 
                 cn.Open();
@@ -46,6 +47,7 @@ namespace NetworkCommunicationMonitor.Models
                 foreach (DataRow row in rows)
                 {
                     Connection tempConnection = new Connection();
+                    tempConnection.id = Convert.ToInt32(row["connection_id"]);
                     tempConnection.ipOne = Convert.ToString(row["station_one_id"]);
                     tempConnection.source = Convert.ToString(row["station_one_id"]);
                     tempConnection.ipTwo = Convert.ToString(row["station_two_id"]);

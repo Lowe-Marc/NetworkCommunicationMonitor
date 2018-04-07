@@ -20,7 +20,7 @@ INSERT INTO Account (account_holder_firstname, account_holder_lastname, account_
 INSERT INTO Card(card_id, card_firstname, card_lastname, card_expirationMonth, card_expirationYear, card_securityCode, account_id) VALUES('5538572760352094', 'Darrell', 'Adams', '08', '2021', '758', 4);
 INSERT INTO Card(card_id, card_firstname, card_lastname, card_expirationMonth, card_expirationYear, card_securityCode, account_id) VALUES('4485228863864370', 'Dalton', 'Lily', '07', '2018', '259', 4);
 --192.168.0.1 is the processing center, 2,3,4, and 5 are gateways
-INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueLimit) VALUES('192.168.0.1', 1, 0, 'Zero', 1);
+INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueLimit) VALUES('192.168.0.1', 1, 0, null, 1);
 INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueLimit) VALUES('192.168.0.2', 1, 1, 'One', 1);
 INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueLimit) VALUES('192.168.0.3', 1, 1, 'Two', 1);
 INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueLimit) VALUES('192.168.0.4', 1, 1, 'Three', 1);

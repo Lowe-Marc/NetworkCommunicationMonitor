@@ -726,10 +726,12 @@
             const WEIGHTOFFSET = 100000000; // This is used to inactivate relays/connections and to prevent a path from routing through a store
             const nodes = @Html.Raw(Json.Encode(ViewData["Nodes"]));
             const edges = @Html.Raw(Json.Encode(ViewData["Links"]));
+            console.log(edges);
             const relayColor = 'green';
 
-            var stores = [];
-            var relays = [];
+            var storeIds = [];
+            var relayIds = [];
+            var connectionIds = [];
             var currentAnimations = [];
 
             var data = [];
@@ -807,29 +809,27 @@
             //popOver();
             //This handles deactivating of relays
             cy.on('click', 'node', function (evt) {
-                if (relays.includes(this.data('id')))
-                    if (this.data('status') == 'active') {
-                        console.log('locking: ' + this.id());
-                        this.data('status', 'inactive');
-                        this.data('color', 'black');
-                        var edges = this.connectedEdges();
-                        console.log("numEdges: " + edges.length);
-                        for (var i = 0; i < edges.length; i++) {
-                            var temp = edges[i].data('activeWeight');
-                            edges[i].data('activeWeight', temp + WEIGHTOFFSET);
-                        }
-                    } else {
-                        console.log("unlocking: " + this.id());
-                        this.data('status', 'active');
-                        this.data('color', relayColor);
-                        var edges = this.connectedEdges();
-                        console.log("numEdges: " + edges.length);
-                        for (var i = 0; i < edges.length; i++) {
-                            var temp = edges[i].data('activeWeight');
-                            edges[i].data('activeWeight', temp - WEIGHTOFFSET);
-                        }
-                    }
+                tryLockNetworkElement(this)
             });
+
+            cy.on('click', 'edge', function (evt) {
+                tryLockNetworkElement(this)
+            });
+
+            function tryLockNetworkElement(element) {
+                if (relayIds.includes(element.data('id')) || connectionIds.includes(element.data('connectionId')))
+                    if (element.data('isActive') == true) {
+                        console.log('locking: ' + element.id());
+                        element.data('status', 'inactive');
+                        element.data('color', 'black');
+                        element.data('isActive', false);
+                    } else {
+                        console.log("unlocking: " + element.id());
+                        element.data('status', 'active');
+                        element.data('color', relayColor);
+                        element.data('isActive', true);
+                    }
+            }
 
             /*=====================================================================================================
                                                         Animations
@@ -958,14 +958,14 @@
                     let tempId = nodes[i].id.slice(10);
 
                     if (nodes[i].group == 0) {  // Processing center
-                        data.push({ group: 'nodes', data: { id: tempId, color: 'orange', shape: 'barrel', width: '50', height: '50', category: '1', queue: [] } });
+                        data.push({ group: 'nodes', data: { id: tempId, color: 'orange', shape: 'barrel', width: '50', height: '50', category: '1', queue: [], isActive: true } });
                     } else if (nodes[i].group == 1) {   // Store
-                        stores.push(tempId);
-                        data.push({ group: 'nodes', data: { id: tempId, color: 'blueviolet', shape: 'ellipse', width: '20', height: '20', category: '3', parent: nodes[i].region } });
+                        storeIds.push(tempId);
+                        data.push({ group: 'nodes', data: { id: tempId, color: 'blueviolet', shape: 'ellipse', width: '20', height: '20', category: '3', parent: nodes[i].region, isActive: true } });
                     } else if (nodes[i].group == 2) {   // Relay
-                        relays.push(tempId);
+                        relayIds.push(tempId);
                         if (nodes[i].isActive) { status = 'active'; } else { status = 'inactive';}
-                        data.push({ group: 'nodes', data: { id: tempId, color: 'green', shape: 'triangle ', width: '35', height: '35', category: '2', status: status, parent: nodes[i].region, queue: [] } });
+                        data.push({ group: 'nodes', data: { id: tempId, color: 'green', shape: 'triangle ', width: '35', height: '35', category: '2', status: status, parent: nodes[i].region, queue: [], isActive: true } });
                     }
                 }
                 arr = unique(temp);
@@ -977,10 +977,13 @@
                 for (var i = 0; i < edges.length; i++) { // Edges
                     let sourceId = edges[i].source.slice(10);
                     let targetId = edges[i].target.slice(10);
-                    if (stores.includes(sourceId) || stores.includes(targetId)) {
-                        data.push({ group: 'edges', data: { source: sourceId, target: targetId, weight: edges[i].distance, activeWeight: (edges[i].distance + WEIGHTOFFSET), queue: [] } });
+                    //console.log(edges[i])
+                    var tempId = edges[i].id
+                    connectionIds.push(tempId)
+                    if (storeIds.includes(sourceId) || storeIds.includes(targetId)) {
+                        data.push({ group: 'edges', data: { source: sourceId, target: targetId, weight: edges[i].distance, activeWeight: (edges[i].distance + WEIGHTOFFSET), isActive: true, queue: [], connecitonId: tempId } });
                     } else {
-                        data.push({ group: 'edges', data: { source: sourceId, target: targetId, weight: edges[i].distance, activeWeight: edges[i].distance, queue: [] } });
+                        data.push({ group: 'edges', data: { source: sourceId, target: targetId, weight: edges[i].distance, activeWeight: edges[i].distance, isActive: true, queue: [], connectionId: tempId } });
                     }
                 }
                 
@@ -1016,12 +1019,16 @@
             }
 
             function assembleAnim(storeNode) {
+                console.log("Assembling animation")
+
                 var processingCenter = getNode("@NetworkCommunicationMonitor.Models.Relay.PROCESSINGCENTERIP");
                 var path = getPath(storeNode, processingCenter);
                 var n = cy.nodes();
                 var animationList = []
                 // Assemble list of animations
                 for (var i = 0; i < path.length; i++) {
+                    console.log(i + ": ")
+                    console.log(path[i])
                     // If an inactive edge is in the path, we will drop the packet.
                     // An edge is inactive if the activeWeight is >= the WEIGHTOFFSET
                     var edgeActiveWeight = path[i].data('activeWeight');
@@ -1029,8 +1036,8 @@
                     //if (i == 1 && path.length >= 3 && path[i + 2].data('activeWeight') >= WEIGHTOFFSET) {
                     //    shouldDropPacket = true;
                     //}
-                    console.log("activeWeight: " + edgeActiveWeight);
-                    if (shouldDropPacket) {
+                    //console.log("activeWeight: " + edgeActiveWeight);
+                    if (!path[i].data('isActive')) {
                         break;
                     } else {
                         var animation = path[i].animation({
@@ -1046,20 +1053,20 @@
                     }
                     
                 }
-                console.log("starting newAnim: ")
-                console.log(animationList)
+                //console.log("starting newAnim: ")
+                //console.log(animationList)
                 newAnim(animationList, 0);
             }
 
             // This is used to remove stores and inactive relays/connections from a path
             function correctPath(path) {
-                console.log("correcting path:")
-                console.log(path)
+                //console.log("correcting path:")
+                //console.log(path)
 
                 for (var i = 0; i < path.length; i++) {
-                    console.log(i)
-                    console.log(path[i].data('shape'))
-                    console.log(path[i].data('queue'))
+                    //console.log(i)
+                    //console.log(path[i].data('shape'))
+                    //console.log(path[i].data('queue'))
                 }
 
                 return path
