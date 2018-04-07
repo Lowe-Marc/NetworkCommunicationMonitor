@@ -821,12 +821,24 @@
                     if (element.data('isActive') == true) {
                         console.log('locking: ' + element.id());
                         element.data('status', 'inactive');
-                        element.data('color', 'black');
+                        //element.data('color', 'black');
+                        element.animation({
+                            style: {
+                                'background-color': 'black'
+                            },
+                            duration: 500
+                        }).play();
                         element.data('isActive', false);
                     } else {
                         console.log("unlocking: " + element.id());
                         element.data('status', 'active');
-                        element.data('color', relayColor);
+                        //element.data('color', relayColor);
+                        element.animation({
+                            style: {
+                                'background-color': relayColor
+                            },
+                            duration: 500
+                        }).play();
                         element.data('isActive', true);
                     }
             }
