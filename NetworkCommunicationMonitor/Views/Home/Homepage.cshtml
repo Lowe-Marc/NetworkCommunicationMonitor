@@ -836,20 +836,20 @@
                     })
                     .selector('edge:selected')
                     .css({
-                        'border-color': 'black',
-                        'background-color': 'black',
-                        'line-color': 'black',
-                        'target-arrow-color': 'black',
-                        'source-arrow-color': 'black',
-                        'width': '5px',
-                        'height': '5px',
-                        'opacity': '1'
+                        //'border-color': 'black',
+                        //'background-color': 'black',
+                        //'line-color': 'black',
+                        //'target-arrow-color': 'black',
+                        //'source-arrow-color': 'black',
+                        //'width': '5px',
+                        //'height': '5px',
+                        //'opacity': '1'
                     })
                     .selector('node:selected')
                     .css({
-                        'border-color': 'black',
-                        'background-color': 'black',
-                        'opacity': '1'
+                        //'border-color': 'black',
+                        //'background-color': 'black',
+                        //'opacity': '1'
                     }),
                 //.selector('.outline')
                 //.css({
@@ -863,10 +863,9 @@
                 wheelSensitivity: 0.2
             });
 
-            //popOver();
             //This handles deactivating of relays
             cy.on('click', 'node', function (evt) {
-                tryLockNetworkElement(this);
+                popOver(this);
             });
             cy.on('click', 'edge', function (evt) {
                 tryLockNetworkElement(this);
@@ -986,30 +985,37 @@
             /*=====================================================================================================
                                                         Functions
             ======================================================================================================*/
-            function popOver() {
+            function popOver(element) {
                 // qtip
                 cy.elements("node[category= '2']").qtip({
                     content: {
                         text: function () {
+                            var $menuContents = $('<div> Queue:' + element.data('queue').toString() + '</div>');
                             var $ctr = $('<div class="select-buttons"></div>');
-                            var $inactive = $('<button id="inactive">Inactive</button>');
-                            var $active = $('<button id="active" class="hidden">Active</button>');
+                            var $inactive = $('<button id="inactive">Inactivate</button>');
+                            var $active = $('<button id="active" class="hidden">Activate</button>');
 
-                            $inactive.on('click', function () {
-                                let n = cy.$('node:selected');
+                            if (element.data('isActive') == true) {
+                                $active.addClass('hidden');
+                                $inactive.removeClass('hidden');
+                            } else {
                                 $inactive.addClass('hidden');
                                 $active.removeClass('hidden');
-                                inactive(n);
+                            }
+
+                            $inactive.on('click', function () {
+                                tryLockNetworkElement(element);
+                                $inactive.addClass('hidden');
+                                $active.removeClass('hidden');
                             });
 
                             $active.on('click', function () {
-                                let n = cy.$('node:selected');
+                                tryLockNetworkElement(element);
                                 $active.addClass('hidden');
                                 $inactive.removeClass('hidden');
-                                active(n);
                             });
                             $('#network-view').append($ctr);
-                            $ctr.append($active).append($inactive);
+                            $ctr.append($menuContents).append($active).append($inactive);
                             return $ctr;
                         }
                     },
@@ -1028,12 +1034,6 @@
                     },
                 });
             }
-            function inactive(n) {
-                cy.$(n).lock();
-            }
-            function active(n) {
-                cy.$(n).unlock();
-            }
 
             function convertElements() {
                 let temp = [];
@@ -1050,7 +1050,7 @@
                     } else if (nodes[i].group == 1) {   // Store
                         storeIds.push(tempId);
                         storeList.push(tempId);
-                        data.push({ group: 'nodes', data: { id: tempId, color: 'blueviolet', shape: 'ellipse', width: '20', height: '20', category: '3', parent: nodes[i].region, isActive: false } });
+                        data.push({ group: 'nodes', data: { id: tempId, color: 'blueviolet', shape: 'ellipse', width: '20', height: '20', category: '3', parent: nodes[i].region, isActive: true } });
                     } else if (nodes[i].group == 2) {   // Relay
                         relayIds.push(tempId);
                         relayList.push(tempId);
@@ -1073,7 +1073,7 @@
                     var tempId = edges[i].id
                     connectionIds.push(tempId)
                     if (storeIds.includes(sourceId) || storeIds.includes(targetId)) {
-                        data.push({ group: 'edges', data: { source: sourceId, target: targetId, weight: edges[i].distance, activeWeight: (edges[i].distance + WEIGHTOFFSET*2), isActive: false, queue: [], connectionId: tempId } });
+                        data.push({ group: 'edges', data: { source: sourceId, target: targetId, weight: edges[i].distance, activeWeight: (edges[i].distance + WEIGHTOFFSET*2), isActive: true, queue: [], connectionId: tempId } });
                     } else {
                         data.push({ group: 'edges', data: { source: sourceId, target: targetId, weight: edges[i].distance, activeWeight: edges[i].distance, isActive: true, queue: [], connectionId: tempId } });
                     }
@@ -1110,8 +1110,8 @@
                     console.log("i : " + i)
                     console.log(path[i]);
                     console.log(elementIsActive)
-                    var shouldDropPacket = (i > 1 && i < path.length - 2) && !elementIsActive;
-                    if (shouldDropPacket) {
+                    //var shouldDropPacket = (i > 1 && i < path.length - 2) || !elementIsActive;
+                    if (!elementIsActive) {
                         break;
                     } else {
                         var animation = path[i].animation({
@@ -1121,29 +1121,16 @@
                                 'width': '10px',
                                 'height': '10px'
                             },
-                            duration: 1000
+                            duration: 1000,
+                            node: path[i]
                         });
                         animationList.push(animation);
                     }
 
                 }
-                //console.log("starting newAnim: ")
-                //console.log(animationList)
+                console.log("starting newAnim: ")
+                console.log(animationList)
                 newAnim(animationList, 0);
-            }
-
-            // This is used to remove stores and inactive relays/connections from a path
-            function correctPath(path) {
-                //console.log("correcting path:")
-                //console.log(path)
-
-                for (var i = 0; i < path.length; i++) {
-                    //console.log(i)
-                    //console.log(path[i].data('shape'))
-                    //console.log(path[i].data('queue'))
-                }
-
-                return path
             }
 
             // Play the animation and try to continue
@@ -1182,7 +1169,7 @@
 
                 var path = truncatedPath.concat(returnPath);
 
-                return correctPath(path);
+                return path;
             }
 
             // For some reason the cytoscape aStar path has edges after nodes, this should properly order things
