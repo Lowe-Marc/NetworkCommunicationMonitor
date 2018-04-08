@@ -183,6 +183,33 @@ namespace NetworkCommunicationMonitor.Models
                 cn.Close();
             }
         }
+
+        public static Account getAccountForCard(string cardNumber)
+        {
+            int accountNumber = 0;
+
+            var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
+            using (cn)
+            {
+                DataTable questionTable = new DataTable();
+                DataRowCollection rows;
+                string _sql = @"SELECT account_id FROM Card WHERE card_id = @CardNumber";
+                var cmd = new SqlCommand(_sql, cn);
+
+                cmd.Parameters.Add("@CardNumber", SqlDbType.VarChar).Value = cardNumber;
+
+                cn.Open();
+
+                questionTable.Load(cmd.ExecuteReader());
+                rows = questionTable.Rows;
+
+                accountNumber = Convert.ToInt32(rows[0]["account_id"]);
+            }
+
+            Account account = Account.getAccountByNumber(accountNumber);
+
+            return account;
+        }
     }
 
 }

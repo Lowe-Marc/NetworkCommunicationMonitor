@@ -919,7 +919,7 @@
 
             // When a new transaction is created, it will animate right away
             $('#transactionSubmit').click(function () {
-                handleTransaction();
+                var transaction = handleTransaction();
             });
 
             function handleTransaction() {
@@ -942,7 +942,13 @@
                     method: "POST",
                     url: "/Home/AddTransaction",
                     data: transaction,
-                    success: closeClick,
+                    success: (result) => {
+                        closeClick();
+                        console.log("Successful ajax request: ")
+                        transaction.transactionID = result;
+                        console.log(result);
+                        return transaction;
+                    },
                     error: (result) => {
                         console.log("Error on ajax request");
                         console.log(result);
@@ -954,7 +960,7 @@
                 $('#close-transaction').click();
                 var transactionStart = $('#transactionIPAddress').val();
                 var startNode = getNode(transactionStart);
-                assembleAnim(startNode);
+                //assembleAnim(startNode);
             }
 
             //pauseAnimation();
@@ -1069,7 +1075,6 @@
                     console.log(edges[i]);
                     let sourceId = edges[i].source.slice(10);
                     let targetId = edges[i].target.slice(10);
-                    //console.log(edges[i])
                     var tempId = edges[i].id
                     connectionIds.push(tempId)
                     if (storeIds.includes(sourceId) || storeIds.includes(targetId)) {

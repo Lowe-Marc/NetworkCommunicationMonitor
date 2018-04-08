@@ -283,7 +283,7 @@ namespace NetworkCommunicationMonitor.Controllers
             return RedirectToAction("Homepage", "Home");
         }
 
-        public void AddTransaction(FormCollection collection)
+        public int AddTransaction(FormCollection collection)
         {
             setViewDataDefaults();
             setNetworkData();
@@ -303,10 +303,14 @@ namespace NetworkCommunicationMonitor.Controllers
             {
                 NetworkCommunicationMonitor.Models.Transaction.addTransaction(cardNumber, storeIP, transactionDate, transactionAmount, transactionCategory);
             }
+            int id = NetworkCommunicationMonitor.Models.Transaction.getTransactionID(cardNumber, storeIP, transactionDate, transactionAmount, transactionCategory);
 
-            //ViewData["TransactionStart"] = storeIP;
+            return id;
+        }
 
-            //return View("Homepage");
+        public void GenerateResponse(FormCollection collection)
+        {
+
         }
 
         private void setNetworkData()
