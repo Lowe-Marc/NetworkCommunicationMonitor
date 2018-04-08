@@ -783,6 +783,8 @@
             var remainIpSet = []; // ip addresses not include stores and relays
             var currentAnimations = [];
             var currentAnimationSet = new Set();
+            var animationsArePaused = false;
+
             convertElements();
             getRemainingIp();
             validateInput();
@@ -924,11 +926,11 @@
             });
 
             $('#pause').click(function () {
-                pauseAnimation();
+                pauseOrPlayAnimations();
             });
 
             $('#play').click(function () {
-                pauseAnimation();
+                pauseOrPlayAnimations();
             });
 
             function handleTransaction() {
@@ -972,53 +974,17 @@
                 assembleAnim(startNode, transaction);
             }
 
-            function pauseAnimation(node) {
-                //node.play();
-                //node.play().promise().then(function () {
-                //    let index = animationList.indexOf(node);
-                //    animationList.splice(index, 1);
-                //    animationList.pop();
-                //    animationList.shift();
-                //});
+            function pauseOrPlayAnimations(node) {
                 $("#pause").click(function () {
                     $("#pause").addClass('hidden');
                     $("#play").removeClass('hidden');
-                    //animationList.forEach(function (animation) {
-                    //    animation.pause();
-                    //});
-                    //for (var i = 0; i < currentAnimations.length; i++) {
-                    //    var animationList = currentAnimations[i];
-                    //    for (var j = 0; j < animationList.length; j++) {
-                    //        var animation = animationList[i];
-                    //        console.log("in loop")
-                    //        console.log(animation);
-                    //        console.log(animation['paused'])
-                    //        console.log(animation['node'].animated())
-                    //        if (animation['node'].animated()) {
-                    //            animation.pause();
-                    //            animation['paused'] = true;
-                    //        }
-                    //    }
-                    //}
+                    animationsArePaused = true;
                     currentAnimationSet.forEach(function (animation) {animation.pause()} )
                 });
                 $("#play").click(function () {
                     $("#play").addClass('hidden');
                     $("#pause").removeClass('hidden');
-                    //for (var i = 0; i < currentAnimations.length; i++) {
-                    //    var animationList = currentAnimations[i];
-                    //    for (var j = 0; j < animationList.length; j++) {
-                    //        var animation = animationList[i];
-                    //        //console.log("in loop")
-                    //        //console.log(animation);
-                    //        //console.log(animation['paused'])
-                    //        //console.log(animation['node'].animated())
-                    //        if (animation['paused']) {
-                    //            animation.play();
-                    //            animation['paused'] = false;
-                    //        }
-                    //    }
-                    //}
+                    animationsArePaused = false;
                     currentAnimationSet.forEach(function (animation) { animation.play() })
                 });
             }
@@ -1172,9 +1138,10 @@
             // Play the animation and try to continue
             function newAnim(animationList, currentAnimationPlayingIndex) {
                 var animation = animationList[currentAnimationPlayingIndex];
-                //pauseAnimation(animation);
                 currentAnimationSet.add(animation);
-                animation.play();
+                if (!animationsArePaused) {
+                    animation.play();
+                }
                 animation.promise('completed').then(function () {
                         animation
                             .reverse()
