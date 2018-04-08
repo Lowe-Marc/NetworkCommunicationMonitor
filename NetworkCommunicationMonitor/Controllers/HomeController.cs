@@ -31,7 +31,7 @@ namespace NetworkCommunicationMonitor.Controllers
             setViewDataDefaults();
 
             setNetworkData();
-
+            ViewData["Cards"] = NetworkCommunicationMonitor.Models.Card.getCards();
             ViewData["TransactionStart"] = startLocation;
 
             return View();
@@ -233,8 +233,8 @@ namespace NetworkCommunicationMonitor.Controllers
         {
             setViewDataDefaults();
 
-            string ipAddress = Convert.ToString(collection["ipAddress"]);
-            string ipConnectedTo = Convert.ToString(collection["ipConnectedTo"]);
+            string ipAddress = Convert.ToString(collection["relayIpAddress"]);
+            string ipConnectedTo = Convert.ToString(collection["relayIpConnectedTo"]);
 
             string region = Relay.getRegion(ipConnectedTo);
 
@@ -263,8 +263,8 @@ namespace NetworkCommunicationMonitor.Controllers
             setViewDataDefaults();
 
             string storeName = Convert.ToString(collection["storeName"]);
-            string ipAddress = Convert.ToString(collection["ipAddress"]);
-            string ipConnectedTo = Convert.ToString(collection["ipConnectedTo"]);
+            string ipAddress = Convert.ToString(collection["storeIpAddress"]);
+            string ipConnectedTo = Convert.ToString(collection["storeIpConnectedTo"]);
 
             NetworkCommunicationMonitor.Models.Store.addStore(ipAddress, ipConnectedTo, storeName);
 
@@ -289,7 +289,8 @@ namespace NetworkCommunicationMonitor.Controllers
             setNetworkData();
 
             string storeIP = Convert.ToString(collection["storeIP"]);
-            string cardNumber = Convert.ToString(collection["cardNumber"]);
+            string card_number = Convert.ToString(collection["cardNumber"]);
+            string cardNumber = card_number.Replace(" ", "");
             DateTime transactionDate = Convert.ToDateTime(collection["transactionDate"]);
             double transactionAmount = Convert.ToDouble(collection["amount"]);
             string transactionCategory = Convert.ToString(collection["category"]);
