@@ -269,8 +269,8 @@
                         <i class="fa fa-fw fa-th-large" data-toggle="modal" data-target="#add-region" title="Create Region"></i>
                         <i class="fa fa-fw fa-arrows-h" data-toggle="modal" data-target="#add-connection" title="Create Connection"></i>
                         <i class="fa fa-exchange" data-toggle="modal" data-target="#add-transaction" title="Create Transaction"></i>
-                        @*<i class="fa fa-play hidden" id="play" title="Play"></i>
-                        <i class="fa fa-fw fa-pause " id="pause" title="Pause"></i>*@
+                        <i class="fa fa-play hidden" id="play" title="Play"></i>
+                        <i class="fa fa-fw fa-pause " id="pause" title="Pause"></i>
                     </div>
                     <div class="notation pull-right">
                         <ul class="list-inline list-unstyled">
@@ -782,6 +782,7 @@
             var existIpSet = []; // ip addresses include both stores and relays
             var remainIpSet = []; // ip addresses not include stores and relays
             var currentAnimations = [];
+            var currentAnimationSet = new Set();
             convertElements();
             getRemainingIp();
             validateInput();
@@ -922,6 +923,14 @@
                 var transaction = handleTransaction();
             });
 
+            $('#pause').click(function () {
+                pauseAnimation();
+            });
+
+            $('#play').click(function () {
+                pauseAnimation();
+            });
+
             function handleTransaction() {
                 //Collect values
                 console.log("Handling transactions");
@@ -943,7 +952,7 @@
                     url: "/Home/AddTransaction",
                     data: transaction,
                     success: (result) => {
-                        closeClick();
+                        closeClick(transaction);
                         console.log("Successful ajax request: ")
                         transaction.transactionID = result;
                         console.log(result);
@@ -956,16 +965,15 @@
                 });
             }
 
-            function closeClick() {
+            function closeClick(transaction) {
                 $('#close-transaction').click();
                 var transactionStart = $('#transactionIPAddress').val();
                 var startNode = getNode(transactionStart);
-                //assembleAnim(startNode);
+                assembleAnim(startNode, transaction);
             }
 
-            //pauseAnimation();
             function pauseAnimation(node) {
-                node.play();
+                //node.play();
                 //node.play().promise().then(function () {
                 //    let index = animationList.indexOf(node);
                 //    animationList.splice(index, 1);
@@ -975,17 +983,43 @@
                 $("#pause").click(function () {
                     $("#pause").addClass('hidden');
                     $("#play").removeClass('hidden');
-                    animationList.forEach(function (animation) {
-                        animation.pause();
-                    });
+                    //animationList.forEach(function (animation) {
+                    //    animation.pause();
+                    //});
+                    //for (var i = 0; i < currentAnimations.length; i++) {
+                    //    var animationList = currentAnimations[i];
+                    //    for (var j = 0; j < animationList.length; j++) {
+                    //        var animation = animationList[i];
+                    //        console.log("in loop")
+                    //        console.log(animation);
+                    //        console.log(animation['paused'])
+                    //        console.log(animation['node'].animated())
+                    //        if (animation['node'].animated()) {
+                    //            animation.pause();
+                    //            animation['paused'] = true;
+                    //        }
+                    //    }
+                    //}
+                    currentAnimationSet.forEach(function (animation) {animation.pause()} )
                 });
                 $("#play").click(function () {
                     $("#play").addClass('hidden');
                     $("#pause").removeClass('hidden');
-                    node.play();
-                    //animationList.forEach(function (animation) {
-                    //    animation.play();
-                    //});
+                    //for (var i = 0; i < currentAnimations.length; i++) {
+                    //    var animationList = currentAnimations[i];
+                    //    for (var j = 0; j < animationList.length; j++) {
+                    //        var animation = animationList[i];
+                    //        //console.log("in loop")
+                    //        //console.log(animation);
+                    //        //console.log(animation['paused'])
+                    //        //console.log(animation['node'].animated())
+                    //        if (animation['paused']) {
+                    //            animation.play();
+                    //            animation['paused'] = false;
+                    //        }
+                    //    }
+                    //}
+                    currentAnimationSet.forEach(function (animation) { animation.play() })
                 });
             }
             /*=====================================================================================================
@@ -1072,7 +1106,6 @@
 
                 // Convert Edges
                 for (var i = 0; i < edges.length; i++) { // Edges
-                    console.log(edges[i]);
                     let sourceId = edges[i].source.slice(10);
                     let targetId = edges[i].target.slice(10);
                     var tempId = edges[i].id
@@ -1100,7 +1133,7 @@
                 }
             }
 
-            function assembleAnim(storeNode) {
+            function assembleAnim(storeNode, transaction) {
                 console.log("Assembling animation")
 
                 var processingCenter = getNode("@NetworkCommunicationMonitor.Models.Relay.PROCESSINGCENTERIP");
@@ -1112,9 +1145,6 @@
                     // If an inactive edge is in the path, we will drop the packet.
                     // An edge is inactive if the activeWeight is >= the WEIGHTOFFSET
                     var elementIsActive = path[i].data('isActive');
-                    console.log("i : " + i)
-                    console.log(path[i]);
-                    console.log(elementIsActive)
                     //var shouldDropPacket = (i > 1 && i < path.length - 2) || !elementIsActive;
                     if (!elementIsActive) {
                         break;
@@ -1126,34 +1156,35 @@
                                 'width': '10px',
                                 'height': '10px'
                             },
-                            duration: 1000,
-                            node: path[i]
+                            duration: 1000
                         });
+                        animation['paused'] = false;
+                        animation['node'] = path[i];
                         animationList.push(animation);
                     }
-
                 }
                 console.log("starting newAnim: ")
                 console.log(animationList)
+                currentAnimations.push(animationList);
                 newAnim(animationList, 0);
             }
 
             // Play the animation and try to continue
             function newAnim(animationList, currentAnimationPlayingIndex) {
                 var animation = animationList[currentAnimationPlayingIndex];
-                pauseAnimation(animation);
+                //pauseAnimation(animation);
+                currentAnimationSet.add(animation);
+                animation.play();
                 animation.promise('completed').then(function () {
                         animation
                             .reverse()
                             .rewind()
                             .play();
-                        //node.data('queue').push("Test");
+
+                        currentAnimationSet.delete(animation);
                         console.log("Animating a node");
-                        //console.log(node.data('queue'));
                         if (currentAnimationPlayingIndex < animationList.length - 1) {
                             currentAnimationPlayingIndex += 1;
-                            //node.data('queue').shift()
-                            //console.log(node.data('queue'));
                             newAnim(animationList, currentAnimationPlayingIndex);
                         }
                     });
