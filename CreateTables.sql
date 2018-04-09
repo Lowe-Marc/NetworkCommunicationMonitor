@@ -6,5 +6,5 @@ CREATE TABLE Question(question_id varchar(10) PRIMARY KEY, question_question var
 CREATE TABLE Transactions(trans_id int IDENTITY(1,1) PRIMARY KEY, card_id varchar(16), store_id varchar(15), trans_date datetime, trans_amount float, trans_category varchar(20), trans_status bit, response_id varchar(10), status_time datetime, encrypted bit);
 CREATE TABLE Response(response_id int IDENTITY(1,1) PRIMARY KEY, trans_id varchar(10), store_id varchar(15), response_date datetime, status bit);
 CREATE TABLE RelayStation(station_id varchar(15) PRIMARY KEY, station_isActive bit, isGateway bit, region varchar(30), queueLimit int);
-CREATE TABLE Connection(station_one_id varchar(15), station_two_id varchar(15), connection_isActive bit, weight int);
+CREATE TABLE Connection(connection_id int IDENTITY(1,1) PRIMARY KEY, station_one_id varchar(15), station_two_id varchar(15), connection_isActive bit, weight int);
 CREATE TABLE Store(store_id varchar(15) PRIMARY KEY, store_name varchar(30), region varchar(30));
