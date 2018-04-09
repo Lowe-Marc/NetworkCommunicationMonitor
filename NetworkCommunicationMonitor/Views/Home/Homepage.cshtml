@@ -776,7 +776,6 @@
             var storeIds = [];
             var relayIds = [];
             var connectionIds = [];
-
             var storeList = [];
             var relayList = [];
             var gatewayList = [];
@@ -791,12 +790,6 @@
             convertElements();
             getRemainingIp();
             validateInput();
-
-            //console.log("storeList:", storeList);
-            //console.log("relayList:", relayList);
-            //console.log("ipSet:", ipSet);
-            //console.log("existIpSet:", existIpSet);
-            //console.log("remainIpSet:", remainIpSet);
 
             var cy = cytoscape({
                 ready: function () { window.cy = this; },
@@ -901,7 +894,7 @@
                         element.animation({
                             style: {
                                 'background-color': relayColor,
-                                'line-color': 'grey'
+                                'line-color': 'gray'
                             },
                             duration: 500
                         }).play();
@@ -982,7 +975,6 @@
                         animationList.push(animation);
                     }
                 }
-
                 currentAnimations.push(animationList);
                 newAnim(animationList, 0);
             }
@@ -998,16 +990,16 @@
                     let tempId = nodes[i].id.slice(10);
 
                     if (nodes[i].group == 0) {  // Processing center
-                        data.push({ group: 'nodes', data: { id: tempId, color: 'orange', shape: 'barrel', width: '50', height: '50', category: '1', queue: [], isActive: true } });
+                        data.push({ group: 'nodes', data: { id: tempId, color: 'orange', shape: 'barrel', width: '50', height: '50', category: '1', queue: [], isActive: true, limit: nodes[i].queueLimit } });
                     } else if (nodes[i].group == 1) {   // Store
                         storeIds.push(tempId);
                         storeList.push(tempId);
-                        data.push({ group: 'nodes', data: { id: tempId, color: 'blueviolet', shape: 'ellipse', width: '20', height: '20', category: '3', parent: nodes[i].region, isActive: true, queue: [] } });
+                        data.push({ group: 'nodes', data: { id: tempId, color: 'blueviolet', shape: 'ellipse', width: '20', height: '20', category: '3', parent: nodes[i].region, queue: [], isActive: true } });
                     } else if (nodes[i].group == 2) {   // Relay
                         relayIds.push(tempId);
                         relayList.push(tempId);
                         if (nodes[i].isActive) { status = 'active'; } else { status = 'inactive'; }
-                        data.push({ group: 'nodes', data: { id: tempId, color: 'green', shape: 'triangle ', width: '35', height: '35', category: '2', status: status, parent: nodes[i].region, queue: [], isActive: true } });
+                        data.push({ group: 'nodes', data: { id: tempId, color: 'green', shape: 'triangle ', width: '35', height: '35', category: '2', status: status, parent: nodes[i].region, queue: [], isActive: true, limit: nodes[i].queueLimit } });
                     }
                 }
                 arr = unique(temp);
@@ -1154,10 +1146,10 @@
             }
 
             function qtipContent(element, isProcessingCenter) {
-                var content =  {
+                var content = {
                     content: {
                         text: function () {
-                            var elementQueue = element.data('queue')
+                            var elementQueue = element.data('queue');
                             var queueString = [];
                             var transactionInfo = "Encrypted";
                             if (isProcessingCenter && elementQueue.length >= 1) {
@@ -1173,13 +1165,13 @@
                                 queueString.push(elementQueue[i]['transaction']['transactionID']);
                             }
 
-                            var $menuContents = $('<div> Queue:' + queueString.join() + "<br> Transaction Information:" + transactionInfo + '</div>');
+                            var $menuContents = $('<div class="well well-sm"><div class="alert alert-success" role="alert"> Queue: ' + queueString.join() + '</div> <div class="alert alert-success" role="alert">Transaction Information: <hr>' + transactionInfo + '</div>');
                             var $ctr = $('<div class="select-buttons"></div>');
-                            var $inactive = $('<button id="inactive">Inactivate</button>');
+                            var $inactive = $('<button id="inactive" class="btn btn-sm btn-primary center-block">Inactivate</button>');
                             if (isProcessingCenter) {
                                 $inactive = $('');
                             }
-                            var $active = $('<button id="active" class="hidden">Activate</button>');
+                            var $active = $('<button id="active" class="hidden btn btn-sm btn-primary center-block">Activate</button>');
 
                             if (element.data('isActive') == true) {
                                 $active.addClass('hidden');
@@ -1205,22 +1197,19 @@
                             return $ctr;
                         }
                     },
-                    show: { solo: true },
+                    prerender: false,
+                    overwrite: true,
                     position: {
                         my: 'top center',
                         at: 'bottom center',
-                        adjust: { method: 'flip' },
-                        effect: false,
-                        viewport: $('#network-view')
+                        container: $('#network-view'),
                     },
                     style: {
-                        screen: true,
                         classes: 'qtip-bootstrap',
                         tip: { width: 16, height: 8 },
-                        padding: 5,
-                        'font-size': 16,
-                        background: '#D0D0D0',
-                        color: '#000000',
+                    },
+                    show: {
+                        solo: true,
                     },
                 }
                 return content;

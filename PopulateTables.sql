@@ -20,23 +20,23 @@ INSERT INTO Account (account_holder_firstname, account_holder_lastname, account_
 INSERT INTO Card(card_id, card_firstname, card_lastname, card_expirationMonth, card_expirationYear, card_securityCode, account_id) VALUES('5538572760352094', 'Darrell', 'Adams', '08', '2021', '758', 4);
 INSERT INTO Card(card_id, card_firstname, card_lastname, card_expirationMonth, card_expirationYear, card_securityCode, account_id) VALUES('4485228863864370', 'Dalton', 'Lily', '07', '2018', '259', 4);
 --192.168.0.1 is the processing center, 2,3,4, and 5 are gateways
-INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueLimit) VALUES('192.168.0.1', 1, 0, null, 1);
-INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueLimit) VALUES('192.168.0.2', 1, 1, 'One', 1);
-INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueLimit) VALUES('192.168.0.3', 1, 1, 'Two', 1);
-INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueLimit) VALUES('192.168.0.4', 1, 1, 'Three', 1);
-INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueLimit) VALUES('192.168.0.5', 1, 1, 'Four', 1);
+INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueLimit) VALUES('192.168.0.1', 1, 0, null, 100);
+INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueLimit) VALUES('192.168.0.2', 1, 1, 'One', 10);
+INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueLimit) VALUES('192.168.0.3', 1, 1, 'Two', 10);
+INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueLimit) VALUES('192.168.0.4', 1, 1, 'Three', 10);
+INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueLimit) VALUES('192.168.0.5', 1, 1, 'Four', 10);
 -- Starting relays with last digits of 50
-INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueLimit) VALUES('192.168.0.50', 1, 0, 'One', 1);
-INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueLimit) VALUES('192.168.0.51', 1, 0, 'One', 1);
-INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueLimit) VALUES('192.168.0.52', 1, 0, 'Two', 1);
-INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueLimit) VALUES('192.168.0.53', 1, 0, 'Two', 1);
-INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueLimit) VALUES('192.168.0.54', 1, 0, 'Three', 1);
--- INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueLimit) VALUES('192.168.0.55', 1, 0, 'Three', 1);
-INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueLimit) VALUES('192.168.0.56', 1, 0, 'Four', 1);
-INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueLimit) VALUES('192.168.0.57', 1, 0, 'Four', 1);
-INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueLimit) VALUES('192.168.0.58', 1, 0, 'Four', 1);	
-INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueLimit) VALUES('192.168.0.59', 1, 0, 'Four', 1);	
-INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueLimit) VALUES('192.168.0.60', 1, 0, 'Four', 1);
+INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueLimit) VALUES('192.168.0.50', 1, 0, 'One', 3);
+INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueLimit) VALUES('192.168.0.51', 1, 0, 'One', 3);
+INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueLimit) VALUES('192.168.0.52', 1, 0, 'Two', 3);
+INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueLimit) VALUES('192.168.0.53', 1, 0, 'Two', 3);
+INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueLimit) VALUES('192.168.0.54', 1, 0, 'Three', 3);
+-- INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueLimit) VALUES('192.168.0.55', 1, 0, 'Three', 3);
+INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueLimit) VALUES('192.168.0.56', 1, 0, 'Four', 3);
+INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueLimit) VALUES('192.168.0.57', 1, 0, 'Four', 3);
+INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueLimit) VALUES('192.168.0.58', 1, 0, 'Four', 3);	
+INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueLimit) VALUES('192.168.0.59', 1, 0, 'Four', 3);	
+INSERT INTO RelayStation(station_id, station_isActive, isGateway, region, queueLimit) VALUES('192.168.0.60', 1, 0, 'Four', 3);
 -- Starting stores with the last digits of 100
 INSERT INTO Store(store_id, store_name, region) VALUES('192.168.0.100', 'Store 0', 'One');
 INSERT INTO Store(store_id, store_name, region) VALUES('192.168.0.101', 'Store 1', 'One');

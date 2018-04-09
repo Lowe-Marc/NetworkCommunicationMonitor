@@ -20,6 +20,7 @@ namespace NetworkCommunicationMonitor.Models
         public bool isGateway;
         public string region;
         public int group;
+        public int queueLimit;
 
         public static readonly int RELAYGROUP = 2;
         public static readonly int PROCESSINGCENTERGROUP = 0;
@@ -34,7 +35,7 @@ namespace NetworkCommunicationMonitor.Models
             {
                 DataTable questionTable = new DataTable();
                 DataRowCollection rows;
-                string _sql = @"SELECT station_id, station_isActive, isGateway, region FROM RelayStation";
+                string _sql = @"SELECT station_id, station_isActive, isGateway, region, queueLimit FROM RelayStation";
                 var cmd = new SqlCommand(_sql, cn);
 
                 cn.Open();
@@ -50,6 +51,7 @@ namespace NetworkCommunicationMonitor.Models
                     tempRelay.region = Convert.ToString(row["region"]);
                     tempRelay.isActive = Convert.ToBoolean(row["station_isActive"]);
                     tempRelay.isGateway = Convert.ToBoolean(row["isGateway"]);
+                    tempRelay.queueLimit = Convert.ToInt32(row["queueLimit"]);
                     if (tempRelay.id.Equals("192.168.0.1", StringComparison.Ordinal))
                     {
                         tempRelay.group = PROCESSINGCENTERGROUP;
@@ -74,7 +76,7 @@ namespace NetworkCommunicationMonitor.Models
             {
                 DataTable questionTable = new DataTable();
                 DataRowCollection rows;
-                string _sql = @"SELECT station_id, station_isActive, isGateway, region FROM RelayStation";
+                string _sql = @"SELECT station_id, station_isActive, isGateway, region, queueLimit FROM RelayStation";
                 var cmd = new SqlCommand(_sql, cn);
 
                 cn.Open();
@@ -90,6 +92,7 @@ namespace NetworkCommunicationMonitor.Models
                     tempRelay.region = Convert.ToString(row["region"]);
                     tempRelay.isActive = Convert.ToBoolean(row["station_isActive"]);
                     tempRelay.isGateway = Convert.ToBoolean(row["isGateway"]);
+                    tempRelay.queueLimit = Convert.ToInt32(row["queueLimit"]);
                     if (tempRelay.id.Equals(PROCESSINGCENTERIP, StringComparison.Ordinal))
                     {
                         tempRelay.group = PROCESSINGCENTERGROUP;
