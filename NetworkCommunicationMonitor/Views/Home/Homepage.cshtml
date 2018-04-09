@@ -769,6 +769,7 @@
             const edges = @Html.Raw(Json.Encode(ViewData["Links"]));
             const data = [];
             const relayColor = 'green';
+            const PROCESSINGCENTERID = 1;
             const WEIGHTOFFSET = 100000000; // This is used to inactivate relays/connections and to prevent a path from routing through a store
             const animationLength = 1500; // Time the animations take in milliseconds
 
@@ -1039,13 +1040,29 @@
                 //Get animation
                 var animation = animationList[currentAnimationPlayingIndex];
                 //Add to queue
-                console.log(animation)
-                console.log(animationList.length);
-                console.log(currentAnimationPlayingIndex);
                 if (animationList.length != currentAnimationPlayingIndex) {
                     var elementQueue = animation['node'].data('queue')
                     elementQueue.push(animation);
                     animation['node'].data('queue', elementQueue);
+                }
+
+                var atProcessingCenter = (animation['node'].data('id') == PROCESSINGCENTERID)
+                if (atProcessingCenter) {
+                    var transaction = animation['transaction'];
+
+                    $.ajax({
+                        method: "POST",
+                        url: "/Home/GenerateResponse",
+                        data: transaction,
+                        success: (result) => {
+                            console.log("Successful processing")
+                            console.log(result);
+                        },
+                        error: (result) => {
+                            console.log("Error on ajax request");
+                            console.log(result);
+                        }
+                    });
                 }
 
                 //Check to see if the animation should play
@@ -1133,23 +1150,37 @@
             }
 
             function popOver(element) {
-                cy.elements("node[category= '1']").qtip(qtipContent(element));
-                cy.elements("node[category= '2']").qtip(qtipContent(element));
-                cy.elements("node[category= '3']").qtip(qtipContent(element));
+                cy.elements("node[category= '1']").qtip(qtipContent(element, true));
+                cy.elements("node[category= '2']").qtip(qtipContent(element, false));
+                cy.elements("node[category= '3']").qtip(qtipContent(element, false));
             }
 
-            function qtipContent(element) {
+            function qtipContent(element, isProcessingCenter) {
                 var content =  {
                     content: {
                         text: function () {
                             var elementQueue = element.data('queue')
                             var queueString = [];
+                            var transactionInfo = "Encrypted";
+                            if (isProcessingCenter && elementQueue.length >= 1) {
+                                console.log(elementQueue[0]['transaction']);
+                                transactionInfo = "<br>Card Number: " + elementQueue[0]['transaction']['cardNumber']
+                                    + "<br> Store IP: " + elementQueue[0]['transaction']['storeIP']
+                                    + "<br> Amount: " + elementQueue[0]['transaction']['amount']
+                                    + "<br> Category: " + elementQueue[0]['transaction']['category'];
+                            } else if (isProcessingCenter) {
+                                transactionInfo = "None";
+                            }
                             for (var i = 0; i < elementQueue.length; i++) {
                                 queueString.push(elementQueue[i]['transaction']['transactionID']);
                             }
-                            var $menuContents = $('<div> Queue:' + queueString.join() + '</div>');
+
+                            var $menuContents = $('<div> Queue:' + queueString.join() + "<br> Transaction Information:" + transactionInfo + '</div>');
                             var $ctr = $('<div class="select-buttons"></div>');
                             var $inactive = $('<button id="inactive">Inactivate</button>');
+                            if (isProcessingCenter) {
+                                $inactive = $('');
+                            }
                             var $active = $('<button id="active" class="hidden">Activate</button>');
 
                             if (element.data('isActive') == true) {

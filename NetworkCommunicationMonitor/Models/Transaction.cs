@@ -166,7 +166,7 @@ namespace NetworkCommunicationMonitor.Models
             using (cn)
             {
                 DataTable questionTable = new DataTable();
-                string _sql = @"UPDATE Transaction SET trans_status = @Status WHERE trans_id = @TransactionID";
+                string _sql = @"UPDATE Transactions SET trans_status = @Status WHERE trans_id = @TransactionID";
                 var cmd = new SqlCommand(_sql, cn);
 
                 cmd.Parameters.Add("@Status", SqlDbType.Bit).Value = 1;

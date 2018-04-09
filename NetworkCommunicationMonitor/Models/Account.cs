@@ -183,7 +183,7 @@ namespace NetworkCommunicationMonitor.Models
                 questionTable.Load(cmd.ExecuteReader());
                 rows = questionTable.Rows;
 
-                accountNumber = Convert.ToInt32(rows[0]["account_id"]);
+                account.accountNumber = accountNumber;
                 account.accountLimit = Convert.ToInt32(rows[0]["account_limit"]);
                 account.accountBalance = Convert.ToDouble(rows[0]["account_balance"]);
             }
@@ -201,7 +201,7 @@ namespace NetworkCommunicationMonitor.Models
                 var cmd = new SqlCommand(_sql, cn);
 
                 cmd.Parameters.Add("@AccountBalance", SqlDbType.Float).Value = amount + balance;
-                cmd.Parameters.Add("@AccountBalance", SqlDbType.Int).Value = accountNumber;
+                cmd.Parameters.Add("@AccountNumber", SqlDbType.Int).Value = accountNumber;
 
                 cn.Open();
                 cmd.ExecuteNonQuery();

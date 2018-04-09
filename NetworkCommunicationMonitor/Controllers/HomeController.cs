@@ -310,7 +310,14 @@ namespace NetworkCommunicationMonitor.Controllers
 
         public void GenerateResponse(FormCollection collection)
         {
-
+            Transaction transaction = new Transaction();
+            transaction.transactionID = Convert.ToInt32(collection["transactionID"]);
+            transaction.cardID = Convert.ToString(collection["cardNumber"]).Replace(" ","");
+            transaction.storeID = Convert.ToString(collection["storeIP"]);
+            transaction.transactionDate = Convert.ToDateTime(collection["transactionDate"]);
+            transaction.amount = Convert.ToDouble(collection["amount"]);
+            transaction.category = Convert.ToString(collection["category"]);
+            NetworkCommunicationMonitor.Models.Response.generateResponse(transaction);
         }
 
         private void setNetworkData()
