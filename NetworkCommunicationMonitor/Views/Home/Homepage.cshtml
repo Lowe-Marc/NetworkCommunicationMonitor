@@ -770,6 +770,7 @@
             const data = [];
             const relayColor = 'green';
             const WEIGHTOFFSET = 100000000; // This is used to inactivate relays/connections and to prevent a path from routing through a store
+            const animationLength = 1500; // Time the animations take in milliseconds
 
             var storeIds = [];
             var relayIds = [];
@@ -783,6 +784,7 @@
             var remainIpSet = []; // ip addresses not include stores and relays
             var currentAnimations = [];
             var currentAnimationSet = new Set();
+            var queueAnimationSet = new Set();
             var animationsArePaused = false;
 
             convertElements();
@@ -971,10 +973,11 @@
                                 'width': '10px',
                                 'height': '10px'
                             },
-                            duration: 1000
+                            duration: animationLength
                         });
                         animation['paused'] = false;
                         animation['node'] = path[i];
+                        animation['transaction'] = transaction;
                         animationList.push(animation);
                     }
                 }
@@ -998,7 +1001,7 @@
                     } else if (nodes[i].group == 1) {   // Store
                         storeIds.push(tempId);
                         storeList.push(tempId);
-                        data.push({ group: 'nodes', data: { id: tempId, color: 'blueviolet', shape: 'ellipse', width: '20', height: '20', category: '3', parent: nodes[i].region, isActive: true } });
+                        data.push({ group: 'nodes', data: { id: tempId, color: 'blueviolet', shape: 'ellipse', width: '20', height: '20', category: '3', parent: nodes[i].region, isActive: true, queue: [] } });
                     } else if (nodes[i].group == 2) {   // Relay
                         relayIds.push(tempId);
                         relayList.push(tempId);
@@ -1032,22 +1035,62 @@
 
             // Play the animation and try to continue
             function newAnim(animationList, currentAnimationPlayingIndex) {
+                console.log("newAnim");
+                //Get animation
                 var animation = animationList[currentAnimationPlayingIndex];
-                currentAnimationSet.add(animation);
-                if (!animationsArePaused) {
-                    animation.play();
+                //Add to queue
+                console.log(animation)
+                console.log(animationList.length);
+                console.log(currentAnimationPlayingIndex);
+                if (animationList.length != currentAnimationPlayingIndex) {
+                    var elementQueue = animation['node'].data('queue')
+                    elementQueue.push(animation);
+                    animation['node'].data('queue', elementQueue);
                 }
+
+                //Check to see if the animation should play
+                var firstInQueue = (elementQueue[0] == animation);
+                var nodeIsAlreadyAnimating = animation['node'].animated()
+                if (!animationsArePaused && firstInQueue && !nodeIsAlreadyAnimating) {
+                    animation.play();
+                    currentAnimationSet.add(animation);
+                } else {
+                    queueAnimationSet.add(animation);
+                }
+
+                //Setup what happens next
                 animation.promise('completed').then(function () {
                     animation
                         .reverse()
                         .rewind()
                         .play();
+                    //Kick off the next animation in the queue
+                    setTimeout(function () { playNecessaryQueuedAnimations(); }, animationLength*2);
 
                     currentAnimationSet.delete(animation);
-                    console.log("Animating a node");
                     if (currentAnimationPlayingIndex < animationList.length - 1) {
+                        elementQueue.shift();
+                        animation['node'].data('queue', elementQueue);
+
                         currentAnimationPlayingIndex += 1;
                         newAnim(animationList, currentAnimationPlayingIndex);
+                    } else {
+                        elementQueue.shift();
+                        animation['node'].data('queue', elementQueue);
+                    }
+                });
+            }
+
+            function playAnimations() {
+                currentAnimationSet.forEach(function (animation) { animation.play() })
+                playNecessaryQueuedAnimations();
+            }
+
+            function playNecessaryQueuedAnimations() {
+                queueAnimationSet.forEach(function (animation) {
+                    if (animationIsFirstInQueue(animation)) {
+                        currentAnimationSet.add(animation);
+                        animation.play();
                     }
                 });
             }
@@ -1071,7 +1114,7 @@
             function pauseOrPlayAnimations(node) {
                 if (animationsArePaused) {
                     animationsArePaused = false;
-                    currentAnimationSet.forEach(function (animation) { animation.play() })
+                    playAnimations();
                     $("#play").addClass('hidden');
                     $("#pause").removeClass('hidden');
                 } else {
@@ -1090,10 +1133,21 @@
             }
 
             function popOver(element) {
-                cy.elements("node[category= '2']").qtip({
+                cy.elements("node[category= '1']").qtip(qtipContent(element));
+                cy.elements("node[category= '2']").qtip(qtipContent(element));
+                cy.elements("node[category= '3']").qtip(qtipContent(element));
+            }
+
+            function qtipContent(element) {
+                var content =  {
                     content: {
                         text: function () {
-                            var $menuContents = $('<div> Queue:' + element.data('queue').toString() + '</div>');
+                            var elementQueue = element.data('queue')
+                            var queueString = [];
+                            for (var i = 0; i < elementQueue.length; i++) {
+                                queueString.push(elementQueue[i]['transaction']['transactionID']);
+                            }
+                            var $menuContents = $('<div> Queue:' + queueString.join() + '</div>');
                             var $ctr = $('<div class="select-buttons"></div>');
                             var $inactive = $('<button id="inactive">Inactivate</button>');
                             var $active = $('<button id="active" class="hidden">Activate</button>');
@@ -1134,12 +1188,18 @@
                         classes: 'qtip-bootstrap',
                         tip: { width: 16, height: 8 }
                     },
-                });
+                }
+                return content;
             }
 
             /*=====================================================================================================
                                                         Helper Functions
             ======================================================================================================*/
+
+            function animationIsFirstInQueue(animation) {
+                var elementQueue = animation['node'].data('queue')
+                return (elementQueue[0] == animation);
+            }
 
             // Simple function to return a node from the list based off the ip
             function getNode(ipAddress) {
