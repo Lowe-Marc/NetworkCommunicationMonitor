@@ -789,11 +789,11 @@
             getRemainingIp();
             validateInput();
 
-            console.log("storeList:", storeList);
-            console.log("relayList:", relayList);
-            console.log("ipSet:", ipSet);
-            console.log("existIpSet:", existIpSet);
-            console.log("remainIpSet:", remainIpSet);
+            //console.log("storeList:", storeList);
+            //console.log("relayList:", relayList);
+            //console.log("ipSet:", ipSet);
+            //console.log("existIpSet:", existIpSet);
+            //console.log("remainIpSet:", remainIpSet);
 
             var cy = cytoscape({
                 ready: function () { window.cy = this; },
@@ -875,13 +875,10 @@
             });
 
             function tryLockNetworkElement(element) {
-                console.log("trying to lock:")
-                console.log(element);
                 if (relayIds.includes(element.data('id')) || connectionIds.includes(element.data('connectionId')))
                     if (element.data('isActive') == true) {
                         console.log('locking: ' + element.id());
                         element.data('status', 'inactive');
-                        //element.data('color', 'black');
                         element.animation({
                             style: {
                                 'background-color': 'black',
@@ -891,7 +888,6 @@
                         }).play();
                         var connectedEdges = element.connectedEdges();
                         for (var i = 0; i < connectedEdges.length; i++) {
-                            console.log(connectedEdges[i].data('connectionId'));
                             weight = connectedEdges[i].data('activeWeight');
                             connectedEdges[i].data('activeWeight', weight + WEIGHTOFFSET)
                         }
@@ -899,7 +895,6 @@
                     } else {
                         console.log("unlocking: " + element.id());
                         element.data('status', 'active');
-                        //element.data('color', relayColor);
                         element.animation({
                             style: {
                                 'background-color': relayColor,
@@ -909,18 +904,158 @@
                         }).play();
                         var connectedEdges = element.connectedEdges();
                         for (var i = 0; i < connectedEdges.length; i++) {
-                            console.log(connectedEdges[i].data('connectionId'));
                             weight = connectedEdges[i].data('activeWeight');
                             connectedEdges[i].data('activeWeight', weight - WEIGHTOFFSET)
                         }
                         element.data('isActive', true);
                     }
             }
+
+            /*=====================================================================================================
+                                                        Core Functions
+            ======================================================================================================*/
+            function handleTransaction() {
+                //Collect values
+                var transaction = new Object();
+                transaction.cardNumber = $('#transactionCardNumber').val();
+                var transactionStart = $('#transactionIPAddress').val();
+                transaction.storeIP = transactionStart;
+                transaction.transactionDate = $('#transactionDate').val();
+                transaction.amount = $('#transactionAmount').val();
+                transaction.category = $('#transactionCategory').val();
+
+                //Database insertion
+                $.ajax({
+                    method: "POST",
+                    url: "/Home/AddTransaction",
+                    data: transaction,
+                    success: (result) => {
+                        closeClick(transaction);
+                        console.log("Successful ajax request: ")
+                        transaction.transactionID = result;
+                        console.log("Transaction ID: " + result);
+                        return transaction;
+                    },
+                    error: (result) => {
+                        console.log("Error on ajax request");
+                        console.log(result);
+                    }
+                });
+            }
+
+            // Will be used to handle what happens at the processing center
+            function process(hasProcessed) {
+                animPath(processingCenter, startNode, true);
+            }
+
+            function assembleAnim(storeNode, transaction) {
+                console.log("Assembling animation")
+
+                var processingCenter = getNode("@NetworkCommunicationMonitor.Models.Relay.PROCESSINGCENTERIP");
+                var path = getPath(storeNode, processingCenter);
+                var n = cy.nodes();
+                var animationList = []
+                // Assemble list of animations
+                for (var i = 0; i < path.length; i++) {
+                    // If an inactive edge is in the path, we will drop the packet.
+                    // An edge is inactive if the activeWeight is >= the WEIGHTOFFSET
+                    var elementIsActive = path[i].data('isActive');
+                    //var shouldDropPacket = (i > 1 && i < path.length - 2) || !elementIsActive;
+                    if (!elementIsActive) {
+                        break;
+                    } else {
+                        var animation = path[i].animation({
+                            style: {
+                                'background-color': 'red',
+                                'line-color': 'red',
+                                'width': '10px',
+                                'height': '10px'
+                            },
+                            duration: 1000
+                        });
+                        animation['paused'] = false;
+                        animation['node'] = path[i];
+                        animationList.push(animation);
+                    }
+                }
+
+                currentAnimations.push(animationList);
+                newAnim(animationList, 0);
+            }
+
+            function convertElements() {
+                let temp = [];
+                let arr = [];
+                let status;
+
+                // Convert Nodes
+                for (var i = 0; i < nodes.length; i++) {
+                    temp.push(nodes[i].region);
+                    let tempId = nodes[i].id.slice(10);
+
+                    if (nodes[i].group == 0) {  // Processing center
+                        data.push({ group: 'nodes', data: { id: tempId, color: 'orange', shape: 'barrel', width: '50', height: '50', category: '1', queue: [], isActive: true } });
+                    } else if (nodes[i].group == 1) {   // Store
+                        storeIds.push(tempId);
+                        storeList.push(tempId);
+                        data.push({ group: 'nodes', data: { id: tempId, color: 'blueviolet', shape: 'ellipse', width: '20', height: '20', category: '3', parent: nodes[i].region, isActive: true } });
+                    } else if (nodes[i].group == 2) {   // Relay
+                        relayIds.push(tempId);
+                        relayList.push(tempId);
+                        if (nodes[i].isActive) { status = 'active'; } else { status = 'inactive'; }
+                        data.push({ group: 'nodes', data: { id: tempId, color: 'green', shape: 'triangle ', width: '35', height: '35', category: '2', status: status, parent: nodes[i].region, queue: [], isActive: true } });
+                    }
+                }
+                arr = unique(temp);
+                arr.sort();
+                for (var i = 0; i < arr.length; i++) { // Region
+                    data.push({ group: 'nodes', data: { id: arr[i], color: 'white', shape: 'rectangle', width: '0', height: '0', category: '0' } });
+                }
+
+                // Convert Edges
+                for (var i = 0; i < edges.length; i++) { // Edges
+                    let sourceId = edges[i].source.slice(10);
+                    let targetId = edges[i].target.slice(10);
+                    var tempId = edges[i].id
+                    connectionIds.push(tempId)
+                    if (storeIds.includes(sourceId) || storeIds.includes(targetId)) {
+                        data.push({ group: 'edges', data: { source: sourceId, target: targetId, weight: edges[i].distance, activeWeight: (edges[i].distance + WEIGHTOFFSET * 2), isActive: true, queue: [], connectionId: tempId } });
+                    } else {
+                        data.push({ group: 'edges', data: { source: sourceId, target: targetId, weight: edges[i].distance, activeWeight: edges[i].distance, isActive: true, queue: [], connectionId: tempId } });
+                    }
+                }
+            }
+
             /*=====================================================================================================
                                                         Animations
             ======================================================================================================*/
 
-            // When a new transaction is created, it will animate right away
+            // Play the animation and try to continue
+            function newAnim(animationList, currentAnimationPlayingIndex) {
+                var animation = animationList[currentAnimationPlayingIndex];
+                currentAnimationSet.add(animation);
+                if (!animationsArePaused) {
+                    animation.play();
+                }
+                animation.promise('completed').then(function () {
+                    animation
+                        .reverse()
+                        .rewind()
+                        .play();
+
+                    currentAnimationSet.delete(animation);
+                    console.log("Animating a node");
+                    if (currentAnimationPlayingIndex < animationList.length - 1) {
+                        currentAnimationPlayingIndex += 1;
+                        newAnim(animationList, currentAnimationPlayingIndex);
+                    }
+                });
+            }
+
+            /*=====================================================================================================
+                                                        Click Events
+            ======================================================================================================*/
+
             $('#transactionSubmit').click(function () {
                 var transaction = handleTransaction();
             });
@@ -933,38 +1068,18 @@
                 pauseOrPlayAnimations();
             });
 
-            function handleTransaction() {
-                //Collect values
-                console.log("Handling transactions");
-                var transaction = new Object();
-                transaction.cardNumber = $('#transactionCardNumber').val();
-                var transactionStart = $('#transactionIPAddress').val();
-                transaction.storeIP = transactionStart;
-                transaction.transactionDate = $('#transactionDate').val();
-                transaction.amount = $('#transactionAmount').val();
-                transaction.category = $('#transactionCategory').val();
-
-                //Kick off animation
-                console.log("Kicking off animation for: " + transactionStart);
-                //assembleAnim(startNode);
-
-                //Database insertion
-                $.ajax({
-                    method: "POST",
-                    url: "/Home/AddTransaction",
-                    data: transaction,
-                    success: (result) => {
-                        closeClick(transaction);
-                        console.log("Successful ajax request: ")
-                        transaction.transactionID = result;
-                        console.log(result);
-                        return transaction;
-                    },
-                    error: (result) => {
-                        console.log("Error on ajax request");
-                        console.log(result);
-                    }
-                });
+            function pauseOrPlayAnimations(node) {
+                if (animationsArePaused) {
+                    animationsArePaused = false;
+                    currentAnimationSet.forEach(function (animation) { animation.play() })
+                    $("#play").addClass('hidden');
+                    $("#pause").removeClass('hidden');
+                } else {
+                    animationsArePaused = true;
+                    currentAnimationSet.forEach(function (animation) { animation.pause() })
+                    $("#pause").addClass('hidden');
+                    $("#play").removeClass('hidden');
+                }
             }
 
             function closeClick(transaction) {
@@ -974,25 +1089,7 @@
                 assembleAnim(startNode, transaction);
             }
 
-            function pauseOrPlayAnimations(node) {
-                $("#pause").click(function () {
-                    $("#pause").addClass('hidden');
-                    $("#play").removeClass('hidden');
-                    animationsArePaused = true;
-                    currentAnimationSet.forEach(function (animation) {animation.pause()} )
-                });
-                $("#play").click(function () {
-                    $("#play").addClass('hidden');
-                    $("#pause").removeClass('hidden');
-                    animationsArePaused = false;
-                    currentAnimationSet.forEach(function (animation) { animation.play() })
-                });
-            }
-            /*=====================================================================================================
-                                                        Functions
-            ======================================================================================================*/
             function popOver(element) {
-                // qtip
                 cy.elements("node[category= '2']").qtip({
                     content: {
                         text: function () {
@@ -1032,7 +1129,6 @@
                         adjust: { method: 'flip' },
                         effect: false,
                         viewport: $('#network-view')
-                        //adjust: { method: 'none shift' }
                     },
                     style: {
                         classes: 'qtip-bootstrap',
@@ -1041,53 +1137,9 @@
                 });
             }
 
-            function convertElements() {
-                let temp = [];
-                let arr = [];
-                let status;
-
-                // Convert Nodes
-                for (var i = 0; i < nodes.length; i++) {
-                    temp.push(nodes[i].region);
-                    let tempId = nodes[i].id.slice(10);
-
-                    if (nodes[i].group == 0) {  // Processing center
-                        data.push({ group: 'nodes', data: { id: tempId, color: 'orange', shape: 'barrel', width: '50', height: '50', category: '1', queue: [], isActive: true } });
-                    } else if (nodes[i].group == 1) {   // Store
-                        storeIds.push(tempId);
-                        storeList.push(tempId);
-                        data.push({ group: 'nodes', data: { id: tempId, color: 'blueviolet', shape: 'ellipse', width: '20', height: '20', category: '3', parent: nodes[i].region, isActive: true } });
-                    } else if (nodes[i].group == 2) {   // Relay
-                        relayIds.push(tempId);
-                        relayList.push(tempId);
-                        if (nodes[i].isActive) { status = 'active'; } else { status = 'inactive';}
-                        data.push({ group: 'nodes', data: { id: tempId, color: 'green', shape: 'triangle ', width: '35', height: '35', category: '2', status: status, parent: nodes[i].region, queue: [], isActive: true } });
-                    }
-                }
-                arr = unique(temp);
-                arr.sort();
-                for (var i = 0; i < arr.length; i++) { // Region
-                    data.push({ group: 'nodes', data: { id: arr[i], color: 'white', shape: 'rectangle', width: '0', height: '0', category: '0' } });
-                }
-
-                // Convert Edges
-                for (var i = 0; i < edges.length; i++) { // Edges
-                    let sourceId = edges[i].source.slice(10);
-                    let targetId = edges[i].target.slice(10);
-                    var tempId = edges[i].id
-                    connectionIds.push(tempId)
-                    if (storeIds.includes(sourceId) || storeIds.includes(targetId)) {
-                        data.push({ group: 'edges', data: { source: sourceId, target: targetId, weight: edges[i].distance, activeWeight: (edges[i].distance + WEIGHTOFFSET*2), isActive: true, queue: [], connectionId: tempId } });
-                    } else {
-                        data.push({ group: 'edges', data: { source: sourceId, target: targetId, weight: edges[i].distance, activeWeight: edges[i].distance, isActive: true, queue: [], connectionId: tempId } });
-                    }
-                }
-            }
-
-            // Will be used to handle what happens at the processing center
-            function process(hasProcessed) {
-                animPath(processingCenter, startNode, true);
-            }
+            /*=====================================================================================================
+                                                        Helper Functions
+            ======================================================================================================*/
 
             // Simple function to return a node from the list based off the ip
             function getNode(ipAddress) {
@@ -1097,64 +1149,6 @@
                         return n[i];
                     }
                 }
-            }
-
-            function assembleAnim(storeNode, transaction) {
-                console.log("Assembling animation")
-
-                var processingCenter = getNode("@NetworkCommunicationMonitor.Models.Relay.PROCESSINGCENTERIP");
-                var path = getPath(storeNode, processingCenter);
-                var n = cy.nodes();
-                var animationList = []
-                // Assemble list of animations
-                for (var i = 0; i < path.length; i++) {
-                    // If an inactive edge is in the path, we will drop the packet.
-                    // An edge is inactive if the activeWeight is >= the WEIGHTOFFSET
-                    var elementIsActive = path[i].data('isActive');
-                    //var shouldDropPacket = (i > 1 && i < path.length - 2) || !elementIsActive;
-                    if (!elementIsActive) {
-                        break;
-                    } else {
-                        var animation = path[i].animation({
-                            style: {
-                                'background-color': 'red',
-                                'line-color': 'red',
-                                'width': '10px',
-                                'height': '10px'
-                            },
-                            duration: 1000
-                        });
-                        animation['paused'] = false;
-                        animation['node'] = path[i];
-                        animationList.push(animation);
-                    }
-                }
-                console.log("starting newAnim: ")
-                console.log(animationList)
-                currentAnimations.push(animationList);
-                newAnim(animationList, 0);
-            }
-
-            // Play the animation and try to continue
-            function newAnim(animationList, currentAnimationPlayingIndex) {
-                var animation = animationList[currentAnimationPlayingIndex];
-                currentAnimationSet.add(animation);
-                if (!animationsArePaused) {
-                    animation.play();
-                }
-                animation.promise('completed').then(function () {
-                        animation
-                            .reverse()
-                            .rewind()
-                            .play();
-
-                        currentAnimationSet.delete(animation);
-                        console.log("Animating a node");
-                        if (currentAnimationPlayingIndex < animationList.length - 1) {
-                            currentAnimationPlayingIndex += 1;
-                            newAnim(animationList, currentAnimationPlayingIndex);
-                        }
-                    });
             }
 
             // Calculate the round trip path from start to end
