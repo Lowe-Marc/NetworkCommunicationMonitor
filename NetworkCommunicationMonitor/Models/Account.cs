@@ -163,5 +163,50 @@ namespace NetworkCommunicationMonitor.Models
                 cn.Close();
             }
         }
+
+        public static Account getAccountByNumber(int accountNumber)
+        {
+            Account account = new Account();
+
+            var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
+            using (cn)
+            {
+                DataTable questionTable = new DataTable();
+                DataRowCollection rows;
+                string _sql = @"SELECT account_balance, account_limit FROM Account WHERE account_id = @AccountNumber";
+                var cmd = new SqlCommand(_sql, cn);
+
+                cmd.Parameters.Add("@AccountNumber", SqlDbType.Int).Value = accountNumber;
+
+                cn.Open();
+
+                questionTable.Load(cmd.ExecuteReader());
+                rows = questionTable.Rows;
+
+                account.accountNumber = accountNumber;
+                account.accountLimit = Convert.ToInt32(rows[0]["account_limit"]);
+                account.accountBalance = Convert.ToDouble(rows[0]["account_balance"]);
+            }
+
+            return account;
+        }
+
+        public static void chargeAccount(double amount, double balance, int accountNumber)
+        {
+            var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
+            using (cn)
+            {
+                DataTable questionTable = new DataTable();
+                string _sql = @"UPDATE Account SET account_balance = @AccountBalance WHERE account_id = @AccountNumber";
+                var cmd = new SqlCommand(_sql, cn);
+
+                cmd.Parameters.Add("@AccountBalance", SqlDbType.Float).Value = amount + balance;
+                cmd.Parameters.Add("@AccountNumber", SqlDbType.Int).Value = accountNumber;
+
+                cn.Open();
+                cmd.ExecuteNonQuery();
+                cn.Close();
+            }
+        }
     }
 }

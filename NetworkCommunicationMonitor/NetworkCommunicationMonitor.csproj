@@ -152,6 +152,7 @@
     <Compile Include="Models\Connection.cs" />
     <Compile Include="Models\Global.cs" />
     <Compile Include="Models\Relay.cs" />
+    <Compile Include="Models\Response.cs" />
     <Compile Include="Models\Store.cs" />
     <Compile Include="Models\Transaction.cs" />
     <Compile Include="Models\User.cs" />

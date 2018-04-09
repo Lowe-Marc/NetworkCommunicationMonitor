@@ -269,8 +269,8 @@
                         <i class="fa fa-fw fa-th-large" data-toggle="modal" data-target="#add-region" title="Create Region"></i>
                         <i class="fa fa-fw fa-arrows-h" data-toggle="modal" data-target="#add-connection" title="Create Connection"></i>
                         <i class="fa fa-exchange" data-toggle="modal" data-target="#add-transaction" title="Create Transaction"></i>
-                        @*<i class="fa fa-play hidden" id="play" title="Play"></i>
-                        <i class="fa fa-fw fa-pause " id="pause" title="Pause"></i>*@
+                        <i class="fa fa-play hidden" id="play" title="Play"></i>
+                        <i class="fa fa-fw fa-pause " id="pause" title="Pause"></i>
                     </div>
                     <div class="notation pull-right">
                         <ul class="list-inline list-unstyled">
@@ -769,7 +769,9 @@
             const edges = @Html.Raw(Json.Encode(ViewData["Links"]));
             const data = [];
             const relayColor = 'green';
+            const PROCESSINGCENTERID = 1;
             const WEIGHTOFFSET = 100000000; // This is used to inactivate relays/connections and to prevent a path from routing through a store
+            const animationLength = 1200; // Time the animations take in milliseconds
 
             var storeIds = [];
             var relayIds = [];
@@ -782,15 +784,19 @@
             var existIpSet = []; // ip addresses include both stores and relays
             var remainIpSet = []; // ip addresses not include stores and relays
             var currentAnimations = [];
+            var currentAnimationSet = new Set();
+            var queueAnimationSet = new Set();
+            var animationsArePaused = false;
+
             convertElements();
             getRemainingIp();
             validateInput();
 
-            console.log("storeList:", storeList);
-            console.log("relayList:", relayList);
-            console.log("ipSet:", ipSet);
-            console.log("existIpSet:", existIpSet);
-            console.log("remainIpSet:", remainIpSet);
+            //console.log("storeList:", storeList);
+            //console.log("relayList:", relayList);
+            //console.log("ipSet:", ipSet);
+            //console.log("existIpSet:", existIpSet);
+            //console.log("remainIpSet:", remainIpSet);
 
             var cy = cytoscape({
                 ready: function () { window.cy = this; },
@@ -833,24 +839,24 @@
                         'border-color': 'black',
                         'background-color': 'black',
                         'opacity': '1'
-                    })
-                    .selector('edge:selected')
-                    .css({
-                        'border-color': 'black',
-                        'background-color': 'black',
-                        'line-color': 'black',
-                        'target-arrow-color': 'black',
-                        'source-arrow-color': 'black',
-                        'width': '5px',
-                        'height': '5px',
-                        'opacity': '1'
-                    })
-                    .selector('node:selected')
-                    .css({
-                        'border-color': 'black',
-                        'background-color': 'black',
-                        'opacity': '1'
                     }),
+                //    .selector('edge:selected')
+                //    .css({
+                //        'border-color': 'black',
+                //        'background-color': 'black',
+                //        'line-color': 'black',
+                //        'target-arrow-color': 'black',
+                //        'source-arrow-color': 'black',
+                //        'width': '5px',
+                //        'height': '5px',
+                //        'opacity': '1'
+                //    })
+                //    .selector('node:selected')
+                //    .css({
+                //        'border-color': 'black',
+                //        'background-color': 'black',
+                //        'opacity': '1'
+                //    }),
                 //.selector('.outline')
                 //.css({
                 //    "text-outline-color": '#e6e6e6',
@@ -863,23 +869,19 @@
                 wheelSensitivity: 0.2
             });
 
-            //popOver();
             //This handles deactivating of relays
             cy.on('click', 'node', function (evt) {
-                tryLockNetworkElement(this);
+                popOver(this);
             });
             cy.on('click', 'edge', function (evt) {
                 tryLockNetworkElement(this);
             });
 
             function tryLockNetworkElement(element) {
-                console.log("trying to lock:")
-                console.log(element);
                 if (relayIds.includes(element.data('id')) || connectionIds.includes(element.data('connectionId')))
                     if (element.data('isActive') == true) {
                         console.log('locking: ' + element.id());
                         element.data('status', 'inactive');
-                        //element.data('color', 'black');
                         element.animation({
                             style: {
                                 'background-color': 'black',
@@ -889,7 +891,6 @@
                         }).play();
                         var connectedEdges = element.connectedEdges();
                         for (var i = 0; i < connectedEdges.length; i++) {
-                            console.log(connectedEdges[i].data('connectionId'));
                             weight = connectedEdges[i].data('activeWeight');
                             connectedEdges[i].data('activeWeight', weight + WEIGHTOFFSET)
                         }
@@ -897,7 +898,6 @@
                     } else {
                         console.log("unlocking: " + element.id());
                         element.data('status', 'active');
-                        //element.data('color', relayColor);
                         element.animation({
                             style: {
                                 'background-color': relayColor,
@@ -907,25 +907,18 @@
                         }).play();
                         var connectedEdges = element.connectedEdges();
                         for (var i = 0; i < connectedEdges.length; i++) {
-                            console.log(connectedEdges[i].data('connectionId'));
                             weight = connectedEdges[i].data('activeWeight');
                             connectedEdges[i].data('activeWeight', weight - WEIGHTOFFSET)
                         }
                         element.data('isActive', true);
                     }
             }
+
             /*=====================================================================================================
-                                                        Animations
+                                                        Core Functions
             ======================================================================================================*/
-
-            // When a new transaction is created, it will animate right away
-            $('#transactionSubmit').click(function () {
-                handleTransaction();
-            });
-
             function handleTransaction() {
                 //Collect values
-                console.log("Handling transactions");
                 var transaction = new Object();
                 transaction.cardNumber = $('#transactionCardNumber').val();
                 var transactionStart = $('#transactionIPAddress').val();
@@ -934,16 +927,18 @@
                 transaction.amount = $('#transactionAmount').val();
                 transaction.category = $('#transactionCategory').val();
 
-                //Kick off animation
-                console.log("Kicking off animation for: " + transactionStart);
-                //assembleAnim(startNode);
-
                 //Database insertion
                 $.ajax({
                     method: "POST",
                     url: "/Home/AddTransaction",
                     data: transaction,
-                    success: closeClick,
+                    success: (result) => {
+                        closeClick(transaction);
+                        console.log("Successful ajax request: ")
+                        transaction.transactionID = result;
+                        console.log("Transaction ID: " + result);
+                        return transaction;
+                    },
                     error: (result) => {
                         console.log("Error on ajax request");
                         console.log(result);
@@ -951,88 +946,45 @@
                 });
             }
 
-            function closeClick() {
-                $('#close-transaction').click();
-                var transactionStart = $('#transactionIPAddress').val();
-                var startNode = getNode(transactionStart);
-                assembleAnim(startNode);
+            // Will be used to handle what happens at the processing center
+            function process(hasProcessed) {
+                animPath(processingCenter, startNode, true);
             }
 
-            //pauseAnimation();
-            function pauseAnimation(node) {
-                node.play();
-                //node.play().promise().then(function () {
-                //    let index = animationList.indexOf(node);
-                //    animationList.splice(index, 1);
-                //    animationList.pop();
-                //    animationList.shift();
-                //});
-                $("#pause").click(function () {
-                    $("#pause").addClass('hidden');
-                    $("#play").removeClass('hidden');
-                    animationList.forEach(function (animation) {
-                        animation.pause();
-                    });
-                });
-                $("#play").click(function () {
-                    $("#play").addClass('hidden');
-                    $("#pause").removeClass('hidden');
-                    node.play();
-                    //animationList.forEach(function (animation) {
-                    //    animation.play();
-                    //});
-                });
-            }
-            /*=====================================================================================================
-                                                        Functions
-            ======================================================================================================*/
-            function popOver() {
-                // qtip
-                cy.elements("node[category= '2']").qtip({
-                    content: {
-                        text: function () {
-                            var $ctr = $('<div class="select-buttons"></div>');
-                            var $inactive = $('<button id="inactive">Inactive</button>');
-                            var $active = $('<button id="active" class="hidden">Active</button>');
+            function assembleAnim(storeNode, transaction) {
+                console.log("Assembling animation")
 
-                            $inactive.on('click', function () {
-                                let n = cy.$('node:selected');
-                                $inactive.addClass('hidden');
-                                $active.removeClass('hidden');
-                                inactive(n);
-                            });
+                var processingCenter = getNode("@NetworkCommunicationMonitor.Models.Relay.PROCESSINGCENTERIP");
+                var path = getPath(storeNode, processingCenter);
+                var n = cy.nodes();
+                var animationList = []
+                // Assemble list of animations
+                for (var i = 0; i < path.length; i++) {
+                    // If an inactive edge is in the path, we will drop the packet.
+                    // An edge is inactive if the activeWeight is >= the WEIGHTOFFSET
+                    var elementIsActive = path[i].data('isActive');
+                    //var shouldDropPacket = (i > 1 && i < path.length - 2) || !elementIsActive;
+                    if (!elementIsActive) {
+                        break;
+                    } else {
+                        var animation = path[i].animation({
+                            style: {
+                                'background-color': 'red',
+                                'line-color': 'red',
+                                'width': '10px',
+                                'height': '10px'
+                            },
+                            duration: animationLength
+                        });
+                        animation['paused'] = false;
+                        animation['node'] = path[i];
+                        animation['transaction'] = transaction;
+                        animationList.push(animation);
+                    }
+                }
 
-                            $active.on('click', function () {
-                                let n = cy.$('node:selected');
-                                $active.addClass('hidden');
-                                $inactive.removeClass('hidden');
-                                active(n);
-                            });
-                            $('#network-view').append($ctr);
-                            $ctr.append($active).append($inactive);
-                            return $ctr;
-                        }
-                    },
-                    show: { solo: true },
-                    position: {
-                        my: 'top center',
-                        at: 'bottom center',
-                        adjust: { method: 'flip' },
-                        effect: false,
-                        viewport: $('#network-view')
-                        //adjust: { method: 'none shift' }
-                    },
-                    style: {
-                        classes: 'qtip-bootstrap',
-                        tip: { width: 16, height: 8 }
-                    },
-                });
-            }
-            function inactive(n) {
-                cy.$(n).lock();
-            }
-            function active(n) {
-                cy.$(n).unlock();
+                currentAnimations.push(animationList);
+                newAnim(animationList, 0);
             }
 
             function convertElements() {
@@ -1050,11 +1002,11 @@
                     } else if (nodes[i].group == 1) {   // Store
                         storeIds.push(tempId);
                         storeList.push(tempId);
-                        data.push({ group: 'nodes', data: { id: tempId, color: 'blueviolet', shape: 'ellipse', width: '20', height: '20', category: '3', parent: nodes[i].region, isActive: false } });
+                        data.push({ group: 'nodes', data: { id: tempId, color: 'blueviolet', shape: 'ellipse', width: '20', height: '20', category: '3', parent: nodes[i].region, isActive: true, queue: [] } });
                     } else if (nodes[i].group == 2) {   // Relay
                         relayIds.push(tempId);
                         relayList.push(tempId);
-                        if (nodes[i].isActive) { status = 'active'; } else { status = 'inactive';}
+                        if (nodes[i].isActive) { status = 'active'; } else { status = 'inactive'; }
                         data.push({ group: 'nodes', data: { id: tempId, color: 'green', shape: 'triangle ', width: '35', height: '35', category: '2', status: status, parent: nodes[i].region, queue: [], isActive: true } });
                     }
                 }
@@ -1068,20 +1020,219 @@
                 for (var i = 0; i < edges.length; i++) { // Edges
                     let sourceId = edges[i].source.slice(10);
                     let targetId = edges[i].target.slice(10);
-                    //console.log(edges[i])
                     var tempId = edges[i].id
                     connectionIds.push(tempId)
                     if (storeIds.includes(sourceId) || storeIds.includes(targetId)) {
-                        data.push({ group: 'edges', data: { source: sourceId, target: targetId, weight: edges[i].distance, activeWeight: (edges[i].distance + WEIGHTOFFSET), isActive: false, queue: [], connectionId: tempId } });
+                        data.push({ group: 'edges', data: { source: sourceId, target: targetId, weight: edges[i].distance, activeWeight: (edges[i].distance + WEIGHTOFFSET * 2), isActive: true, queue: [], connectionId: tempId } });
                     } else {
                         data.push({ group: 'edges', data: { source: sourceId, target: targetId, weight: edges[i].distance, activeWeight: edges[i].distance, isActive: true, queue: [], connectionId: tempId } });
                     }
                 }
             }
 
-            // Will be used to handle what happens at the processing center
-            function process(hasProcessed) {
-                animPath(processingCenter, startNode, true);
+            /*=====================================================================================================
+                                                        Animations
+            ======================================================================================================*/
+
+            // Play the animation and try to continue
+            function newAnim(animationList, currentAnimationPlayingIndex) {
+                console.log("newAnim");
+                //Get animation
+                var animation = animationList[currentAnimationPlayingIndex];
+                //Add to queue
+                if (animationList.length != currentAnimationPlayingIndex) {
+                    var elementQueue = animation['node'].data('queue')
+                    elementQueue.push(animation);
+                    animation['node'].data('queue', elementQueue);
+                }
+
+                var atProcessingCenter = (animation['node'].data('id') == PROCESSINGCENTERID)
+                if (atProcessingCenter) {
+                    var transaction = animation['transaction'];
+
+                    $.ajax({
+                        method: "POST",
+                        url: "/Home/GenerateResponse",
+                        data: transaction,
+                        success: (result) => {
+                            console.log("Successful processing", result)
+                        },
+                        error: (result) => {
+                            console.log("Error on ajax request",result);
+                        }
+                    });
+                }
+
+                //Check to see if the animation should play
+                var firstInQueue = (elementQueue[0] == animation);
+                var nodeIsAlreadyAnimating = animation['node'].animated()
+                if (!animationsArePaused && firstInQueue && !nodeIsAlreadyAnimating) {
+                    animation.play();
+                    currentAnimationSet.add(animation);
+                } else {
+                    queueAnimationSet.add(animation);
+                }
+
+                //Setup what happens next
+                animation.promise('completed').then(function () {
+                    animation
+                        .reverse()
+                        .rewind()
+                        .play();
+                    //Kick off the next animation in the queue
+                    setTimeout(function () { playNecessaryQueuedAnimations(); }, animationLength*2);
+
+                    currentAnimationSet.delete(animation);
+                    if (currentAnimationPlayingIndex < animationList.length - 1) {
+                        elementQueue.shift();
+                        animation['node'].data('queue', elementQueue);
+
+                        currentAnimationPlayingIndex += 1;
+                        newAnim(animationList, currentAnimationPlayingIndex);
+                    } else {
+                        elementQueue.shift();
+                        animation['node'].data('queue', elementQueue);
+                    }
+                });
+            }
+
+            function playAnimations() {
+                currentAnimationSet.forEach(function (animation) { animation.play() })
+                playNecessaryQueuedAnimations();
+            }
+
+            function playNecessaryQueuedAnimations() {
+                queueAnimationSet.forEach(function (animation) {
+                    if (animationIsFirstInQueue(animation)) {
+                        currentAnimationSet.add(animation);
+                        animation.play();
+                    }
+                });
+            }
+
+            /*=====================================================================================================
+                                                        Click Events
+            ======================================================================================================*/
+
+            $('#transactionSubmit').click(function () {
+                var transaction = handleTransaction();
+            });
+
+            $('#pause').click(function () {
+                pauseOrPlayAnimations();
+            });
+
+            $('#play').click(function () {
+                pauseOrPlayAnimations();
+            });
+
+            function pauseOrPlayAnimations(node) {
+                if (animationsArePaused) {
+                    animationsArePaused = false;
+                    playAnimations();
+                    $("#play").addClass('hidden');
+                    $("#pause").removeClass('hidden');
+                } else {
+                    animationsArePaused = true;
+                    currentAnimationSet.forEach(function (animation) { animation.pause() })
+                    $("#pause").addClass('hidden');
+                    $("#play").removeClass('hidden');
+                }
+            }
+
+            function closeClick(transaction) {
+                $('#close-transaction').click();
+                var transactionStart = $('#transactionIPAddress').val();
+                var startNode = getNode(transactionStart);
+                assembleAnim(startNode, transaction);
+            }
+
+            function popOver(element) {
+                cy.elements("node[category= '1']").qtip(qtipContent(element, true));
+                cy.elements("node[category= '2']").qtip(qtipContent(element, false));
+                cy.elements("node[category= '3']").qtip(qtipContent(element, false));
+            }
+
+            function qtipContent(element, isProcessingCenter) {
+                var content =  {
+                    content: {
+                        text: function () {
+                            var elementQueue = element.data('queue')
+                            var queueString = [];
+                            var transactionInfo = "Encrypted";
+                            if (isProcessingCenter && elementQueue.length >= 1) {
+                                console.log("elementQueue:",elementQueue[0]['transaction']);
+                                transactionInfo = "<br>Card Number: " + elementQueue[0]['transaction']['cardNumber']
+                                    + "<br> Store IP: " + elementQueue[0]['transaction']['storeIP']
+                                    + "<br> Amount: " + elementQueue[0]['transaction']['amount']
+                                    + "<br> Category: " + elementQueue[0]['transaction']['category'];
+                            } else if (isProcessingCenter) {
+                                transactionInfo = "None";
+                            }
+                            for (var i = 0; i < elementQueue.length; i++) {
+                                queueString.push(elementQueue[i]['transaction']['transactionID']);
+                            }
+
+                            var $menuContents = $('<div> Queue:' + queueString.join() + "<br> Transaction Information:" + transactionInfo + '</div>');
+                            var $ctr = $('<div class="select-buttons"></div>');
+                            var $inactive = $('<button id="inactive">Inactivate</button>');
+                            if (isProcessingCenter) {
+                                $inactive = $('');
+                            }
+                            var $active = $('<button id="active" class="hidden">Activate</button>');
+
+                            if (element.data('isActive') == true) {
+                                $active.addClass('hidden');
+                                $inactive.removeClass('hidden');
+                            } else {
+                                $inactive.addClass('hidden');
+                                $active.removeClass('hidden');
+                            }
+
+                            $inactive.on('click', function () {
+                                tryLockNetworkElement(element);
+                                $inactive.addClass('hidden');
+                                $active.removeClass('hidden');
+                            });
+
+                            $active.on('click', function () {
+                                tryLockNetworkElement(element);
+                                $active.addClass('hidden');
+                                $inactive.removeClass('hidden');
+                            });
+                            $('#network-view').append($ctr);
+                            $ctr.append($menuContents).append($active).append($inactive);
+                            return $ctr;
+                        }
+                    },
+                    show: { solo: true },
+                    position: {
+                        my: 'top center',
+                        at: 'bottom center',
+                        adjust: { method: 'flip' },
+                        effect: false,
+                        viewport: $('#network-view')
+                    },
+                    style: {
+                        screen: true,
+                        classes: 'qtip-bootstrap',
+                        tip: { width: 16, height: 8 },
+                        padding: 5,
+                        'font-size': 16,
+                        background: '#D0D0D0',
+                        color: '#000000',
+                    },
+                }
+                return content;
+            }
+
+            /*=====================================================================================================
+                                                        Helper Functions
+            ======================================================================================================*/
+
+            function animationIsFirstInQueue(animation) {
+                var elementQueue = animation['node'].data('queue')
+                return (elementQueue[0] == animation);
             }
 
             // Simple function to return a node from the list based off the ip
@@ -1092,79 +1243,6 @@
                         return n[i];
                     }
                 }
-            }
-
-            function assembleAnim(storeNode) {
-                console.log("Assembling animation")
-
-                var processingCenter = getNode("@NetworkCommunicationMonitor.Models.Relay.PROCESSINGCENTERIP");
-                var path = getPath(storeNode, processingCenter);
-                var n = cy.nodes();
-                var animationList = []
-                // Assemble list of animations
-                for (var i = 0; i < path.length; i++) {
-                    console.log(i + ": ")
-                    console.log(path[i])
-                    // If an inactive edge is in the path, we will drop the packet.
-                    // An edge is inactive if the activeWeight is >= the WEIGHTOFFSET
-                    var elementIsActive = path[i].data('isActive');
-                    console.log("i : " + i)
-                    console.log(elementIsActive)
-                    var shouldDropPacket = (i > 1 && i < path.length - 2) && !elementIsActive;
-                    if (shouldDropPacket) {
-                        break;
-                    } else {
-                        var animation = path[i].animation({
-                            style: {
-                                'background-color': 'red',
-                                'line-color': 'red',
-                                'width': '10px',
-                                'height': '10px'
-                            },
-                            duration: 1000
-                        });
-                        animationList.push(animation);
-                    }
-
-                }
-                //console.log("starting newAnim: ")
-                //console.log(animationList)
-                newAnim(animationList, 0);
-            }
-
-            // This is used to remove stores and inactive relays/connections from a path
-            function correctPath(path) {
-                //console.log("correcting path:")
-                //console.log(path)
-
-                for (var i = 0; i < path.length; i++) {
-                    //console.log(i)
-                    //console.log(path[i].data('shape'))
-                    //console.log(path[i].data('queue'))
-                }
-
-                return path
-            }
-
-            // Play the animation and try to continue
-            function newAnim(animationList, currentAnimationPlayingIndex) {
-                var animation = animationList[currentAnimationPlayingIndex];
-                pauseAnimation(animation);
-                animation.promise('completed').then(function () {
-                        animation
-                            .reverse()
-                            .rewind()
-                            .play();
-                        //node.data('queue').push("Test");
-                        console.log("Animating a node");
-                        //console.log(node.data('queue'));
-                        if (currentAnimationPlayingIndex < animationList.length - 1) {
-                            currentAnimationPlayingIndex += 1;
-                            //node.data('queue').shift()
-                            //console.log(node.data('queue'));
-                            newAnim(animationList, currentAnimationPlayingIndex);
-                        }
-                    });
             }
 
             // Calculate the round trip path from start to end
@@ -1182,7 +1260,7 @@
 
                 var path = truncatedPath.concat(returnPath);
 
-                return correctPath(path);
+                return path;
             }
 
             // For some reason the cytoscape aStar path has edges after nodes, this should properly order things
@@ -1269,7 +1347,7 @@
 
             function validateInput() {
                 let date = new Date();
-                let day = date.getDay() + 1;
+                let day = date.getDate();
                 let month = date.getMonth() + 1 ;
                 let year = date.getFullYear();
                 let transActionDate = day + "/" + month + "/" + year;
@@ -1292,7 +1370,7 @@
                     $('#ipOne').append('<option>' + existIpSet[i] + '</option>');
                     $('#ipTwo').append('<option>' + existIpSet[i] + '</option>');
                 }
-                for (var i = 1; i < 11; i++) {
+                for (var i = 1; i < 101; i++) {
                     $('#storeWeight').append('<option>' + i + '</option>');
                     $('#relayWeight').append('<option>' + i + '</option>');
                     $('#connectionWeight').append('<option>' + i + '</option>');

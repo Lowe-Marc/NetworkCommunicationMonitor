@@ -128,15 +128,45 @@ namespace NetworkCommunicationMonitor.Models
         public static void deleteCard(string cardID)
         {
             var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
-            using (cn)
-            {
-                string _sql = @"DELETE FROM Card WHERE card_id = '" + cardID + "'";
-                var cmd = new SqlCommand(_sql, cn);
+            var cn1 = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
+            var cn2 = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
+            string accountID;
 
-                cn.Open();
-                cmd.ExecuteNonQuery();
-                cn.Close();
+            using (cn2)
+            {
+                string _sql2 = @"SELECT DISTINCT account_id FROM Card WHERE card_id = '" + cardID + "'";
+                var cmd2 = new SqlCommand(_sql2, cn2);
+                cn2.Open();
+                SqlDataReader sdr = cmd2.ExecuteReader();
+                sdr.Close();
+                accountID = Convert.ToString(cmd2.ExecuteScalar());
+                cn2.Close();
             }
+            using (cn1)
+            {
+                string _sql1 = @"SELECT COUNT(account_id) FROM Card WHERE account_id = '" + accountID + "'";
+                var cmd1 = new SqlCommand(_sql1, cn1);
+                cn1.Open();
+                int amount = (int)cmd1.ExecuteScalar();
+
+                if (amount != 1)
+                {
+                    using (cn)
+                    {
+                        string _sql = @"DELETE FROM Card WHERE card_id = '" + cardID + "'";
+                        var cmd = new SqlCommand(_sql, cn);
+
+                        cn.Open();
+                        cmd.ExecuteNonQuery();
+                        cn.Close();
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("The last card cannot be deleted!");
+                }
+            }
+
         }
 
         public static void deleteCardsForAccount(int accountID)
@@ -182,6 +212,33 @@ namespace NetworkCommunicationMonitor.Models
                 cmd.ExecuteNonQuery();
                 cn.Close();
             }
+        }
+
+        public static Account getAccountForCard(string cardNumber)
+        {
+            int accountNumber = 0;
+
+            var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
+            using (cn)
+            {
+                DataTable questionTable = new DataTable();
+                DataRowCollection rows;
+                string _sql = @"SELECT account_id FROM Card WHERE card_id = @CardNumber";
+                var cmd = new SqlCommand(_sql, cn);
+
+                cmd.Parameters.Add("@CardNumber", SqlDbType.VarChar).Value = cardNumber;
+
+                cn.Open();
+
+                questionTable.Load(cmd.ExecuteReader());
+                rows = questionTable.Rows;
+
+                accountNumber = Convert.ToInt32(rows[0]["account_id"]);
+            }
+
+            Account account = Account.getAccountByNumber(accountNumber);
+
+            return account;
         }
     }
 

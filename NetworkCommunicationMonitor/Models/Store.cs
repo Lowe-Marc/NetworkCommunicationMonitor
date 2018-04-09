@@ -114,7 +114,7 @@ namespace NetworkCommunicationMonitor.Models
             return numStores;
         }
 
-        public static void addStore(string ipAddress, string relayIP, string storeName)
+        public static void addStore(int weight, string ipAddress, string relayIP, string storeName)
         {
             string region = Relay.getRegion(relayIP);
 
@@ -132,7 +132,7 @@ namespace NetworkCommunicationMonitor.Models
                 cn.Close();
             }
 
-            Connection.addConnection(ipAddress, relayIP);
+            Connection.addConnection(weight, ipAddress, relayIP);
         }
     }
 }

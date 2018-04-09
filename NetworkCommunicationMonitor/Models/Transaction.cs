@@ -14,7 +14,7 @@ namespace NetworkCommunicationMonitor.Models
     public class Transaction
     {
 
-        public string transactionID;
+        public int transactionID;
         public string cardID;
         public string storeID;
         public DateTime transactionDate;
@@ -51,7 +51,7 @@ namespace NetworkCommunicationMonitor.Models
                 foreach (DataRow row in rows)
                 {
                     Transaction tempTransaction = new Transaction();
-                    tempTransaction.transactionID = Convert.ToString(row["trans_id"]);
+                    tempTransaction.transactionID = Convert.ToInt32(row["trans_id"]);
                     tempTransaction.cardID = Convert.ToString(row["card_id"]);
                     tempTransaction.storeID = Convert.ToString(row["store_id"]);
                     tempTransaction.transactionDate = Convert.ToDateTime(row["trans_date"]);
@@ -127,6 +127,56 @@ namespace NetworkCommunicationMonitor.Models
                 cmd.ExecuteNonQuery();
                 cn.Close();
             }
+        }
+
+        // Note, it is possible for there to be transactions with identical details in the database, but they will have different IDs.
+        // This will get the largest corresponding ID.
+        public static int getTransactionID(string cardNumber, string storeIP, DateTime transactionDate, double transactionAmount, string transactionCategory)
+        {
+            int transactionID = 0;
+
+            var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
+            using (cn)
+            {
+                DataTable questionTable = new DataTable();
+                DataRowCollection rows;
+                string _sql = @"SELECT trans_id FROM Transactions WHERE card_id = @CardNumber AND store_id = @StoreIP AND trans_date = @TransactionDate AND trans_amount = @TransactionAmount AND trans_category = @TransactionCategory";
+                var cmd = new SqlCommand(_sql, cn);
+
+                cmd.Parameters.Add("@CardNumber", SqlDbType.VarChar).Value = cardNumber;
+                cmd.Parameters.Add("@StoreIP", SqlDbType.VarChar).Value = storeIP;
+                cmd.Parameters.Add("@TransactionDate", SqlDbType.DateTime).Value = transactionDate;
+                cmd.Parameters.Add("@TransactionAmount", SqlDbType.Float).Value = transactionAmount;
+                cmd.Parameters.Add("@TransactionCategory", SqlDbType.VarChar).Value = transactionCategory;
+
+                cn.Open();
+
+                questionTable.Load(cmd.ExecuteReader());
+                rows = questionTable.Rows;
+
+                transactionID = Convert.ToInt32(rows[rows.Count-1]["trans_id"]);
+            }
+
+            return transactionID;
+        }
+
+        public static void approveTransaction(Transaction transaction)
+        {
+            var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
+            using (cn)
+            {
+                DataTable questionTable = new DataTable();
+                string _sql = @"UPDATE Transactions SET trans_status = @Status WHERE trans_id = @TransactionID";
+                var cmd = new SqlCommand(_sql, cn);
+
+                cmd.Parameters.Add("@Status", SqlDbType.Bit).Value = 1;
+                cmd.Parameters.Add("@TransactionID", SqlDbType.Int).Value = transaction.transactionID;
+
+                cn.Open();
+                cmd.ExecuteNonQuery();
+                cn.Close();
+            }
+
         }
     }
 }

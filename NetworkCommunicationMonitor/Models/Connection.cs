@@ -21,6 +21,7 @@ namespace NetworkCommunicationMonitor.Models
         public string target;
         public int distance;
         public int value;
+        public int weight;
 
         public Connection()
         {
@@ -36,7 +37,7 @@ namespace NetworkCommunicationMonitor.Models
             {
                 DataTable questionTable = new DataTable();
                 DataRowCollection rows;
-                string _sql = @"SELECT connection_id, station_one_id, station_two_id FROM Connection";
+                string _sql = @"SELECT connection_id, station_one_id, station_two_id, weight FROM Connection";
                 var cmd = new SqlCommand(_sql, cn);
 
                 cn.Open();
@@ -52,7 +53,7 @@ namespace NetworkCommunicationMonitor.Models
                     tempConnection.source = Convert.ToString(row["station_one_id"]);
                     tempConnection.ipTwo = Convert.ToString(row["station_two_id"]);
                     tempConnection.target = Convert.ToString(row["station_two_id"]);
-                    tempConnection.distance = 100;
+                    tempConnection.distance = Convert.ToInt32(row["weight"]);
                     tempConnection.value = 4;
                     connections.Add(tempConnection);
                 }
@@ -61,12 +62,12 @@ namespace NetworkCommunicationMonitor.Models
             return connections;
         }
 
-        public static void addConnection(string ipOne, string ipTwo)
+        public static void addConnection(int weight, string ipOne, string ipTwo)
         {
             var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
             using (cn)
             {
-                string _sql = @"INSERT INTO Connection (station_one_id, station_two_id, connection_isActive, weight) VALUES('" + ipOne + "', '" + ipTwo + "', '" + 1 + "', '" + 1 + "')";
+                string _sql = @"INSERT INTO Connection (station_one_id, station_two_id, connection_isActive, weight) VALUES('" + ipOne + "', '" + ipTwo + "', '" + 1 + "', '" + weight + "')";
                 var cmd = new SqlCommand(_sql, cn);
 
                 cn.Open();

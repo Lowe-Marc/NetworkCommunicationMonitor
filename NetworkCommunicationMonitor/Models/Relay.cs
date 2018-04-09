@@ -131,7 +131,7 @@ namespace NetworkCommunicationMonitor.Models
             return numRelays-1;
         }
 
-        public static void addRelay(string ipAddress, string ipConnectedTo, bool isGateway, string region, int queueLimit)
+        public static void addRelay(int weight, string ipAddress, string ipConnectedTo, bool isGateway, string region, int queueLimit)
         {
             var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
             using (cn)
@@ -151,14 +151,14 @@ namespace NetworkCommunicationMonitor.Models
                 cn.Close();
             }
 
-            Connection.addConnection(ipAddress, ipConnectedTo);
+            Connection.addConnection(weight, ipAddress, ipConnectedTo);
         }
 
-        public static void addRegion(string regionName, string gatewayIP, string relayIP, string storeIP, string storeName)
+        public static void addRegion(int GRweight, int SRweight, string regionName, string gatewayIP, string relayIP, string storeIP, string storeName)
         {
-            addRelay(gatewayIP, PROCESSINGCENTERIP, true, regionName, 10);
-            addRelay(relayIP, gatewayIP, false, regionName, 10);
-            Store.addStore(storeIP, relayIP, storeName);
+            addRelay(GRweight, gatewayIP, PROCESSINGCENTERIP, true, regionName, 10);
+            addRelay(GRweight, relayIP, gatewayIP, false, regionName, 10);
+            Store.addStore(SRweight,storeIP, relayIP, storeName);
         }
 
         public static string getRegion(string ipAddress)
