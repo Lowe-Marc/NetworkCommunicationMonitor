@@ -867,7 +867,9 @@
                 popOver(this);
             });
             cy.on('click', 'edge', function (evt) {
-                tryLockNetworkElement(this);
+                if (animationsArePaused) {
+                    tryLockNetworkElement(this);
+                }
             });
 
             function tryLockNetworkElement(element) {
@@ -1102,6 +1104,10 @@
                 });
             }
 
+            function reassemblePaths() {
+
+            }
+
             /*=====================================================================================================
                                                         Click Events
             ======================================================================================================*/
@@ -1150,25 +1156,32 @@
                     content: {
                         text: function () {
                             var elementQueue = element.data('queue');
+                            var limit = element.data('limit');
                             var queueString = [];
-                            var transactionInfo = "Encrypted";
+                            var transactionInfo = "None";
+                            if (elementQueue.length >= 1) {
+                                transactionInfo = "Encrypted";
+                            }
                             if (isProcessingCenter && elementQueue.length >= 1) {
-                                console.log("elementQueue:",elementQueue[0]['transaction']);
+                                //console.log("elementQueue:",elementQueue[0]['transaction']);
                                 transactionInfo = "<br>Card Number: " + elementQueue[0]['transaction']['cardNumber']
                                     + "<br> Store IP: " + elementQueue[0]['transaction']['storeIP']
                                     + "<br> Amount: " + elementQueue[0]['transaction']['amount']
                                     + "<br> Category: " + elementQueue[0]['transaction']['category'];
-                            } else if (isProcessingCenter) {
-                                transactionInfo = "None";
                             }
                             for (var i = 0; i < elementQueue.length; i++) {
                                 queueString.push(elementQueue[i]['transaction']['transactionID']);
                             }
 
-                            var $menuContents = $('<div class="well well-sm"><div class="alert alert-success" role="alert"> Queue: ' + queueString.join() + '</div> <div class="alert alert-success" role="alert">Transaction Information: <hr>' + transactionInfo + '</div>');
+                            let differ = limit - queueString.length;
+                            if (differ != null && differ < 0) {
+                                queueString = queueString.slice(0, differ);
+                            }
+
+                            var $menuContents = $('<div class="well well-sm"><div class="alert alert-success" role="alert"> <p> Limit: ' + limit + '</p><p> Queue: ' + queueString.join() + '</p></div> <div class="alert alert-success" role="alert">Transaction Information: <hr>' + transactionInfo + '</div>');
                             var $ctr = $('<div class="select-buttons"></div>');
                             var $inactive = $('<button id="inactive" class="btn btn-sm btn-primary center-block">Inactivate</button>');
-                            if (isProcessingCenter) {
+                            if (isProcessingCenter || !animationsArePaused) {
                                 $inactive = $('');
                             }
                             var $active = $('<button id="active" class="hidden btn btn-sm btn-primary center-block">Activate</button>');
