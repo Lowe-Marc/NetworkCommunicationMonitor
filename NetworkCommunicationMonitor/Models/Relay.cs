@@ -20,6 +20,7 @@ namespace NetworkCommunicationMonitor.Models
         public bool isGateway;
         public string region;
         public int group;
+        public int queueLimit;
 
         public static readonly int RELAYGROUP = 2;
         public static readonly int PROCESSINGCENTERGROUP = 0;
@@ -34,7 +35,7 @@ namespace NetworkCommunicationMonitor.Models
             {
                 DataTable questionTable = new DataTable();
                 DataRowCollection rows;
-                string _sql = @"SELECT station_id, station_isActive, isGateway, region FROM RelayStation";
+                string _sql = @"SELECT station_id, station_isActive, isGateway, region, queueLimit FROM RelayStation";
                 var cmd = new SqlCommand(_sql, cn);
 
                 cn.Open();
@@ -50,6 +51,7 @@ namespace NetworkCommunicationMonitor.Models
                     tempRelay.region = Convert.ToString(row["region"]);
                     tempRelay.isActive = Convert.ToBoolean(row["station_isActive"]);
                     tempRelay.isGateway = Convert.ToBoolean(row["isGateway"]);
+                    tempRelay.queueLimit = Convert.ToInt32(row["queueLimit"]);
                     if (tempRelay.id.Equals("192.168.0.1", StringComparison.Ordinal))
                     {
                         tempRelay.group = PROCESSINGCENTERGROUP;
@@ -74,7 +76,7 @@ namespace NetworkCommunicationMonitor.Models
             {
                 DataTable questionTable = new DataTable();
                 DataRowCollection rows;
-                string _sql = @"SELECT station_id, station_isActive, isGateway, region FROM RelayStation";
+                string _sql = @"SELECT station_id, station_isActive, isGateway, region, queueLimit FROM RelayStation";
                 var cmd = new SqlCommand(_sql, cn);
 
                 cn.Open();
@@ -90,6 +92,7 @@ namespace NetworkCommunicationMonitor.Models
                     tempRelay.region = Convert.ToString(row["region"]);
                     tempRelay.isActive = Convert.ToBoolean(row["station_isActive"]);
                     tempRelay.isGateway = Convert.ToBoolean(row["isGateway"]);
+                    tempRelay.queueLimit = Convert.ToInt32(row["queueLimit"]);
                     if (tempRelay.id.Equals(PROCESSINGCENTERIP, StringComparison.Ordinal))
                     {
                         tempRelay.group = PROCESSINGCENTERGROUP;
@@ -131,7 +134,7 @@ namespace NetworkCommunicationMonitor.Models
             return numRelays-1;
         }
 
-        public static void addRelay(string ipAddress, string ipConnectedTo, bool isGateway, string region, int queueLimit)
+        public static void addRelay(int weight, string ipAddress, string ipConnectedTo, bool isGateway, string region, int queueLimit)
         {
             var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
             using (cn)
@@ -151,14 +154,14 @@ namespace NetworkCommunicationMonitor.Models
                 cn.Close();
             }
 
-            Connection.addConnection(ipAddress, ipConnectedTo);
+            Connection.addConnection(weight, ipAddress, ipConnectedTo);
         }
 
-        public static void addRegion(string regionName, string gatewayIP, string relayIP, string storeIP, string storeName)
+        public static void addRegion(int GRweight, int SRweight, string regionName, string gatewayIP, string relayIP, string storeIP, string storeName)
         {
-            addRelay(gatewayIP, PROCESSINGCENTERIP, true, regionName, 10);
-            addRelay(relayIP, gatewayIP, false, regionName, 10);
-            Store.addStore(storeIP, relayIP, storeName);
+            addRelay(GRweight, gatewayIP, PROCESSINGCENTERIP, true, regionName, 10);
+            addRelay(GRweight, relayIP, gatewayIP, false, regionName, 10);
+            Store.addStore(SRweight,storeIP, relayIP, storeName);
         }
 
         public static string getRegion(string ipAddress)
