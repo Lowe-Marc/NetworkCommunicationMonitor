@@ -769,7 +769,7 @@
             const edges = @Html.Raw(Json.Encode(ViewData["Links"]));
             const data = [];
             const relayColor = 'green';
-            const PROCESSINGCENTERID = 1;
+            const PROCESSINGCENTERID = 200;
             const WEIGHTOFFSET = 100000000; // This is used to inactivate relays/connections and to prevent a path from routing through a store
             const animationLength = 1200; // Time the animations take in milliseconds
 
@@ -921,6 +921,8 @@
                 transaction.transactionDate = $('#transactionDate').val();
                 transaction.amount = $('#transactionAmount').val();
                 transaction.category = $('#transactionCategory').val();
+                transaction.currentNode = null;
+                transaction.hasBeenProcessed = false;
 
                 //Database insertion
                 $.ajax({
@@ -946,11 +948,12 @@
                 animPath(processingCenter, startNode, true);
             }
 
-            function assembleAnim(storeNode, transaction) {
+            function assembleAnim(storeNode, transaction, finalDestination) {
                 console.log("Assembling animation")
+                console.log(storeNode)
 
                 var processingCenter = getNode("@NetworkCommunicationMonitor.Models.Relay.PROCESSINGCENTERIP");
-                var path = getPath(storeNode, processingCenter);
+                var path = getPath(storeNode, processingCenter, finalDestination, transaction);
                 var n = cy.nodes();
                 var animationList = []
                 // Assemble list of animations
@@ -974,6 +977,7 @@
                         animation['paused'] = false;
                         animation['node'] = path[i];
                         animation['transaction'] = transaction;
+                        animation['startNode'] = storeNode;
                         animationList.push(animation);
                     }
                 }
@@ -1040,33 +1044,50 @@
                     animation['node'].data('queue', elementQueue);
                 }
 
+                // Let the transaction know what node it's in
+                animation['transaction'].currentNode = animation['node']
                 var atProcessingCenter = (animation['node'].data('id') == PROCESSINGCENTERID)
                 if (atProcessingCenter) {
                     var transaction = animation['transaction'];
 
+                    // The transactionToSubmit can't have a reference to its current node or the
+                    // ajax request blows up the callstack because the node also has a reference to
+                    // the transaction
+                    var transactionToSubmit = new Object();
+                    transactionToSubmit.cardNumber = transaction.cardNumber
+                    transactionToSubmit.storeIP = transaction.storeIP
+                    transactionToSubmit.transactionDate = transaction.transactionDate
+                    transactionToSubmit.amount = transaction.amount
+                    transactionToSubmit.category = transaction.category
+
                     $.ajax({
                         method: "POST",
                         url: "/Home/GenerateResponse",
-                        data: transaction,
+                        data: transactionToSubmit,
                         success: (result) => {
                             console.log("Successful processing", result)
+                            animation['transaction'].hasBeenProcessed = true;
                         },
                         error: (result) => {
-                            console.log("Error on ajax request",result);
+                            console.log("Error on ajax request", result);
                         }
                     });
+                    console.log("ajax")
                 }
 
                 //Check to see if the animation should play
                 var firstInQueue = (elementQueue[0] == animation);
                 var nodeIsAlreadyAnimating = animation['node'].animated()
+                if (nodeIsAlreadyAnimating) {
+
+                }
                 if (!animationsArePaused && firstInQueue && !nodeIsAlreadyAnimating) {
                     animation.play();
                     currentAnimationSet.add(animation);
                 } else {
                     queueAnimationSet.add(animation);
                 }
-
+                
                 //Setup what happens next
                 animation.promise('completed').then(function () {
                     animation
@@ -1091,8 +1112,9 @@
             }
 
             function playAnimations() {
-                currentAnimationSet.forEach(function (animation) { animation.play() })
-                playNecessaryQueuedAnimations();
+                //currentAnimationSet.forEach(function (animation) { animation.play() })
+                //playNecessaryQueuedAnimations();
+                reassemblePaths();
             }
 
             function playNecessaryQueuedAnimations() {
@@ -1105,7 +1127,38 @@
             }
 
             function reassemblePaths() {
+                console.log("Reassembling animation paths")
+                //currentAnimationSet.forEach(function (animation) {
+                //    animation.reverse().play().promise('completed').then(function () {
+                //        animation
+                //            .stop();
+                //    });
+                //});
 
+                // Get all transactions and empty the queues of all nodes
+                var existingTransactions = [];
+                data.forEach(function (element) {
+                    var oldQueue = element['data']['queue']
+                    if (oldQueue != undefined && oldQueue.length > 0) {
+                        for (var i = 0; i < oldQueue.length; i++) {
+                            existingTransactions.push(oldQueue[i]['transaction'])
+                        }
+                        element['data']['queue'] = []
+                    }
+                });
+
+                // Assemble all the new animations
+                for (var i = 0; i < existingTransactions.length; i++) {
+                    var transaction = existingTransactions[i];
+                    var originalStart = getNodeById(transaction.storeIP);
+                    var currentlyAt = transaction.currentNode;
+                    if (currentlyAt.data('source') != undefined) {
+                        currentlyAt = getNodeById(currentlyAt.data('source'))
+                    }
+                    assembleAnim(currentlyAt, transaction, originalStart);
+                }
+
+                playNecessaryQueuedAnimations()
             }
 
             /*=====================================================================================================
@@ -1132,7 +1185,18 @@
                     $("#pause").removeClass('hidden');
                 } else {
                     animationsArePaused = true;
-                    currentAnimationSet.forEach(function (animation) { animation.pause() })
+                    currentAnimationSet.forEach(function (animation) {
+                        //animation
+                        //    .pause()
+                        //    .reverse()
+                        //    .play()
+                        //    .promise('completed').then(function () {
+                        //        animation
+                        //            .stop();
+                        //    });
+                        animation.progress(0.0).apply().pause();
+                    })
+                    //queueAnimationSet.forEach(function (animation) { animation.pause() })
                     $("#pause").addClass('hidden');
                     $("#play").removeClass('hidden');
                 }
@@ -1142,7 +1206,7 @@
                 $('#close-transaction').click();
                 var transactionStart = $('#transactionIPAddress').val();
                 var startNode = getNode(transactionStart);
-                assembleAnim(startNode, transaction);
+                assembleAnim(startNode, transaction, startNode);
             }
 
             function popOver(element) {
@@ -1156,13 +1220,13 @@
                     content: {
                         text: function () {
                             var elementQueue = element.data('queue');
+                            var limit = element.data('limit');
                             var queueString = [];
                             var transactionInfo = "None";
                             if (elementQueue.length >= 1) {
                                 transactionInfo = "Encrypted";
                             }
                             if (isProcessingCenter && elementQueue.length >= 1) {
-                                console.log("elementQueue:",elementQueue[0]['transaction']);
                                 transactionInfo = "<br>Card Number: " + elementQueue[0]['transaction']['cardNumber']
                                     + "<br> Store IP: " + elementQueue[0]['transaction']['storeIP']
                                     + "<br> Amount: " + elementQueue[0]['transaction']['amount']
@@ -1172,7 +1236,12 @@
                                 queueString.push(elementQueue[i]['transaction']['transactionID']);
                             }
 
-                            var $menuContents = $('<div class="well well-sm"><div class="alert alert-success" role="alert"> Queue: ' + queueString.join() + '</div> <div class="alert alert-success" role="alert">Transaction Information: <hr>' + transactionInfo + '</div>');
+                            let differ = limit - queueString.length;
+                            if (differ != null && differ < 0) {
+                                queueString = queueString.slice(0, differ);
+                            }
+
+                            var $menuContents = $('<div class="well well-sm"><div class="alert alert-success" role="alert"> <p> Limit: ' + limit + '</p><p> Queue: ' + queueString.join() + '</p></div> <div class="alert alert-success" role="alert">Transaction Information: <hr>' + transactionInfo + '</div>');
                             var $ctr = $('<div class="select-buttons"></div>');
                             var $inactive = $('<button id="inactive" class="btn btn-sm btn-primary center-block">Inactivate</button>');
                             if (isProcessingCenter || !animationsArePaused) {
@@ -1241,22 +1310,89 @@
                 }
             }
 
-            // Calculate the round trip path from start to end
-            function getPath(startNode, endNode) {
-                var aStar = cy.elements().aStar({ root: startNode, goal: endNode, weight: function (edge) {return edge.data('activeWeight')} });
+            function getNodeById(Id) {
+                var n = cy.nodes();
+                for (var i = 0; i < n.length; i++) {
+                    if (n[i].data('id') == Id) {
+                        return n[i];
+                    }
+                }
+
+                for (var i = 0; i < nodes.length; i++) {
+                    if (nodes[i]["ipAddress"] == Id) {
+                        return n[i];
+                    }
+                }
+
+                var e = cy.edges();
+                for (var i = 0; i < e.length; i++) {
+                    if (e[i].data('id') == Id) {
+                        return e[i];
+                    }
+                }
+                console.log("Node not found by Id")
+            }
+
+            // Calculate the round trip path from start to end.
+            // if the finalDestination is not the same as endNode,
+            // that means the path is being reassembled. The path should then concatenate
+            // a one way path back to the final destination
+            function getPath(startNode, endNode, finalDestination, transaction) {
+                console.log("getting path")
+                console.log(startNode)
+                console.log(endNode)
+                console.log(finalDestination)
+
+                var localDestination;
+                var needsOneWayAddition = false;
+                if (transaction.hasBeenProcessed) {
+                    localDestination = finalDestination;
+                } else {
+                    localDestination = endNode;
+                    needsOneWayAddition = true;
+                }
+                //console.log("localDestination: ")
+                //console.log(localDestination);
+
+                var aStar = cy.elements().aStar({ root: startNode, goal: localDestination, weight: function (edge) { return edge.data('activeWeight') } });
                 var pathToTruncate = Object.values(aStar.path);
                 var truncatedPath = truncatePath(pathToTruncate);
                 truncatedPath = reorderPath(truncatedPath);
-
+                //console.log("reorderedPath")
+                //console.log(truncatedPath);
+                
                 // The return path is simply the reverse of the original path with the first element removed
                 // so the processing center doesn't animate twice.
-                var returnPath = truncatedPath.slice(0);
-                returnPath.reverse();
-                returnPath.shift();
+                //var returnPath = truncatedPath.slice(0);
+                //returnPath.reverse();
+                //returnPath.shift();
+                //console.log("returnPath")
+                //console.log(returnPath);
 
-                var path = truncatedPath.concat(returnPath);
+                //var path = truncatedPath.concat(returnPath);
+                var path = truncatedPath;
+                //console.log("needsOneWayPath:" + needsOneWayAddition)
+                if (needsOneWayAddition) {
+                    var temp = getOneWayPath(endNode, finalDestination);
+                    //console.log("temp: ")
+                    //console.log(temp);
+                    path = path.concat(temp);
+                }
 
+                console.log("returning full path:");
+                console.log(path);
                 return path;
+            }
+
+            function getOneWayPath(startNode, endNode) {
+                console.log("One way path")
+                console.log(startNode)
+                console.log(endNode)
+                var aStar = cy.elements().aStar({ root: startNode, goal: endNode, weight: function (edge) { return edge.data('activeWeight') } });
+                var pathToTruncate = Object.values(aStar.path);
+                var truncatedPath = truncatePath(pathToTruncate);
+                truncatedPath = reorderPath(truncatedPath);
+                return truncatedPath;
             }
 
             // For some reason the cytoscape aStar path has edges after nodes, this should properly order things

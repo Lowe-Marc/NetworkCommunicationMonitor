@@ -24,7 +24,7 @@ namespace NetworkCommunicationMonitor.Models
 
         public static readonly int RELAYGROUP = 2;
         public static readonly int PROCESSINGCENTERGROUP = 0;
-        public static readonly string PROCESSINGCENTERIP = "192.168.0.1";
+        public static readonly string PROCESSINGCENTERIP = "192.168.0.200";
 
         public static List<Relay> getRelays()
         {
