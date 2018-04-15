@@ -28,6 +28,8 @@ namespace NetworkCommunicationMonitor.Controllers
         {
             if (Session["username"] == null)
                 return RedirectToAction("Index","Home");
+            else
+                Session["username"] = Session["username"];
             setViewDataDefaults();
 
             setNetworkData();
@@ -287,6 +289,14 @@ namespace NetworkCommunicationMonitor.Controllers
             NetworkCommunicationMonitor.Models.Connection.addConnection(weight, ipOne, ipTwo);
 
             return RedirectToAction("Homepage", "Home");
+        }
+
+        public void ChangeQueueLimit(FormCollection collection)
+        {
+            String ipAddress = Convert.ToString(collection["ipAddress"]);
+            int queueLimit = Convert.ToInt32(collection["queueLimit"]);
+
+            NetworkCommunicationMonitor.Models.Relay.changeLimit(ipAddress, queueLimit);
         }
 
         public int AddTransaction(FormCollection collection)

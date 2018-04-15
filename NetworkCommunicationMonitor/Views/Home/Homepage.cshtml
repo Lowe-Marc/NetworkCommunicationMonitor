@@ -766,6 +766,7 @@
         $(function () { // on dom ready
 
             const nodes = @Html.Raw(Json.Encode(ViewData["Nodes"]));
+            console.log(nodes);
             const edges = @Html.Raw(Json.Encode(ViewData["Links"]));
             const data = [];
             const relayColor = 'green';
@@ -996,16 +997,16 @@
                     let tempId = nodes[i].id.slice(10);
 
                     if (nodes[i].group == 0) {  // Processing center
-                        data.push({ group: 'nodes', data: { id: tempId, color: 'orange', shape: 'barrel', width: '50', height: '50', category: '1', queue: [], isActive: true, limit: nodes[i].queueLimit } });
+                        data.push({ group: 'nodes', data: { id: tempId, color: 'orange', shape: 'barrel', width: '50', height: '50', category: '1', queue: [], isActive: true, limit: nodes[i].queueLimit, name: 'Processing Center' } });
                     } else if (nodes[i].group == 1) {   // Store
                         storeIds.push(tempId);
                         storeList.push(tempId);
-                        data.push({ group: 'nodes', data: { id: tempId, color: 'blueviolet', shape: 'ellipse', width: '20', height: '20', category: '3', parent: nodes[i].region, queue: [], isActive: true } });
+                        data.push({ group: 'nodes', data: { id: tempId, color: 'blueviolet', shape: 'ellipse', width: '20', height: '20', category: '3', parent: nodes[i].region, queue: [], isActive: true, name: nodes[i].name } });
                     } else if (nodes[i].group == 2) {   // Relay
                         relayIds.push(tempId);
                         relayList.push(tempId);
                         if (nodes[i].isActive) { status = 'active'; } else { status = 'inactive'; }
-                        data.push({ group: 'nodes', data: { id: tempId, color: 'green', shape: 'triangle ', width: '35', height: '35', category: '2', status: status, parent: nodes[i].region, queue: [], isActive: true, limit: nodes[i].queueLimit } });
+                        data.push({ group: 'nodes', data: { id: tempId, color: 'green', shape: 'triangle ', width: '35', height: '35', category: '2', status: status, parent: nodes[i].region, queue: [], isActive: true, limit: nodes[i].queueLimit, name: 'Relay' } });
                     }
                 }
                 arr = unique(temp);
@@ -1215,6 +1216,10 @@
                 cy.elements("node[category= '3']").qtip(qtipContent(element, false));
             }
 
+            function testFunc() {
+                console.log("testFunc");
+            }
+
             function qtipContent(element, isProcessingCenter) {
                 var content = {
                     content: {
@@ -1240,14 +1245,39 @@
                             if (differ != null && differ < 0) {
                                 queueString = queueString.slice(0, differ);
                             }
+                            if (queueString.length == 0) {
+                                queueString = 'Empty';
+                            } else {
+                                queueString = queueString.join();
+                            }
+                            if (limit == undefined) {
+                                limit = "Unlimited";
+                            }
+                            var $newLimitButton = $('<br><div><button id="newLimitButton" class="btn btn-sm btn-primary center-block">Update Limit</button></div>');
+                            var $newLimitInput = $('<input id="newLimitInput" class="hidden center-block" placeholder="New Limit"></input>');
 
-                            var $menuContents = $('<div class="well well-sm"><div class="alert alert-success" role="alert"> <p> Limit: ' + limit + '</p><p> Queue: ' + queueString.join() + '</p></div> <div class="alert alert-success" role="alert">Transaction Information: <hr>' + transactionInfo + '</div>');
+                            var menuString = '<div class="well well-sm"><div class="alert alert-success" role="alert">'
+                                + '<p> Name: ' + element.data('name') + '</p> '
+                                + '<p> Limit: ' + limit + '</p>'
+                                + '<p> Queue: ' + queueString + '</p>'
+                                //+ '<button id="newLimitButton" class="btn btn-sm btn-primary center-block">Update Limit</button></div>'
+                                + '</div > <div class="alert alert-success" role="alert">Transaction Information: <hr>' + transactionInfo + '</div>'
+                            
+                            var $menuContents = $(menuString);
                             var $ctr = $('<div class="select-buttons"></div>');
                             var $inactive = $('<button id="inactive" class="btn btn-sm btn-primary center-block">Inactivate</button>');
+                            var $active = $('<button id="active" class="hidden btn btn-sm btn-primary center-block">Activate</button>');
                             if (isProcessingCenter || !animationsArePaused) {
                                 $inactive = $('');
+                                $active = $('');
+                                console.log("Should be inactive")
+                                $newLimitButton = $('');
+                                $newLimitInput = $('');
+                            } else {
+                                console.log("Should be active")
+                                $newLimitButton.removeClass('hidden');
+                                $newLimitInput.removeClass('hidden');
                             }
-                            var $active = $('<button id="active" class="hidden btn btn-sm btn-primary center-block">Activate</button>');
 
                             if (element.data('isActive') == true) {
                                 $active.addClass('hidden');
@@ -1256,6 +1286,28 @@
                                 $inactive.addClass('hidden');
                                 $active.removeClass('hidden');
                             }
+
+                            $newLimitButton.on('click', function () {
+                                console.log($newLimitInput.val());
+                                var node = new Object();
+                                node.ipAddress = '192.168.0.' + element.data('id');
+                                node.queueLimit = $newLimitInput.val();
+
+                                $.ajax({
+                                    method: "POST",
+                                    url: "/Home/ChangeQueueLimit",
+                                    data: node,
+                                    success: (result) => {
+                                        console.log("Successful ajax request: ")
+                                        console.log("Node " + node.ipAddress + " has new queue limit: " + result);
+                                        element.data('limit', node.queueLimit);
+                                    },
+                                    error: (result) => {
+                                        console.log("Error on ajax request");
+                                        console.log(result);
+                                    }
+                                });
+                            })
 
                             $inactive.on('click', function () {
                                 tryLockNetworkElement(element);
@@ -1269,7 +1321,7 @@
                                 $inactive.removeClass('hidden');
                             });
                             $('#network-view').append($ctr);
-                            $ctr.append($menuContents).append($active).append($inactive);
+                            $ctr.append($menuContents).append($active).append($inactive).append($newLimitButton).append($newLimitInput);
                             return $ctr;
                         }
                     },
