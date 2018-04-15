@@ -24,6 +24,7 @@ namespace NetworkCommunicationMonitor.Models
         public DateTime statusTime;
         public bool status;
         public bool encrypted;
+        public bool self;
 
         public Transaction()
         {
@@ -40,7 +41,7 @@ namespace NetworkCommunicationMonitor.Models
             {
                 DataTable questionTable = new DataTable();
                 DataRowCollection rows;
-                string _sql = @"SELECT trans_id, card_id, store_id, trans_date, trans_amount, trans_category, trans_status, response_id, status_time, encrypted FROM Transactions";
+                string _sql = @"SELECT trans_id, card_id, store_id, trans_date, trans_amount, trans_category, trans_status, response_id, status_time, encrypted, self FROM Transactions";
                 var cmd = new SqlCommand(_sql, cn);
 
                 cn.Open();
@@ -61,6 +62,7 @@ namespace NetworkCommunicationMonitor.Models
                     tempTransaction.statusTime = Convert.ToDateTime(row["status_time"]);
                     tempTransaction.status = Convert.ToBoolean(row["trans_status"]);
                     tempTransaction.encrypted = Convert.ToBoolean(row["encrypted"]);
+                    tempTransaction.self = Convert.ToBoolean(row["self"]);
                     transactions.Add(tempTransaction);
                 }
             }
@@ -95,7 +97,7 @@ namespace NetworkCommunicationMonitor.Models
             return numTransactions;
         }
 
-        public static void addTransaction(string cardNumber, string storeIP, DateTime transactionDate, double transactionAmount, string transactionCategory)
+        public static void addTransaction(string cardNumber, string storeIP, DateTime transactionDate, double transactionAmount, string transactionCategory, bool transactionSelf)
         {
             var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
             using (cn)
@@ -109,8 +111,8 @@ namespace NetworkCommunicationMonitor.Models
                 DateTime statusTime = new DateTime(2018, 1, 1);
                 int encrypted = 0;
 
-                string _sql = @"INSERT INTO Transactions (card_id, store_id, trans_date, trans_amount, trans_category, trans_status, response_id, status_time, encrypted) VALUES("
-                    + "@AccountNumber, @StoreIP, @TransactionDate, @TransactionAmount, @TransactionCategory, @TransactionStatus, @ResponseID, @StatusTime, @Encrypted)";
+                string _sql = @"INSERT INTO Transactions (card_id, store_id, trans_date, trans_amount, trans_category, trans_status, response_id, status_time, encrypted, self) VALUES("
+                    + "@AccountNumber, @StoreIP, @TransactionDate, @TransactionAmount, @TransactionCategory, @TransactionStatus, @ResponseID, @StatusTime, @Encrypted, @Self)";
 
                 var cmd = new SqlCommand(_sql, cn);
                 cmd.Parameters.Add("@AccountNumber", SqlDbType.VarChar).Value = cardNumber;
@@ -122,6 +124,7 @@ namespace NetworkCommunicationMonitor.Models
                 cmd.Parameters.Add("@ResponseID", SqlDbType.VarChar).Value = responseID;
                 cmd.Parameters.Add("@StatusTime", SqlDbType.DateTime).Value = statusTime;
                 cmd.Parameters.Add("@Encrypted", SqlDbType.Bit).Value = encrypted;
+                cmd.Parameters.Add("@Self", SqlDbType.Bit).Value = transactionSelf;
 
                 cn.Open();
                 cmd.ExecuteNonQuery();
@@ -131,7 +134,7 @@ namespace NetworkCommunicationMonitor.Models
 
         // Note, it is possible for there to be transactions with identical details in the database, but they will have different IDs.
         // This will get the largest corresponding ID.
-        public static int getTransactionID(string cardNumber, string storeIP, DateTime transactionDate, double transactionAmount, string transactionCategory)
+        public static int getTransactionID(string cardNumber, string storeIP, DateTime transactionDate, double transactionAmount, string transactionCategory, bool transactionSelf)
         {
             int transactionID = 0;
 
@@ -140,7 +143,7 @@ namespace NetworkCommunicationMonitor.Models
             {
                 DataTable questionTable = new DataTable();
                 DataRowCollection rows;
-                string _sql = @"SELECT trans_id FROM Transactions WHERE card_id = @CardNumber AND store_id = @StoreIP AND trans_date = @TransactionDate AND trans_amount = @TransactionAmount AND trans_category = @TransactionCategory";
+                string _sql = @"SELECT trans_id FROM Transactions WHERE card_id = @CardNumber AND store_id = @StoreIP AND trans_date = @TransactionDate AND trans_amount = @TransactionAmount AND trans_category = @TransactionCategory AND self = @TransactionSelf";
                 var cmd = new SqlCommand(_sql, cn);
 
                 cmd.Parameters.Add("@CardNumber", SqlDbType.VarChar).Value = cardNumber;
@@ -148,6 +151,14 @@ namespace NetworkCommunicationMonitor.Models
                 cmd.Parameters.Add("@TransactionDate", SqlDbType.DateTime).Value = transactionDate;
                 cmd.Parameters.Add("@TransactionAmount", SqlDbType.Float).Value = transactionAmount;
                 cmd.Parameters.Add("@TransactionCategory", SqlDbType.VarChar).Value = transactionCategory;
+                if (transactionSelf)
+                {
+                    cmd.Parameters.Add("@TransactionSelf", SqlDbType.Bit).Value = 1;
+                } else
+                {
+                    cmd.Parameters.Add("@TransactionSelf", SqlDbType.Bit).Value = 0;
+                }
+                
 
                 cn.Open();
 

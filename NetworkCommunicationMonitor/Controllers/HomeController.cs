@@ -310,6 +310,7 @@ namespace NetworkCommunicationMonitor.Controllers
             DateTime transactionDate = Convert.ToDateTime(collection["transactionDate"]);
             double transactionAmount = Convert.ToDouble(collection["amount"]);
             string transactionCategory = Convert.ToString(collection["category"]);
+            bool transactionSelf = Convert.ToBoolean(collection["self"]);
             
             if (storeIP == null)
             {
@@ -317,9 +318,9 @@ namespace NetworkCommunicationMonitor.Controllers
             }
             else
             {
-                NetworkCommunicationMonitor.Models.Transaction.addTransaction(cardNumber, storeIP, transactionDate, transactionAmount, transactionCategory);
+                NetworkCommunicationMonitor.Models.Transaction.addTransaction(cardNumber, storeIP, transactionDate, transactionAmount, transactionCategory, transactionSelf);
             }
-            int id = NetworkCommunicationMonitor.Models.Transaction.getTransactionID(cardNumber, storeIP, transactionDate, transactionAmount, transactionCategory);
+            int id = NetworkCommunicationMonitor.Models.Transaction.getTransactionID(cardNumber, storeIP, transactionDate, transactionAmount, transactionCategory, transactionSelf);
 
             return id;
         }

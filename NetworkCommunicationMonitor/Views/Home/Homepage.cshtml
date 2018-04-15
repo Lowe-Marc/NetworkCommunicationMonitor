@@ -578,23 +578,23 @@
                                                                         <select class="form-control" id="transactionIPAddress" name="transactionIPAddress" style="padding:0;"></select>
                                                                     </div>
                                                                 </div>
-                                                            @{
-                                                                List<NetworkCommunicationMonitor.Models.Card> cards = (List<NetworkCommunicationMonitor.Models.Card>)ViewData["Cards"];
+                                                                @{
+                                                                    List<NetworkCommunicationMonitor.Models.Card> cards = (List<NetworkCommunicationMonitor.Models.Card>)ViewData["Cards"];
                                                                 <div class="form-group">
                                                                     <label for="transactionCardNumber" class="col-sm-4 control-label">Card number</label>
                                                                     <div class="col-sm-6">
                                                                         <select class="form-control" id="transactionCardNumber" name="transactionCardNumber" style="padding:0;">
-                                                                        @{
-                                                                            foreach (NetworkCommunicationMonitor.Models.Card card in cards)
-                                                                            {
-                                                                            @*<input type="text" class="form-control" id="transactionCardNumber" name="transactionCardNumber" placeholder="Card number" maxlength="19" onkeyup="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,'')" required />*@
-                                                                            <option>@card.cardNumber</option>
+                                                                            @{
+                                                                                foreach (NetworkCommunicationMonitor.Models.Card card in cards)
+                                                                                {
+                                                                                    @*<input type="text" class="form-control" id="transactionCardNumber" name="transactionCardNumber" placeholder="Card number" maxlength="19" onkeyup="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,'')" required />*@
+                                                                                    <option>@card.cardNumber</option>
                                                                                 }
                                                                             }
                                                                         </select>
                                                                     </div>
                                                                 </div>
-                                                            }
+                                                                }
                                                                 <div class="form-group">
                                                                     <label for="transactionAmount" class="col-sm-4 control-label">Transaction Amount</label>
                                                                     <div class="col-sm-6">
@@ -615,6 +615,12 @@
                                                                             <option>Credit</option>
                                                                             <option>Debit</option>
                                                                         </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="transactionSelf" class="col-sm-4 control-label">Self</label>
+                                                                    <div class="col-sm-6">
+                                                                        <input type="checkbox" class="center-block" id="transactionSelf" style="min-width:20px;min-height:20px;margin:9px 10px 0px 0%;" />
                                                                     </div>
                                                                 </div>
                                                                 <div class="modal-footer">
@@ -766,7 +772,6 @@
         $(function () { // on dom ready
 
             const nodes = @Html.Raw(Json.Encode(ViewData["Nodes"]));
-            console.log(nodes);
             const edges = @Html.Raw(Json.Encode(ViewData["Links"]));
             const data = [];
             const relayColor = 'green';
@@ -924,6 +929,7 @@
                 transaction.category = $('#transactionCategory').val();
                 transaction.currentNode = null;
                 transaction.hasBeenProcessed = false;
+                transaction.self = document.getElementById("transactionSelf").checked;
 
                 //Database insertion
                 $.ajax({
@@ -1060,6 +1066,8 @@
                     transactionToSubmit.transactionDate = transaction.transactionDate
                     transactionToSubmit.amount = transaction.amount
                     transactionToSubmit.category = transaction.category
+                    transactionToSubmit.self = transaction.self
+                    transactionToSubmit.transactionID = transaction.transactionID;
 
                     $.ajax({
                         method: "POST",
@@ -1216,10 +1224,6 @@
                 cy.elements("node[category= '3']").qtip(qtipContent(element, false));
             }
 
-            function testFunc() {
-                console.log("testFunc");
-            }
-
             function qtipContent(element, isProcessingCenter) {
                 var content = {
                     content: {
@@ -1260,7 +1264,6 @@
                                 + '<p> Name: ' + element.data('name') + '</p> '
                                 + '<p> Limit: ' + limit + '</p>'
                                 + '<p> Queue: ' + queueString + '</p>'
-                                //+ '<button id="newLimitButton" class="btn btn-sm btn-primary center-block">Update Limit</button></div>'
                                 + '</div > <div class="alert alert-success" role="alert">Transaction Information: <hr>' + transactionInfo + '</div>'
                             
                             var $menuContents = $(menuString);
