@@ -234,10 +234,10 @@
                                                         { 
                                                             <tr>
                                                                 <td>@transaction.transactionID</td>
-                                                                <td>@transaction.cardID</td>
+                                                                <td>@NetworkCommunicationMonitor.Models.Card.formatCardNumber(transaction.cardID)</td>
                                                                 <td>@transaction.storeID</td>
                                                                 <td>@String.Format("{0:C}", transaction.amount)</td>
-                                                                <td>@transaction.transactionDate</td>
+                                                                <td>@transaction.transactionDate.ToString("MM/dd/yyyy")</td>
                                                                 <td>@transaction.category</td>
                                                                 <td>@transaction.status</td>
                                                             </tr>

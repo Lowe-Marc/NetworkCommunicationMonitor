@@ -8,6 +8,7 @@ using System.Web;
 using System.Configuration;
 using System.Net.Mail;
 using System.Web.UI;
+using System.Windows.Forms;
 
 namespace NetworkCommunicationMonitor.Models
 {
@@ -160,9 +161,11 @@ namespace NetworkCommunicationMonitor.Models
                         cmd.ExecuteNonQuery();
                         cn.Close();
                     }
+                    MessageBox.Show("'"+cardID+"' deleted successfully! ");
                 }
                 else
                 {
+                    MessageBox.Show("The last card of an account cannot be deleted!");
                     Console.WriteLine("The last card cannot be deleted!");
                 }
             }

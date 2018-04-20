@@ -956,8 +956,6 @@
             }
 
             function assembleAnim(storeNode, transaction, finalDestination) {
-                console.log("Assembling animation")
-                console.log(storeNode)
 
                 var processingCenter = getNode("@NetworkCommunicationMonitor.Models.Relay.PROCESSINGCENTERIP");
                 var path = getPath(storeNode, processingCenter, finalDestination, transaction);
@@ -1041,7 +1039,6 @@
 
             // Play the animation and try to continue
             function newAnim(animationList, currentAnimationPlayingIndex) {
-                console.log("newAnim");
                 //Get animation
                 var animation = animationList[currentAnimationPlayingIndex];
                 //Add to queue
@@ -1054,7 +1051,8 @@
                 // Let the transaction know what node it's in
                 animation['transaction'].currentNode = animation['node']
                 var atProcessingCenter = (animation['node'].data('id') == PROCESSINGCENTERID)
-                if (atProcessingCenter) {
+                var transactionNeedProcessing = !animation['transaction'].hasBeenProcessed;
+                if (atProcessingCenter && transactionNeedProcessing) {
                     var transaction = animation['transaction'];
 
                     // The transactionToSubmit can't have a reference to its current node or the
@@ -1081,7 +1079,6 @@
                             console.log("Error on ajax request", result);
                         }
                     });
-                    console.log("ajax")
                 }
 
                 //Check to see if the animation should play
@@ -1239,7 +1236,8 @@
                                 transactionInfo = "<br>Card Number: " + elementQueue[0]['transaction']['cardNumber']
                                     + "<br> Store IP: " + elementQueue[0]['transaction']['storeIP']
                                     + "<br> Amount: " + elementQueue[0]['transaction']['amount']
-                                    + "<br> Category: " + elementQueue[0]['transaction']['category'];
+                                    + "<br> Category: " + elementQueue[0]['transaction']['category']
+                                    + "<br> Self: " + elementQueue[0]['transaction']['self'];
                             }
                             for (var i = 0; i < elementQueue.length; i++) {
                                 queueString.push(elementQueue[i]['transaction']['transactionID']);
@@ -1273,11 +1271,9 @@
                             if (isProcessingCenter || !animationsArePaused) {
                                 $inactive = $('');
                                 $active = $('');
-                                console.log("Should be inactive")
                                 $newLimitButton = $('');
                                 $newLimitInput = $('');
                             } else {
-                                console.log("Should be active")
                                 $newLimitButton.removeClass('hidden');
                                 $newLimitInput.removeClass('hidden');
                             }
@@ -1291,7 +1287,6 @@
                             }
 
                             $newLimitButton.on('click', function () {
-                                console.log($newLimitInput.val());
                                 var node = new Object();
                                 node.ipAddress = '192.168.0.' + element.data('id');
                                 node.queueLimit = $newLimitInput.val();
@@ -1385,7 +1380,7 @@
                         return e[i];
                     }
                 }
-                console.log("Node not found by Id")
+                console.log("WARNING: Node not found by Id")
             }
 
             // Calculate the round trip path from start to end.
@@ -1393,10 +1388,6 @@
             // that means the path is being reassembled. The path should then concatenate
             // a one way path back to the final destination
             function getPath(startNode, endNode, finalDestination, transaction) {
-                console.log("getting path")
-                console.log(startNode)
-                console.log(endNode)
-                console.log(finalDestination)
 
                 var localDestination;
                 var needsOneWayAddition = false;
@@ -1406,43 +1397,29 @@
                     localDestination = endNode;
                     needsOneWayAddition = true;
                 }
-                //console.log("localDestination: ")
-                //console.log(localDestination);
 
                 var aStar = cy.elements().aStar({ root: startNode, goal: localDestination, weight: function (edge) { return edge.data('activeWeight') } });
                 var pathToTruncate = Object.values(aStar.path);
                 var truncatedPath = truncatePath(pathToTruncate);
                 truncatedPath = reorderPath(truncatedPath);
-                //console.log("reorderedPath")
-                //console.log(truncatedPath);
                 
                 // The return path is simply the reverse of the original path with the first element removed
                 // so the processing center doesn't animate twice.
                 //var returnPath = truncatedPath.slice(0);
                 //returnPath.reverse();
                 //returnPath.shift();
-                //console.log("returnPath")
-                //console.log(returnPath);
 
                 //var path = truncatedPath.concat(returnPath);
                 var path = truncatedPath;
-                //console.log("needsOneWayPath:" + needsOneWayAddition)
                 if (needsOneWayAddition) {
                     var temp = getOneWayPath(endNode, finalDestination);
-                    //console.log("temp: ")
-                    //console.log(temp);
                     path = path.concat(temp);
                 }
-
-                console.log("returning full path:");
-                console.log(path);
+                
                 return path;
             }
 
             function getOneWayPath(startNode, endNode) {
-                console.log("One way path")
-                console.log(startNode)
-                console.log(endNode)
                 var aStar = cy.elements().aStar({ root: startNode, goal: endNode, weight: function (edge) { return edge.data('activeWeight') } });
                 var pathToTruncate = Object.values(aStar.path);
                 var truncatedPath = truncatePath(pathToTruncate);

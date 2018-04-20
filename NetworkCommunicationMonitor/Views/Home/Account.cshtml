@@ -254,7 +254,7 @@
                                                                 </select>
                                                             </td>
                                                             <td>@account.accountAddress</td>
-                                                            <td>@account.phoneNumber</td>
+                                                            <td>@NetworkCommunicationMonitor.Models.Account.formatPhoneNumber(account.phoneNumber)</td>
                                                             <td>@String.Format("{0:C}", account.accountLimit)</td>
                                                             <td>@String.Format("{0:C}", account.accountBalance)</td>
                                                         </tr>

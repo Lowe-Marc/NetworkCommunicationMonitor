@@ -8,6 +8,7 @@ using System.Web;
 using System.Configuration;
 using System.Net.Mail;
 using System.Web.UI;
+using System.Windows.Forms;
 
 namespace NetworkCommunicationMonitor.Models
 {
@@ -21,6 +22,7 @@ namespace NetworkCommunicationMonitor.Models
         public int accountLimit;
         public double accountBalance;
         public List<Card> cards;
+
 
         public Account()
         {
@@ -120,18 +122,37 @@ namespace NetworkCommunicationMonitor.Models
 
         public static void deleteAccount(int accountID)
         {
-            Card.deleteCardsForAccount(accountID);
-
-            var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
-            using (cn)
+            var cn1 = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
+            using (cn1)
             {
-                string _sql = @"DELETE FROM Account WHERE account_id = " + accountID;
-                var cmd = new SqlCommand(_sql, cn);
+                string _sql1 = @"SELECT account_balance FROM Account WHERE account_id = '" + accountID + "'";
+                var cmd1 = new SqlCommand(_sql1, cn1);
+                cn1.Open();
+                double accountBalance = (double)cmd1.ExecuteScalar();
 
-                cn.Open();
-                cmd.ExecuteNonQuery();
-                cn.Close();
+                if (accountBalance == 0)
+                {
+                    Card.deleteCardsForAccount(accountID);
+
+                    var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
+                    using (cn)
+                    {
+                        string _sql = @"DELETE FROM Account WHERE account_id = " + accountID;
+                        var cmd = new SqlCommand(_sql, cn);
+
+                        cn.Open();
+                        cmd.ExecuteNonQuery();
+                        cn.Close();
+                    }
+                    MessageBox.Show(" Account '" + accountID + "' deleted successfully! ");
+                }
+                else
+                {
+                    Console.WriteLine("This account cannot be deleted wiht non-zero balance!");
+                    MessageBox.Show("This account cannot be deleted wiht non-zero balance!");
+                }
             }
+
         }
 
         public static void createAccount(string firstname, string lastname, string address, string phone, int limit, double balance)
@@ -214,6 +235,22 @@ namespace NetworkCommunicationMonitor.Models
                 cmd.ExecuteNonQuery();
                 cn.Close();
             }
+        }
+
+        public static string formatPhoneNumber(string phoneNumber)
+        {
+            string formattedNumber = "(";
+
+            for (int i = 0; i < phoneNumber.Length; i++)
+            {
+                formattedNumber = formattedNumber + phoneNumber[i];
+                if (i == 2)
+                    formattedNumber = formattedNumber + ") ";
+                else if (i == 5)
+                    formattedNumber = formattedNumber + "-";
+            }
+
+            return formattedNumber;
         }
     }
 }
