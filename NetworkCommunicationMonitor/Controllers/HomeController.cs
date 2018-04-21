@@ -311,18 +311,22 @@ namespace NetworkCommunicationMonitor.Controllers
             double transactionAmount = Convert.ToDouble(collection["amount"]);
             string transactionCategory = Convert.ToString(collection["category"]);
             bool transactionSelf = Convert.ToBoolean(collection["self"]);
-            
-            if (storeIP == null)
+            int id;
+
+            Boolean isSuccessfully = NetworkCommunicationMonitor.Models.Transaction.addTransaction(cardNumber, storeIP, transactionDate, transactionAmount, transactionCategory, transactionSelf);
+            if (isSuccessfully == true)
             {
-                    //return RedirectToAction("Homepage", "Home");
+                id = NetworkCommunicationMonitor.Models.Transaction.getTransactionID(cardNumber, storeIP, transactionDate, transactionAmount, transactionCategory, transactionSelf);
+
+                return id;
             }
             else
             {
-                NetworkCommunicationMonitor.Models.Transaction.addTransaction(cardNumber, storeIP, transactionDate, transactionAmount, transactionCategory, transactionSelf);
+                id = -1;
+                return id;
             }
-            int id = NetworkCommunicationMonitor.Models.Transaction.getTransactionID(cardNumber, storeIP, transactionDate, transactionAmount, transactionCategory, transactionSelf);
 
-            return id;
+
         }
 
         public void GenerateResponse(FormCollection collection)

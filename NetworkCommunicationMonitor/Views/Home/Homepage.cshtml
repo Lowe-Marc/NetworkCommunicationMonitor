@@ -1084,11 +1084,10 @@
                 //Check to see if the animation should play
                 var firstInQueue = (elementQueue[0] == animation);
                 var nodeIsAlreadyAnimating = animation['node'].animated()
-                if (nodeIsAlreadyAnimating) {
-
-                }
                 if (!animationsArePaused && firstInQueue && !nodeIsAlreadyAnimating) {
-                    animation.play();
+                    //animation.play();
+                    //ATTEMPT
+                    playAnimationWhenReady(animation)
                     currentAnimationSet.add(animation);
                 } else {
                     queueAnimationSet.add(animation);
@@ -1100,20 +1099,34 @@
                         .reverse()
                         .rewind()
                         .play();
-                    //Kick off the next animation in the queue
-                    setTimeout(function () { playNecessaryQueuedAnimations(); }, animationLength*2);
+                    console.log("playing reverse animation on node: " + animation['node'].data('id'))
 
-                    currentAnimationSet.delete(animation);
-                    if (currentAnimationPlayingIndex < animationList.length - 1) {
-                        elementQueue.shift();
-                        animation['node'].data('queue', elementQueue);
+                    animation.promise('completed').then(function () {
+                        //Kick off the next animation in the queue
+                        setTimeout(function () {
+                            if (!animationsArePaused) {
+                                playNecessaryQueuedAnimations();
+                            }
+                        }, animationLength);
 
-                        currentAnimationPlayingIndex += 1;
-                        newAnim(animationList, currentAnimationPlayingIndex);
-                    } else {
-                        elementQueue.shift();
-                        animation['node'].data('queue', elementQueue);
-                    }
+                        currentAnimationSet.delete(animation);
+                        if (currentAnimationPlayingIndex < animationList.length - 1) {
+                            elementQueue.shift();
+                            animation['node'].data('queue', elementQueue);
+
+                            currentAnimationPlayingIndex += 1;
+                            newAnim(animationList, currentAnimationPlayingIndex);
+                        } else {
+                            elementQueue.shift();
+                            animation['node'].data('queue', elementQueue);
+                        }
+                    })
+
+
+                    
+                    
+
+
                 });
             }
 
@@ -1124,10 +1137,19 @@
             }
 
             function playNecessaryQueuedAnimations() {
+                //console.log("playing queued animations")
+                //console.log("queue: ")
+                //console.log(queueAnimationSet)
+
                 queueAnimationSet.forEach(function (animation) {
                     if (animationIsFirstInQueue(animation)) {
                         currentAnimationSet.add(animation);
-                        animation.play();
+                        //console.log("playing a queued animation")
+                        //console.log(animation);
+                        //animation.play();
+                        //ATTEMPT
+                        playAnimationWhenReady(animation);
+                        queueAnimationSet.delete(animation);
                     }
                 });
             }
@@ -1153,6 +1175,9 @@
                     }
                 });
 
+                currentAnimationSet = new Set();
+                queueAnimationSet = new Set();
+
                 // Assemble all the new animations
                 for (var i = 0; i < existingTransactions.length; i++) {
                     var transaction = existingTransactions[i];
@@ -1165,6 +1190,32 @@
                 }
 
                 playNecessaryQueuedAnimations()
+            }
+
+            function playAnimationWhenReady(animation) {
+                var nodeIsAlreadyAnimating = animation['node'].animated();
+                //console.log("Ready to play: " + nodeIsAlreadyAnimating)
+                //console.log("Node:")
+                //console.log(animation['node'])
+                var nodeAnimation = animation['node'].animation('current')
+                //console.log("nodeAnimation")
+                //console.log(nodeAnimation);
+                //console.log("nodeAnimation.playing():")
+                //console.log(nodeAnimation.playing());
+
+                //console.log("playAnimationWhenReady: " + animation)
+                //console.log("ready: " + !nodeAnimation.playing())
+
+
+                console.log("playing animation on node: " + animation['node'].data('id'))
+
+                if (nodeAnimation.playing()) {
+                    setTimeout(function () {
+                        playAnimationWhenReady(animation)
+                    }, animationLength*2);
+                } else {
+                    animation.play();
+                }
             }
 
             /*=====================================================================================================
@@ -1514,7 +1565,7 @@
                 let day = date.getDate();
                 let month = date.getMonth() + 1 ;
                 let year = date.getFullYear();
-                let transActionDate = day + "/" + month + "/" + year;
+                let transActionDate = month + "/" + day + "/" + year;
 
                 for (var i = 0; i < storeList.length; i++) {
                     $('#transactionIPAddress').append('<option>' + storeList[i] + '</option>');
