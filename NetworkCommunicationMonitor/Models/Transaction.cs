@@ -8,6 +8,7 @@ using System.Web;
 using System.Configuration;
 using System.Net.Mail;
 using System.Web.UI;
+using System.Windows.Forms;
 
 namespace NetworkCommunicationMonitor.Models
 {
@@ -24,6 +25,7 @@ namespace NetworkCommunicationMonitor.Models
         public DateTime statusTime;
         public bool status;
         public bool encrypted;
+        public bool self;
 
         public Transaction()
         {
@@ -40,7 +42,7 @@ namespace NetworkCommunicationMonitor.Models
             {
                 DataTable questionTable = new DataTable();
                 DataRowCollection rows;
-                string _sql = @"SELECT trans_id, card_id, store_id, trans_date, trans_amount, trans_category, trans_status, response_id, status_time, encrypted FROM Transactions";
+                string _sql = @"SELECT trans_id, card_id, store_id, trans_date, trans_amount, trans_category, trans_status, response_id, status_time, encrypted, self FROM Transactions";
                 var cmd = new SqlCommand(_sql, cn);
 
                 cn.Open();
@@ -61,6 +63,7 @@ namespace NetworkCommunicationMonitor.Models
                     tempTransaction.statusTime = Convert.ToDateTime(row["status_time"]);
                     tempTransaction.status = Convert.ToBoolean(row["trans_status"]);
                     tempTransaction.encrypted = Convert.ToBoolean(row["encrypted"]);
+                    tempTransaction.self = Convert.ToBoolean(row["self"]);
                     transactions.Add(tempTransaction);
                 }
             }
@@ -95,43 +98,120 @@ namespace NetworkCommunicationMonitor.Models
             return numTransactions;
         }
 
-        public static void addTransaction(string cardNumber, string storeIP, DateTime transactionDate, double transactionAmount, string transactionCategory)
+        public static string addTransaction(string cardNumber, string storeIP, DateTime transactionDate, double transactionAmount, string transactionCategory, bool transactionSelf)
         {
+            string result = "Transaction successfully created";
+
             var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
-            using (cn)
+            var cn1 = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
+            var cn2 = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
+            string year, month;
+            int year1, month1;
+            int transactionMonth, transactionYear;
+            using (cn1)
             {
-
-                //DateTime transactionDate = new DateTime(2018, 1, 1);
-                //double transactionAmount = 0.0;
-                //string transactionCategory = "Credit";
-                int transactionStatus = 0;
-                string responseID = "-1";
-                DateTime statusTime = new DateTime(2018, 1, 1);
-                int encrypted = 0;
-
-                string _sql = @"INSERT INTO Transactions (card_id, store_id, trans_date, trans_amount, trans_category, trans_status, response_id, status_time, encrypted) VALUES("
-                    + "@AccountNumber, @StoreIP, @TransactionDate, @TransactionAmount, @TransactionCategory, @TransactionStatus, @ResponseID, @StatusTime, @Encrypted)";
-
-                var cmd = new SqlCommand(_sql, cn);
-                cmd.Parameters.Add("@AccountNumber", SqlDbType.VarChar).Value = cardNumber;
-                cmd.Parameters.Add("@StoreIP", SqlDbType.VarChar).Value = storeIP;
-                cmd.Parameters.Add("@TransactionDate", SqlDbType.DateTime).Value = transactionDate;
-                cmd.Parameters.Add("@TransactionAmount", SqlDbType.Float).Value = transactionAmount;
-                cmd.Parameters.Add("@TransactionCategory", SqlDbType.VarChar).Value = transactionCategory;
-                cmd.Parameters.Add("@TransactionStatus", SqlDbType.Bit).Value = transactionStatus;
-                cmd.Parameters.Add("@ResponseID", SqlDbType.VarChar).Value = responseID;
-                cmd.Parameters.Add("@StatusTime", SqlDbType.DateTime).Value = statusTime;
-                cmd.Parameters.Add("@Encrypted", SqlDbType.Bit).Value = encrypted;
-
-                cn.Open();
-                cmd.ExecuteNonQuery();
-                cn.Close();
+                string _sql1 = @"SELECT card_expirationYear FROM Card WHERE card_id = '" + cardNumber + "'";
+                var cmd1 = new SqlCommand(_sql1, cn1);
+                cn1.Open();
+                year = (string)cmd1.ExecuteScalar();
             }
+            using (cn2)
+            {
+                string _sql2 = @"SELECT card_expirationMonth FROM Card WHERE card_id = '" + cardNumber + "'";
+                var cmd2 = new SqlCommand(_sql2, cn2);
+                cn2.Open();
+                month = (string)cmd2.ExecuteScalar();
+            }
+            year1 = Convert.ToInt32(year);
+            month1 = Convert.ToInt32(month);
+            transactionMonth = DateTime.Now.Month;
+            transactionYear = DateTime.Now.Year;
+
+            if (transactionYear < year1)
+            {
+                using (cn)
+                {
+
+                    //DateTime transactionDate = new DateTime(2018, 1, 1);
+                    //double transactionAmount = 0.0;
+                    //string transactionCategory = "Credit";
+                    int transactionStatus = 0;
+                    string responseID = "-1";
+                    DateTime statusTime = new DateTime(2018, 1, 1);
+                    int encrypted = 0;
+
+                    string _sql = @"INSERT INTO Transactions (card_id, store_id, trans_date, trans_amount, trans_category, trans_status, response_id, status_time, encrypted, self) VALUES("
+                        + "@AccountNumber, @StoreIP, @TransactionDate, @TransactionAmount, @TransactionCategory, @TransactionStatus, @ResponseID, @StatusTime, @Encrypted, @Self)";
+
+                    var cmd = new SqlCommand(_sql, cn);
+                    cmd.Parameters.Add("@AccountNumber", SqlDbType.VarChar).Value = cardNumber;
+                    cmd.Parameters.Add("@StoreIP", SqlDbType.VarChar).Value = storeIP;
+                    cmd.Parameters.Add("@TransactionDate", SqlDbType.DateTime).Value = transactionDate;
+                    cmd.Parameters.Add("@TransactionAmount", SqlDbType.Float).Value = transactionAmount;
+                    cmd.Parameters.Add("@TransactionCategory", SqlDbType.VarChar).Value = transactionCategory;
+                    cmd.Parameters.Add("@TransactionStatus", SqlDbType.Bit).Value = transactionStatus;
+                    cmd.Parameters.Add("@ResponseID", SqlDbType.VarChar).Value = responseID;
+                    cmd.Parameters.Add("@StatusTime", SqlDbType.DateTime).Value = statusTime;
+                    cmd.Parameters.Add("@Encrypted", SqlDbType.Bit).Value = encrypted;
+                    cmd.Parameters.Add("@Self", SqlDbType.Bit).Value = transactionSelf;
+
+                    cn.Open();
+                    cmd.ExecuteNonQuery();
+                    cn.Close();
+                }
+            }
+            else if (transactionYear == year1)
+            {
+                if (transactionMonth < month1)
+                {
+                    using (cn)
+                    {
+
+                        //DateTime transactionDate = new DateTime(2018, 1, 1);
+                        //double transactionAmount = 0.0;
+                        //string transactionCategory = "Credit";
+                        int transactionStatus = 0;
+                        string responseID = "-1";
+                        DateTime statusTime = new DateTime(2018, 1, 1);
+                        int encrypted = 0;
+
+                        string _sql = @"INSERT INTO Transactions (card_id, store_id, trans_date, trans_amount, trans_category, trans_status, response_id, status_time, encrypted, self) VALUES("
+                            + "@AccountNumber, @StoreIP, @TransactionDate, @TransactionAmount, @TransactionCategory, @TransactionStatus, @ResponseID, @StatusTime, @Encrypted, @Self)";
+
+                        var cmd = new SqlCommand(_sql, cn);
+                        cmd.Parameters.Add("@AccountNumber", SqlDbType.VarChar).Value = cardNumber;
+                        cmd.Parameters.Add("@StoreIP", SqlDbType.VarChar).Value = storeIP;
+                        cmd.Parameters.Add("@TransactionDate", SqlDbType.DateTime).Value = transactionDate;
+                        cmd.Parameters.Add("@TransactionAmount", SqlDbType.Float).Value = transactionAmount;
+                        cmd.Parameters.Add("@TransactionCategory", SqlDbType.VarChar).Value = transactionCategory;
+                        cmd.Parameters.Add("@TransactionStatus", SqlDbType.Bit).Value = transactionStatus;
+                        cmd.Parameters.Add("@ResponseID", SqlDbType.VarChar).Value = responseID;
+                        cmd.Parameters.Add("@StatusTime", SqlDbType.DateTime).Value = statusTime;
+                        cmd.Parameters.Add("@Encrypted", SqlDbType.Bit).Value = encrypted;
+                        cmd.Parameters.Add("@Self", SqlDbType.Bit).Value = transactionSelf;
+
+                        cn.Open();
+                        cmd.ExecuteNonQuery();
+                        cn.Close();
+                    }
+
+                }
+                else
+                {
+                    result = "Card expired, please select another card";
+                }
+            }
+            else
+            {
+                result = "Card expired, please select another card";
+            }
+
+            return result;
         }
 
         // Note, it is possible for there to be transactions with identical details in the database, but they will have different IDs.
         // This will get the largest corresponding ID.
-        public static int getTransactionID(string cardNumber, string storeIP, DateTime transactionDate, double transactionAmount, string transactionCategory)
+        public static int getTransactionID(string cardNumber, string storeIP, DateTime transactionDate, double transactionAmount, string transactionCategory, bool transactionSelf)
         {
             int transactionID = 0;
 
@@ -140,7 +220,7 @@ namespace NetworkCommunicationMonitor.Models
             {
                 DataTable questionTable = new DataTable();
                 DataRowCollection rows;
-                string _sql = @"SELECT trans_id FROM Transactions WHERE card_id = @CardNumber AND store_id = @StoreIP AND trans_date = @TransactionDate AND trans_amount = @TransactionAmount AND trans_category = @TransactionCategory";
+                string _sql = @"SELECT trans_id FROM Transactions WHERE card_id = @CardNumber AND store_id = @StoreIP AND trans_date = @TransactionDate AND trans_amount = @TransactionAmount AND trans_category = @TransactionCategory AND self = @TransactionSelf";
                 var cmd = new SqlCommand(_sql, cn);
 
                 cmd.Parameters.Add("@CardNumber", SqlDbType.VarChar).Value = cardNumber;
@@ -148,13 +228,28 @@ namespace NetworkCommunicationMonitor.Models
                 cmd.Parameters.Add("@TransactionDate", SqlDbType.DateTime).Value = transactionDate;
                 cmd.Parameters.Add("@TransactionAmount", SqlDbType.Float).Value = transactionAmount;
                 cmd.Parameters.Add("@TransactionCategory", SqlDbType.VarChar).Value = transactionCategory;
+                if (transactionSelf)
+                {
+                    cmd.Parameters.Add("@TransactionSelf", SqlDbType.Bit).Value = 1;
+                }
+                else
+                {
+                    cmd.Parameters.Add("@TransactionSelf", SqlDbType.Bit).Value = 0;
+                }
+
 
                 cn.Open();
 
                 questionTable.Load(cmd.ExecuteReader());
                 rows = questionTable.Rows;
+                try
+                {
+                    transactionID = Convert.ToInt32(rows[rows.Count - 1]["trans_id"]);
+                }
+                catch
+                {
 
-                transactionID = Convert.ToInt32(rows[rows.Count-1]["trans_id"]);
+                }
             }
 
             return transactionID;

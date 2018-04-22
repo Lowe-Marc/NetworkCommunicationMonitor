@@ -8,6 +8,7 @@ using System.Web;
 using System.Configuration;
 using System.Net.Mail;
 using System.Web.UI;
+using System.Windows.Forms;
 
 namespace NetworkCommunicationMonitor.Models
 {
@@ -125,48 +126,70 @@ namespace NetworkCommunicationMonitor.Models
             return numCards;
         }
 
-        public static void deleteCard(string cardID)
+        public static string deleteCard(string cardID)
         {
+            string result = "Card " + cardID + " successfully deleted";
+
             var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
             var cn1 = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
             var cn2 = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
+            var cn3 = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
             string accountID;
+            int amount;
 
-            using (cn2)
+            using (cn3)
             {
-                string _sql2 = @"SELECT DISTINCT account_id FROM Card WHERE card_id = '" + cardID + "'";
-                var cmd2 = new SqlCommand(_sql2, cn2);
-                cn2.Open();
-                SqlDataReader sdr = cmd2.ExecuteReader();
-                sdr.Close();
-                accountID = Convert.ToString(cmd2.ExecuteScalar());
-                cn2.Close();
+                string _sql3 = @"SELECT COUNT(card_id) FROM Card WHERE card_id = '" + cardID + "'";
+                var cmd3 = new SqlCommand(_sql3, cn3);
+                cn3.Open();
+                amount = (int)cmd3.ExecuteScalar();
+
             }
-            using (cn1)
+
+            if (amount != 1)
             {
-                string _sql1 = @"SELECT COUNT(account_id) FROM Card WHERE account_id = '" + accountID + "'";
-                var cmd1 = new SqlCommand(_sql1, cn1);
-                cn1.Open();
-                int amount = (int)cmd1.ExecuteScalar();
+                result = "Card " + cardID + " does not exist";
+            }
 
-                if (amount != 1)
+            else
+            {
+                using (cn2)
                 {
-                    using (cn)
-                    {
-                        string _sql = @"DELETE FROM Card WHERE card_id = '" + cardID + "'";
-                        var cmd = new SqlCommand(_sql, cn);
+                    string _sql2 = @"SELECT DISTINCT account_id FROM Card WHERE card_id = '" + cardID + "'";
+                    var cmd2 = new SqlCommand(_sql2, cn2);
+                    cn2.Open();
+                    SqlDataReader sdr = cmd2.ExecuteReader();
+                    sdr.Close();
+                    accountID = Convert.ToString(cmd2.ExecuteScalar());
+                    cn2.Close();
+                }
+                using (cn1)
+                {
+                    string _sql1 = @"SELECT COUNT(account_id) FROM Card WHERE account_id = '" + accountID + "'";
+                    var cmd1 = new SqlCommand(_sql1, cn1);
+                    cn1.Open();
+                    amount = (int)cmd1.ExecuteScalar();
 
-                        cn.Open();
-                        cmd.ExecuteNonQuery();
-                        cn.Close();
+                    if (amount != 1)
+                    {
+                        using (cn)
+                        {
+                            string _sql = @"DELETE FROM Card WHERE card_id = '" + cardID + "'";
+                            var cmd = new SqlCommand(_sql, cn);
+
+                            cn.Open();
+                            cmd.ExecuteNonQuery();
+                            cn.Close();
+                        }
+                    }
+                    else
+                    {
+                        result = "The last card " + cardID + " of an account " + accountID + " cannot be deleted!";
                     }
                 }
-                else
-                {
-                    Console.WriteLine("The last card cannot be deleted!");
-                }
             }
-
+          
+            return result;
         }
 
         public static void deleteCardsForAccount(int accountID)
@@ -189,7 +212,7 @@ namespace NetworkCommunicationMonitor.Models
             using (cn)
             {
                 string _sql = @"INSERT INTO Card (card_id, card_firstname, card_lastname, card_expirationMonth, "
-                + "card_expirationYear, card_securityCode, account_id) VALUES('" + cardID + "', '" + firstname + "', '" + lastname + "', " 
+                + "card_expirationYear, card_securityCode, account_id) VALUES('" + cardID + "', '" + firstname + "', '" + lastname + "', "
                 + card_expirationMonth + ", " + card_expirationYear + ", " + cvc + ", " + accountID + ")";
                 var cmd = new SqlCommand(_sql, cn);
 

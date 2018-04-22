@@ -16,6 +16,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="~/favicon.ico" media="screen" />
     <link rel="Bookmark" href="~/favicon.ico" />
     <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.min.css">
     <link rel="stylesheet" href="~/assets/plugins/bootstrap/css/bootstrap.min.css">
     <!-- Fonts  -->
     <link rel="stylesheet" href="~/assets/css/font-awesome.min.css">
@@ -309,7 +310,7 @@
                                                                 <div class="form-group">
                                                                     <label for="relayWeight" class="col-sm-4 control-label">Weight</label>
                                                                     <div class="col-sm-6">
-                                                                        <select class="form-control" id="relayWeight" name="relayWeight" style="padding:0;"></select>
+                                                                        <input type="number" class="form-control" id="relayWeight" name="relayWeight" min="1" max="100" required onkeyup="if( value > 100){ value = 100; } else if (value < 1){ value =1 }" />
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
@@ -380,7 +381,7 @@
                                                                 <div class="form-group">
                                                                     <label for="gateway-relay" class="col-sm-4 control-label">Gateway - Relay</label>
                                                                     <div class="col-sm-6">
-                                                                        <select class="form-control" id="gateway-relay" name="gateway-relay" style="padding:0;"></select>
+                                                                        <input type="number" class="form-control" id="gateway-relay" name="gateway-relay" required min="1" max="100" onkeyup="if( value > 100){ value = 100; } else if (value < 1){ value =1 }" />
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
@@ -398,7 +399,7 @@
                                                                 <div class="form-group">
                                                                     <label for="store-relay" class="col-sm-4 control-label">Store-Relay</label>
                                                                     <div class="col-sm-6">
-                                                                        <select class="form-control" id="store-relay" name="store-relay" style="padding:0;"></select>
+                                                                        <input type="number" class="form-control" id="store-relay" name="store-relay" required min="1" max="100" onkeyup="if( value > 100){ value = 100; } else if (value < 1){ value =1 }" />
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
@@ -457,7 +458,7 @@
                                                                 <div class="form-group">
                                                                     <label for="storeWeight" class="col-sm-4 control-label">Weight</label>
                                                                     <div class="col-sm-6">
-                                                                        <select class="form-control" id="storeWeight" name="storeWeight" style="padding:0;"></select>
+                                                                        <input type="number" class="form-control" id="storeWeight" name="storeWeight" min="1" max="100" required onkeyup="if (value > 100) { value = 100; } else if (value < 1){ value =1 }" />
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
@@ -490,148 +491,156 @@
                 }
                 <!--add store end-->
                 <!--add connection start-->
-                @using (Html.BeginForm("AddConnection", "Home", FormMethod.Post))
-                {
-                    <div class="modal fade" id="add-connection" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                    <h1 class="modal-title" id="myModalLabel"><strong> Add a Connection</strong></h1>
-                                </div>
-                                <div class="modal-body">
-                                    <!--main content start-->
-                                    <section class="main-content-wrapper" style="padding:0">
-                                        <section id="main-content" class="animated fadeInUp">
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <div class="panel panel-default">
-                                                        <div class="panel-body">
-                                                            <div class="form-group">
-                                                                <div class="col-sm-12">
-                                                                    <h2 style="text-align:center; margin: -10px 0 15px 0;">Connection Info</h2>
+                @*@using (Html.BeginForm("AddConnection", "Home", FormMethod.Post))
+                    {*@
+                <div class="modal fade" id="add-connection" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" id="close-connection" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h1 class="modal-title" id="myModalLabel"><strong> Add a Connection</strong></h1>
+                            </div>
+                            <div class="modal-body">
+                                <!--main content start-->
+                                <section class="main-content-wrapper" style="padding:0">
+                                    <section id="main-content" class="animated fadeInUp">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-body">
+                                                        <div class="form-group">
+                                                            <div class="col-sm-12">
+                                                                <h2 style="text-align:center; margin: -10px 0 15px 0;">Connection Info</h2>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-horizontal">
+                                                            <div class="form-group" id="connect-form">
+                                                                <label for="connectionWeight" class="col-sm-4 control-label">Weight</label>
+                                                                <div class="col-sm-6">
+                                                                    <input type="number" class="form-control" id="connectionWeight" name="connectionWeight" min="1" max="100" onkeyup="if( value > 100){ value = 100; } else if (value < 1){ value =1 }" required />
                                                                 </div>
                                                             </div>
-                                                            <div class="form-horizontal">
-                                                                <div class="form-group">
-                                                                    <label for="connectionWeight" class="col-sm-4 control-label">Weight</label>
-                                                                    <div class="col-sm-6">
-                                                                        <select class="form-control" id="connectionWeight" name="connectionWeight" style="padding:0;"></select>
-                                                                    </div>
+                                                            <div class="form-group">
+                                                                <label for="ipOne" class="col-sm-4 control-label">IP Address One</label>
+                                                                <div class="col-sm-6">
+                                                                    <select class="form-control" id="ipOne" name="ipOne" style="padding:0;"></select>
                                                                 </div>
-                                                                <div class="form-group">
-                                                                    <label for="ipOne" class="col-sm-4 control-label">IP Address One</label>
-                                                                    <div class="col-sm-6">
-                                                                        <select class="form-control" id="ipOne" name="ipOne" style="padding:0;"></select>
-                                                                    </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="ipTwo" class="col-sm-4 control-label">IP Address Two</label>
+                                                                <div class="col-sm-6">
+                                                                    <select class="form-control" id="ipTwo" name="ipTwo" style="padding:0;"></select>
                                                                 </div>
-                                                                <div class="form-group">
-                                                                    <label for="ipTwo" class="col-sm-4 control-label">IP Address Two</label>
-                                                                    <div class="col-sm-6">
-                                                                        <select class="form-control" id="ipTwo" name="ipTwo" style="padding:0;"></select>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="modal-footer">
-                                                                    <input type="submit" class="btn btn-success btn-block" value="Add To Network" />
-                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <input type="button" id="connectionsubmit" onclick="submitConnection()" class="btn btn-success btn-block" value="Add To Network" />
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </section>
+                                        </div>
                                     </section>
-                                    <!--main content end-->
-                                </div>
+                                </section>
+                                <!--main content end-->
                             </div>
                         </div>
                     </div>
-                }
+                </div>
+                @*}*@
                 <!--add connection end-->
                 <!-- add transaction start-->
                 @*@using (Html.BeginForm("AddTransaction", "Home", FormMethod.Post))
-                {*@
-                    <div class="modal fade" id="add-transaction" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" id="close-transaction" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                    <h1 class="modal-title" id="myModalLabel"><strong> Create a Transaction</strong></h1>
-                                </div>
-                                <div class="modal-body">
-                                    <!--main content start-->
-                                    <section class="main-content-wrapper" style="padding:0">
-                                        <section id="main-content" class="animated fadeInUp">
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <div class="panel panel-default">
-                                                        <div class="panel-body">
+                    {*@
+                <div class="modal fade" id="add-transaction" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" id="close-transaction" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h1 class="modal-title" id="myModalLabel"><strong> Create a Transaction</strong></h1>
+                            </div>
+                            <div class="modal-body">
+                                <!--main content start-->
+                                <section class="main-content-wrapper" style="padding:0">
+                                    <section id="main-content" class="animated fadeInUp">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-body">
+                                                        <div class="form-group">
+                                                            <div class="col-sm-12">
+                                                                <h2 style="text-align:center; margin: -10px 0 15px 0;">Transaction Info</h2>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-horizontal">
                                                             <div class="form-group">
-                                                                <div class="col-sm-12">
-                                                                    <h2 style="text-align:center; margin: -10px 0 15px 0;">Transaction Info</h2>
+                                                                <div class="error-text"></div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="transactionIPAddress" class="col-sm-4 control-label">IP Address of Store</label>
+                                                                <div class="col-sm-6">
+                                                                    <select class="form-control" id="transactionIPAddress" name="transactionIPAddress" style="padding:0;"></select>
                                                                 </div>
                                                             </div>
-                                                            <div class="form-horizontal">
-                                                                <div class="form-group">
-                                                                    <label for="transactionIPAddress" class="col-sm-4 control-label">IP Address of Store</label>
-                                                                    <div class="col-sm-6">
-                                                                        <select class="form-control" id="transactionIPAddress" name="transactionIPAddress" style="padding:0;"></select>
-                                                                    </div>
-                                                                </div>
                                                             @{
                                                                 List<NetworkCommunicationMonitor.Models.Card> cards = (List<NetworkCommunicationMonitor.Models.Card>)ViewData["Cards"];
                                                                 <div class="form-group">
                                                                     <label for="transactionCardNumber" class="col-sm-4 control-label">Card number</label>
                                                                     <div class="col-sm-6">
                                                                         <select class="form-control" id="transactionCardNumber" name="transactionCardNumber" style="padding:0;">
-                                                                        @{
-                                                                            foreach (NetworkCommunicationMonitor.Models.Card card in cards)
-                                                                            {
-                                                                            @*<input type="text" class="form-control" id="transactionCardNumber" name="transactionCardNumber" placeholder="Card number" maxlength="19" onkeyup="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,'')" required />*@
-                                                                            <option>@card.cardNumber</option>
+                                                                            @{
+                                                                                foreach (NetworkCommunicationMonitor.Models.Card card in cards)
+                                                                                {
+                                                                                    <option>@card.cardNumber</option>
                                                                                 }
                                                                             }
                                                                         </select>
                                                                     </div>
                                                                 </div>
                                                             }
-                                                                <div class="form-group">
-                                                                    <label for="transactionAmount" class="col-sm-4 control-label">Transaction Amount</label>
-                                                                    <div class="col-sm-6">
-                                                                        @*<input type="text" class="form-control" id="transactionAmount" name="transactionAmount" required minlength="1" maxlength="6" placeholder="$0.00" onkeyup="value = value.replace(/[^\d]/g, ''); if ( value > 25000) { value = 25000; }" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,'')">*@
-                                                                        <input type="text" class="form-control" id="transactionAmount" name="transactionAmount" required minlength="1" maxlength="6" placeholder="$0.00" onkeyup="if ( value > 25000) { value = 25000; }" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,'')">
-                                                                    </div>
+                                                            <div class="form-group">
+                                                                <label for="transactionAmount" class="col-sm-4 control-label">Transaction Amount</label>
+                                                                <div class="col-sm-6">
+                                                                    @*<input type="text" class="form-control" id="transactionAmount" name="transactionAmount" required minlength="1" maxlength="6" placeholder="$0.00" onkeyup="value = value.replace(/[^\d]/g, ''); if ( value > 25000) { value = 25000; }" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,'')">*@
+                                                                    <input type="text" class="form-control" id="transactionAmount" name="transactionAmount" required minlength="1" maxlength="6" placeholder="$0.00" onkeyup="if ( value > 25000) { value = 25000; }" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,'')">
                                                                 </div>
-                                                                <div class="form-group">
-                                                                    <label for="transactionDate" class="col-sm-4 control-label">Transaction Date</label>
-                                                                    <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" id="transactionDate" name="transactionDate" required minlength="10" maxlength="10" placeholder="MM/DD/YYYY">
-                                                                    </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="transactionDate" class="col-sm-4 control-label">Transaction Date</label>
+                                                                <div class="col-sm-6">
+                                                                    <input type="text" class="form-control" id="transactionDate" name="transactionDate" required />
                                                                 </div>
-                                                                <div class="form-group">
-                                                                    <label for="transactionCategory" class="col-sm-4 control-label">Transaction Category</label>
-                                                                    <div class="col-sm-6">
-                                                                        <select class="form-control" style="padding:0;" id="transactionCategory" name="transactionCategory">
-                                                                            <option>Credit</option>
-                                                                            <option>Debit</option>
-                                                                        </select>
-                                                                    </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="transactionCategory" class="col-sm-4 control-label">Transaction Category</label>
+                                                                <div class="col-sm-6">
+                                                                    <select class="form-control" style="padding:0;" id="transactionCategory" name="transactionCategory">
+                                                                        <option value="Credit">Credit</option>
+                                                                        <option value="Debit">Debit</option>
+                                                                    </select>
                                                                 </div>
-                                                                <div class="modal-footer">
-                                                                    <input id="transactionSubmit" type="submit" class="btn btn-success btn-block" value="Add To Network" />
+                                                            </div>
+                                                            <div class="form-group" id="self-form">
+                                                                <label for="transactionSelf" class="col-sm-4 control-label">Self</label>
+                                                                <div class="col-sm-6">
+                                                                    <input type="checkbox" class="center-block" id="transactionSelf" style="min-width:20px;min-height:20px;margin:9px 10px 0px 0%;" />
                                                                 </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <input id="transactionSubmit" type="submit" class="btn btn-success btn-block" value="Add To Network" />
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </section>
+                                        </div>
                                     </section>
-                                    <!--main content end-->
-                                </div>
+                                </section>
+                                <!--main content end-->
                             </div>
                         </div>
                     </div>
+                </div>
                 @*}*@
                 <!-- add transaction end-->
             </div>
@@ -742,10 +751,12 @@
     <!--Global JS-->
     <script src="~/assets/js/vendor/jquery-1.11.1.min.js"></script>
     <script src="~/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/js/bootstrap-datepicker.min.js"></script>
     <script src="~/assets/plugins/navgoco/jquery.navgoco.min.js"></script>
     <script src="~/assets/plugins/pace/pace.min.js"></script>
     <script src="~/assets/plugins/fullscreen/jquery.fullscreen-min.js"></script>
     <script src="~/assets/js/src/app.js"></script>
+    <script src="~/js/validate-input.js"></script>
     <!--Page Level JS-->
     <script src="~/assets/plugins/mask/js/jquery.maskedinput.min.js"></script>
     <!-- ChartJS  -->
@@ -764,12 +775,11 @@
     <!-- Cytoscape-->
     <script>
         $(function () { // on dom ready
-
             const nodes = @Html.Raw(Json.Encode(ViewData["Nodes"]));
             const edges = @Html.Raw(Json.Encode(ViewData["Links"]));
             const data = [];
             const relayColor = 'green';
-            const PROCESSINGCENTERID = 1;
+            const PROCESSINGCENTERID = 200;
             const WEIGHTOFFSET = 100000000; // This is used to inactivate relays/connections and to prevent a path from routing through a store
             const animationLength = 1200; // Time the animations take in milliseconds
 
@@ -810,7 +820,7 @@
                         'height': 'data(height)',
                         'shape': 'data(shape)',
                         'background-color': 'data(color)',
-                        'border-width': '3px',
+                        'border-width': '2px',
                         'border-color': 'black'
                     })
                     .selector('edge')
@@ -833,28 +843,6 @@
                         'background-color': 'black',
                         'opacity': '1'
                     }),
-                //    .selector('edge:selected')
-                //    .css({
-                //        'border-color': 'black',
-                //        'background-color': 'black',
-                //        'line-color': 'black',
-                //        'target-arrow-color': 'black',
-                //        'source-arrow-color': 'black',
-                //        'width': '5px',
-                //        'height': '5px',
-                //        'opacity': '1'
-                //    })
-                //    .selector('node:selected')
-                //    .css({
-                //        'border-color': 'black',
-                //        'background-color': 'black',
-                //        'opacity': '1'
-                //    }),
-                //.selector('.outline')
-                //.css({
-                //    "text-outline-color": '#e6e6e6',
-                //    "text-outline-width": 3
-                //}),
                 zoom: 1,
                 pan: { x: 0, y: 0 },
                 minZoom: 1e-1,
@@ -879,8 +867,8 @@
                         element.data('status', 'inactive');
                         element.animation({
                             style: {
-                                'background-color': 'black',
-                                'line-color': 'black'
+                                'background-color': 'red',
+                                'line-color': 'red'
                             },
                             duration: 500
                         }).play();
@@ -921,24 +909,41 @@
                 transaction.transactionDate = $('#transactionDate').val();
                 transaction.amount = $('#transactionAmount').val();
                 transaction.category = $('#transactionCategory').val();
+                transaction.currentNode = null;
+                transaction.hasBeenProcessed = false;
+                transaction.self = document.getElementById("transactionSelf").checked;
 
-                //Database insertion
-                $.ajax({
-                    method: "POST",
-                    url: "/Home/AddTransaction",
-                    data: transaction,
-                    success: (result) => {
-                        closeClick(transaction);
-                        console.log("Successful ajax request: ")
-                        transaction.transactionID = result;
-                        console.log("Transaction ID: " + result);
-                        return transaction;
-                    },
-                    error: (result) => {
-                        console.log("Error on ajax request");
-                        console.log(result);
+                if (transaction.amount == null || transaction.amount == "") {
+                    let err = "transaction amount cannot be null";
+                    errorText(err);
+                } else {
+
+                    if (transaction.transactionDate == null || transaction.transactionDate == "") {
+                        let err = "transaction date cannot be null";
+                        errorText(err);
+                    } else {
+                        //Database insertion
+                        $.ajax({
+                            method: "POST",
+                            url: "/Home/AddTransaction",
+                            data: transaction,
+                            success: (result) => {
+                                if (result == "Card expired, please select another card") {
+                                    alert(result);
+                                } else {
+                                    closeClick(transaction);
+                                    console.log("Successful ajax request: ")
+                                    transaction.transactionID = result;
+                                    console.log("Transaction ID: " + result);
+                                }
+                            },
+                            error: (result) => {
+                                let err = "Error ajax";
+                                errorText(err);
+                            }
+                        });
                     }
-                });
+                }
             }
 
             // Will be used to handle what happens at the processing center
@@ -946,11 +951,10 @@
                 animPath(processingCenter, startNode, true);
             }
 
-            function assembleAnim(storeNode, transaction) {
-                console.log("Assembling animation")
+            function assembleAnim(storeNode, transaction, finalDestination) {
 
                 var processingCenter = getNode("@NetworkCommunicationMonitor.Models.Relay.PROCESSINGCENTERIP");
-                var path = getPath(storeNode, processingCenter);
+                var path = getPath(storeNode, processingCenter, finalDestination, transaction);
                 var n = cy.nodes();
                 var animationList = []
                 // Assemble list of animations
@@ -964,8 +968,8 @@
                     } else {
                         var animation = path[i].animation({
                             style: {
-                                'background-color': 'red',
-                                'line-color': 'red',
+                                'background-color': 'purple',
+                                'line-color': 'purple',
                                 'width': '10px',
                                 'height': '10px'
                             },
@@ -974,6 +978,7 @@
                         animation['paused'] = false;
                         animation['node'] = path[i];
                         animation['transaction'] = transaction;
+                        animation['startNode'] = storeNode;
                         animationList.push(animation);
                     }
                 }
@@ -992,16 +997,16 @@
                     let tempId = nodes[i].id.slice(10);
 
                     if (nodes[i].group == 0) {  // Processing center
-                        data.push({ group: 'nodes', data: { id: tempId, color: 'orange', shape: 'barrel', width: '50', height: '50', category: '1', queue: [], isActive: true, limit: nodes[i].queueLimit } });
+                        data.push({ group: 'nodes', data: { id: tempId, color: 'Orange', shape: 'barrel', width: '50', height: '50', category: '1', queue: [], isActive: true, limit: nodes[i].queueLimit, name: 'Processing Center' } });
                     } else if (nodes[i].group == 1) {   // Store
                         storeIds.push(tempId);
                         storeList.push(tempId);
-                        data.push({ group: 'nodes', data: { id: tempId, color: 'blueviolet', shape: 'ellipse', width: '20', height: '20', category: '3', parent: nodes[i].region, queue: [], isActive: true } });
+                        data.push({ group: 'nodes', data: { id: tempId, color: 'DimGray', shape: 'ellipse', width: '20', height: '20', category: '3', parent: nodes[i].region, queue: [], isActive: true, name: nodes[i].name } });
                     } else if (nodes[i].group == 2) {   // Relay
                         relayIds.push(tempId);
                         relayList.push(tempId);
                         if (nodes[i].isActive) { status = 'active'; } else { status = 'inactive'; }
-                        data.push({ group: 'nodes', data: { id: tempId, color: 'green', shape: 'triangle ', width: '35', height: '35', category: '2', status: status, parent: nodes[i].region, queue: [], isActive: true, limit: nodes[i].queueLimit } });
+                        data.push({ group: 'nodes', data: { id: tempId, color: 'green', shape: 'triangle ', width: '35', height: '35', category: '2', status: status, parent: nodes[i].region, queue: [], isActive: true, limit: nodes[i].queueLimit, name: 'Relay' } });
                     }
                 }
                 arr = unique(temp);
@@ -1030,7 +1035,6 @@
 
             // Play the animation and try to continue
             function newAnim(animationList, currentAnimationPlayingIndex) {
-                console.log("newAnim");
                 //Get animation
                 var animation = animationList[currentAnimationPlayingIndex];
                 //Add to queue
@@ -1040,19 +1044,35 @@
                     animation['node'].data('queue', elementQueue);
                 }
 
+                // Let the transaction know what node it's in
+                animation['transaction'].currentNode = animation['node']
                 var atProcessingCenter = (animation['node'].data('id') == PROCESSINGCENTERID)
-                if (atProcessingCenter) {
+                var transactionNeedProcessing = !animation['transaction'].hasBeenProcessed;
+                if (atProcessingCenter && transactionNeedProcessing) {
                     var transaction = animation['transaction'];
+
+                    // The transactionToSubmit can't have a reference to its current node or the
+                    // ajax request blows up the callstack because the node also has a reference to
+                    // the transaction
+                    var transactionToSubmit = new Object();
+                    transactionToSubmit.cardNumber = transaction.cardNumber
+                    transactionToSubmit.storeIP = transaction.storeIP
+                    transactionToSubmit.transactionDate = transaction.transactionDate
+                    transactionToSubmit.amount = transaction.amount
+                    transactionToSubmit.category = transaction.category
+                    transactionToSubmit.self = transaction.self
+                    transactionToSubmit.transactionID = transaction.transactionID;
 
                     $.ajax({
                         method: "POST",
                         url: "/Home/GenerateResponse",
-                        data: transaction,
+                        data: transactionToSubmit,
                         success: (result) => {
                             console.log("Successful processing", result)
+                            animation['transaction'].hasBeenProcessed = true;
                         },
                         error: (result) => {
-                            console.log("Error on ajax request",result);
+                            console.log("Error on ajax request", result);
                         }
                     });
                 }
@@ -1060,6 +1080,9 @@
                 //Check to see if the animation should play
                 var firstInQueue = (elementQueue[0] == animation);
                 var nodeIsAlreadyAnimating = animation['node'].animated()
+                if (nodeIsAlreadyAnimating) {
+
+                }
                 if (!animationsArePaused && firstInQueue && !nodeIsAlreadyAnimating) {
                     animation.play();
                     currentAnimationSet.add(animation);
@@ -1091,8 +1114,9 @@
             }
 
             function playAnimations() {
-                currentAnimationSet.forEach(function (animation) { animation.play() })
-                playNecessaryQueuedAnimations();
+                //currentAnimationSet.forEach(function (animation) { animation.play() })
+                //playNecessaryQueuedAnimations();
+                reassemblePaths();
             }
 
             function playNecessaryQueuedAnimations() {
@@ -1105,7 +1129,38 @@
             }
 
             function reassemblePaths() {
+                console.log("Reassembling animation paths")
+                //currentAnimationSet.forEach(function (animation) {
+                //    animation.reverse().play().promise('completed').then(function () {
+                //        animation
+                //            .stop();
+                //    });
+                //});
 
+                // Get all transactions and empty the queues of all nodes
+                var existingTransactions = [];
+                data.forEach(function (element) {
+                    var oldQueue = element['data']['queue']
+                    if (oldQueue != undefined && oldQueue.length > 0) {
+                        for (var i = 0; i < oldQueue.length; i++) {
+                            existingTransactions.push(oldQueue[i]['transaction'])
+                        }
+                        element['data']['queue'] = []
+                    }
+                });
+
+                // Assemble all the new animations
+                for (var i = 0; i < existingTransactions.length; i++) {
+                    var transaction = existingTransactions[i];
+                    var originalStart = getNodeById(transaction.storeIP);
+                    var currentlyAt = transaction.currentNode;
+                    if (currentlyAt.data('source') != undefined) {
+                        currentlyAt = getNodeById(currentlyAt.data('source'))
+                    }
+                    assembleAnim(currentlyAt, transaction, originalStart);
+                }
+
+                playNecessaryQueuedAnimations()
             }
 
             /*=====================================================================================================
@@ -1132,7 +1187,18 @@
                     $("#pause").removeClass('hidden');
                 } else {
                     animationsArePaused = true;
-                    currentAnimationSet.forEach(function (animation) { animation.pause() })
+                    currentAnimationSet.forEach(function (animation) {
+                        //animation
+                        //    .pause()
+                        //    .reverse()
+                        //    .play()
+                        //    .promise('completed').then(function () {
+                        //        animation
+                        //            .stop();
+                        //    });
+                        animation.progress(0.0).apply().pause();
+                    })
+                    //queueAnimationSet.forEach(function (animation) { animation.pause() })
                     $("#pause").addClass('hidden');
                     $("#play").removeClass('hidden');
                 }
@@ -1142,7 +1208,7 @@
                 $('#close-transaction').click();
                 var transactionStart = $('#transactionIPAddress').val();
                 var startNode = getNode(transactionStart);
-                assembleAnim(startNode, transaction);
+                assembleAnim(startNode, transaction, startNode);
             }
 
             function popOver(element) {
@@ -1163,11 +1229,11 @@
                                 transactionInfo = "Encrypted";
                             }
                             if (isProcessingCenter && elementQueue.length >= 1) {
-                                //console.log("elementQueue:",elementQueue[0]['transaction']);
                                 transactionInfo = "<br>Card Number: " + elementQueue[0]['transaction']['cardNumber']
                                     + "<br> Store IP: " + elementQueue[0]['transaction']['storeIP']
                                     + "<br> Amount: " + elementQueue[0]['transaction']['amount']
-                                    + "<br> Category: " + elementQueue[0]['transaction']['category'];
+                                    + "<br> Category: " + elementQueue[0]['transaction']['category']
+                                    + "<br> Self: " + elementQueue[0]['transaction']['self'];
                             }
                             for (var i = 0; i < elementQueue.length; i++) {
                                 queueString.push(elementQueue[i]['transaction']['transactionID']);
@@ -1177,14 +1243,36 @@
                             if (differ != null && differ < 0) {
                                 queueString = queueString.slice(0, differ);
                             }
+                            if (queueString.length == 0) {
+                                queueString = 'Empty';
+                            } else {
+                                queueString = queueString.join();
+                            }
+                            if (limit == undefined) {
+                                limit = "Unlimited";
+                            }
+                            var $newLimitInput = $('<input type="number" id="newLimitInput" class="hidden col-md-6 pull-right" placeholder="New Limit" min="0" max="100" onkeyup="if( value > 100){ value = 100; } else if (value < 0){ value = 0 }"/>');
+                            var $newLimitButton = $('<button id="newLimitButton" class="btn btn-sm btn-primary col-md-6 pull-right">Update Limit</button>');
 
-                            var $menuContents = $('<div class="well well-sm"><div class="alert alert-success" role="alert"> <p> Limit: ' + limit + '</p><p> Queue: ' + queueString.join() + '</p></div> <div class="alert alert-success" role="alert">Transaction Information: <hr>' + transactionInfo + '</div>');
+                            var menuString = '<div class="well well-sm"><div class="alert alert-success" role="alert">'
+                                + '<p> Name: ' + element.data('name') + '</p> '
+                                + '<p> Limit: ' + limit + '</p>'
+                                + '<p> Queue: ' + queueString + '</p>'
+                                + '</div > <div class="alert alert-success" role="alert">Transaction Information: <hr>' + transactionInfo + '</div>'
+
+                            var $menuContents = $(menuString);
                             var $ctr = $('<div class="select-buttons"></div>');
-                            var $inactive = $('<button id="inactive" class="btn btn-sm btn-primary center-block">Inactivate</button>');
+                            var $inactive = $('<button id="inactive" class="btn btn-sm btn-primary pull-left">Inactivate</button>');
+                            var $active = $('<button id="active" class="hidden btn btn-sm btn-primary pull-left">Activate</button>');
                             if (isProcessingCenter || !animationsArePaused) {
                                 $inactive = $('');
+                                $active = $('');
+                                $newLimitButton = $('');
+                                $newLimitInput = $('');
+                            } else {
+                                $newLimitButton.removeClass('hidden');
+                                $newLimitInput.removeClass('hidden');
                             }
-                            var $active = $('<button id="active" class="hidden btn btn-sm btn-primary center-block">Activate</button>');
 
                             if (element.data('isActive') == true) {
                                 $active.addClass('hidden');
@@ -1193,6 +1281,26 @@
                                 $inactive.addClass('hidden');
                                 $active.removeClass('hidden');
                             }
+
+                            $newLimitButton.on('click', function () {
+                                var node = new Object();
+                                node.ipAddress = '192.168.0.' + element.data('id');
+                                node.queueLimit = $newLimitInput.val();
+
+                                $.ajax({
+                                    method: "POST",
+                                    url: "/Home/ChangeQueueLimit",
+                                    data: node,
+                                    success: (result) => {
+                                        console.log("Successful ajax request: ")
+                                        console.log("Node: " + node.ipAddress + " has new queue limit: " + result);
+                                        element.data('limit', node.queueLimit);
+                                    },
+                                    error: (result) => {
+                                        console.log("Error on ajax request", result);
+                                    }
+                                });
+                            });
 
                             $inactive.on('click', function () {
                                 tryLockNetworkElement(element);
@@ -1206,7 +1314,9 @@
                                 $inactive.removeClass('hidden');
                             });
                             $('#network-view').append($ctr);
-                            $ctr.append($menuContents).append($active).append($inactive);
+                            $container = $('<div class="form-group"></div>');
+                            $ctr.append($menuContents).append($active).append($inactive).append($container);
+                            $container.append($newLimitInput).append($newLimitButton);
                             return $ctr;
                         }
                     },
@@ -1247,22 +1357,71 @@
                 }
             }
 
-            // Calculate the round trip path from start to end
-            function getPath(startNode, endNode) {
-                var aStar = cy.elements().aStar({ root: startNode, goal: endNode, weight: function (edge) {return edge.data('activeWeight')} });
+            function getNodeById(Id) {
+                var n = cy.nodes();
+                for (var i = 0; i < n.length; i++) {
+                    if (n[i].data('id') == Id) {
+                        return n[i];
+                    }
+                }
+
+                for (var i = 0; i < nodes.length; i++) {
+                    if (nodes[i]["ipAddress"] == Id) {
+                        return n[i];
+                    }
+                }
+
+                var e = cy.edges();
+                for (var i = 0; i < e.length; i++) {
+                    if (e[i].data('id') == Id) {
+                        return e[i];
+                    }
+                }
+                console.log("WARNING: Node not found by Id")
+            }
+
+            // Calculate the round trip path from start to end.
+            // if the finalDestination is not the same as endNode,
+            // that means the path is being reassembled. The path should then concatenate
+            // a one way path back to the final destination
+            function getPath(startNode, endNode, finalDestination, transaction) {
+
+                var localDestination;
+                var needsOneWayAddition = false;
+                if (transaction.hasBeenProcessed) {
+                    localDestination = finalDestination;
+                } else {
+                    localDestination = endNode;
+                    needsOneWayAddition = true;
+                }
+
+                var aStar = cy.elements().aStar({ root: startNode, goal: localDestination, weight: function (edge) { return edge.data('activeWeight') } });
                 var pathToTruncate = Object.values(aStar.path);
                 var truncatedPath = truncatePath(pathToTruncate);
                 truncatedPath = reorderPath(truncatedPath);
 
                 // The return path is simply the reverse of the original path with the first element removed
                 // so the processing center doesn't animate twice.
-                var returnPath = truncatedPath.slice(0);
-                returnPath.reverse();
-                returnPath.shift();
+                //var returnPath = truncatedPath.slice(0);
+                //returnPath.reverse();
+                //returnPath.shift();
 
-                var path = truncatedPath.concat(returnPath);
+                //var path = truncatedPath.concat(returnPath);
+                var path = truncatedPath;
+                if (needsOneWayAddition) {
+                    var temp = getOneWayPath(endNode, finalDestination);
+                    path = path.concat(temp);
+                }
 
                 return path;
+            }
+
+            function getOneWayPath(startNode, endNode) {
+                var aStar = cy.elements().aStar({ root: startNode, goal: endNode, weight: function (edge) { return edge.data('activeWeight') } });
+                var pathToTruncate = Object.values(aStar.path);
+                var truncatedPath = truncatePath(pathToTruncate);
+                truncatedPath = reorderPath(truncatedPath);
+                return truncatedPath;
             }
 
             // For some reason the cytoscape aStar path has edges after nodes, this should properly order things
@@ -1348,12 +1507,6 @@
             }
 
             function validateInput() {
-                let date = new Date();
-                let day = date.getDate();
-                let month = date.getMonth() + 1 ;
-                let year = date.getFullYear();
-                let transActionDate = day + "/" + month + "/" + year;
-
                 for (var i = 0; i < storeList.length; i++) {
                     $('#transactionIPAddress').append('<option>' + storeList[i] + '</option>');
                 }
@@ -1372,15 +1525,37 @@
                     $('#ipOne').append('<option>' + existIpSet[i] + '</option>');
                     $('#ipTwo').append('<option>' + existIpSet[i] + '</option>');
                 }
-                for (var i = 1; i < 101; i++) {
-                    $('#storeWeight').append('<option>' + i + '</option>');
-                    $('#relayWeight').append('<option>' + i + '</option>');
-                    $('#connectionWeight').append('<option>' + i + '</option>');
-                    $('#store-relay').append('<option>' + i + '</option>');
-                    $('#gateway-relay').append('<option>' + i + '</option>');
-                }
 
-                $('#transactionDate').val(transActionDate);
+                $("#transactionCategory")
+                    .change(function () {
+                        let value = "";
+                        $("#transactionCategory option:selected").each(function () {
+                            value += $(this).val() + "";
+                            if (value == "Credit") {
+                                $("#self-form").stop().slideUp(200);
+                                $("#transactionSelf").prop("checked", false);
+                            } else if (value == "Debit") {
+                                $("#self-form").stop().slideDown(200);
+                            }
+                        });
+                    })
+                    .trigger("change");
+
+                $('#transactionDate').datepicker({
+                    todayHighlight: true,
+                    toggleActive: true,
+                    container: $('#network-view')
+                });
+
+            }
+
+            function errorText(err) {
+                $('.error-text').empty();
+                $('.error-text').append('<h4 class="text-danger text-center">' + err + '</h4>');
+
+                setTimeout(function () {
+                    $('.error-text h4').fadeOut();
+                }, 5000);
             }
 
             // transfer ip with prefix and sort them by length and letters

@@ -33,7 +33,7 @@ namespace NetworkCommunicationMonitor.Models
             response.storeId = transaction.storeID;
             response.date = transaction.transactionDate;
 
-            if (account.accountBalance + transaction.amount > account.accountLimit)
+            if ((account.accountBalance + transaction.amount > account.accountLimit) && transaction.category.Equals("Credit"))
             {
                 denyTransaction(transaction);
                 response.status = true;
@@ -49,7 +49,7 @@ namespace NetworkCommunicationMonitor.Models
 
         private static void approveTransaction(Transaction transaction, Account account)
         {
-            Account.chargeAccount(transaction.amount, account.accountBalance, account.accountNumber);
+            Account.chargeAccount(transaction, account.accountBalance, account.accountNumber);
             Transaction.approveTransaction(transaction);
         }
 

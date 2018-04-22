@@ -11,6 +11,7 @@ namespace NetworkCommunicationMonitor.Controllers
     public class HomeController : Controller
     {
         private string startLocation;
+        private string result = "";
 
         public ActionResult Index()
         {
@@ -27,12 +28,15 @@ namespace NetworkCommunicationMonitor.Controllers
         public ActionResult Homepage()
         {
             if (Session["username"] == null)
-                return RedirectToAction("Index","Home");
+                return RedirectToAction("Index", "Home");
+            else
+                Session["username"] = Session["username"];
             setViewDataDefaults();
 
             setNetworkData();
             ViewData["Cards"] = NetworkCommunicationMonitor.Models.Card.getCards();
             ViewData["TransactionStart"] = startLocation;
+
 
             return View();
         }
@@ -157,13 +161,14 @@ namespace NetworkCommunicationMonitor.Controllers
             return RedirectToAction("Account", "Home");
         }
 
-        public ActionResult DeleteAccount(FormCollection collection)
+        public string DeleteAccount(FormCollection collection)
         {
             setViewDataDefaults();
 
-            NetworkCommunicationMonitor.Models.Account.deleteAccount(Convert.ToInt32(collection["accountID"]));
+            int accountId = Convert.ToInt32(collection["accountID"]);
 
-            return RedirectToAction("Account", "Home");
+            return NetworkCommunicationMonitor.Models.Account.deleteAccount(accountId);
+            //return RedirectToAction("Account", "Home");
         }
 
         public ActionResult EditAccount(FormCollection collection)
@@ -207,13 +212,14 @@ namespace NetworkCommunicationMonitor.Controllers
             return RedirectToAction("Card", "Home");
         }
 
-        public ActionResult DeleteCard(FormCollection collection)
+        public string DeleteCard(FormCollection collection)
         {
             setViewDataDefaults();
 
-            NetworkCommunicationMonitor.Models.Card.deleteCard(Convert.ToString(collection["delete_cardNumber"]));
+            string cardNumber = Convert.ToString(collection["cardNumber"]);
 
-            return RedirectToAction("Card", "Home");
+            return NetworkCommunicationMonitor.Models.Card.deleteCard(cardNumber);
+            //return RedirectToAction("Card", "Home");
         }
 
         public ActionResult EditCard(FormCollection collection)
@@ -264,7 +270,7 @@ namespace NetworkCommunicationMonitor.Controllers
         public ActionResult AddStore(FormCollection collection)
         {
             setViewDataDefaults();
-            
+
             int weight = Convert.ToInt32(collection["storeWeight"]);
             string storeName = Convert.ToString(collection["storeName"]);
             string ipAddress = Convert.ToString(collection["storeIpAddress"]);
@@ -275,21 +281,28 @@ namespace NetworkCommunicationMonitor.Controllers
             return RedirectToAction("Homepage", "Home");
         }
 
-        public ActionResult AddConnection(FormCollection collection)
+        public string AddConnection(FormCollection collection)
         {
             setViewDataDefaults();
 
-            
             int weight = Convert.ToInt32(collection["connectionWeight"]);
             string ipOne = Convert.ToString(collection["ipOne"]);
             string ipTwo = Convert.ToString(collection["ipTwo"]);
 
-            NetworkCommunicationMonitor.Models.Connection.addConnection(weight, ipOne, ipTwo);
-
-            return RedirectToAction("Homepage", "Home");
+            string result = NetworkCommunicationMonitor.Models.Connection.addConnection(weight, ipOne, ipTwo);
+            return result;
+            //return RedirectToAction("Homepage", "Home");
         }
 
-        public int AddTransaction(FormCollection collection)
+        public void ChangeQueueLimit(FormCollection collection)
+        {
+            String ipAddress = Convert.ToString(collection["ipAddress"]);
+            int queueLimit = Convert.ToInt32(collection["queueLimit"]);
+
+            NetworkCommunicationMonitor.Models.Relay.changeLimit(ipAddress, queueLimit);
+        }
+
+        public string AddTransaction(FormCollection collection)
         {
             setViewDataDefaults();
             setNetworkData();
@@ -300,25 +313,26 @@ namespace NetworkCommunicationMonitor.Controllers
             DateTime transactionDate = Convert.ToDateTime(collection["transactionDate"]);
             double transactionAmount = Convert.ToDouble(collection["amount"]);
             string transactionCategory = Convert.ToString(collection["category"]);
-            
-            if (storeIP == null)
+            bool transactionSelf = Convert.ToBoolean(collection["self"]);
+
+            string result = NetworkCommunicationMonitor.Models.Transaction.addTransaction(cardNumber, storeIP, transactionDate, transactionAmount, transactionCategory, transactionSelf);
+            if (result.Equals("Transaction successfully created"))
             {
-                    //return RedirectToAction("Homepage", "Home");
+                int id = NetworkCommunicationMonitor.Models.Transaction.getTransactionID(cardNumber, storeIP, transactionDate, transactionAmount, transactionCategory, transactionSelf);
+                string idString = id.ToString();
+                return idString;
             }
             else
             {
-                NetworkCommunicationMonitor.Models.Transaction.addTransaction(cardNumber, storeIP, transactionDate, transactionAmount, transactionCategory);
+                return result;
             }
-            int id = NetworkCommunicationMonitor.Models.Transaction.getTransactionID(cardNumber, storeIP, transactionDate, transactionAmount, transactionCategory);
-
-            return id;
         }
 
         public void GenerateResponse(FormCollection collection)
         {
             Transaction transaction = new Transaction();
             transaction.transactionID = Convert.ToInt32(collection["transactionID"]);
-            transaction.cardID = Convert.ToString(collection["cardNumber"]).Replace(" ","");
+            transaction.cardID = Convert.ToString(collection["cardNumber"]).Replace(" ", "");
             transaction.storeID = Convert.ToString(collection["storeIP"]);
             transaction.transactionDate = Convert.ToDateTime(collection["transactionDate"]);
             transaction.amount = Convert.ToDouble(collection["amount"]);

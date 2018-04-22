@@ -8,6 +8,7 @@ using System.Web;
 using System.Configuration;
 using System.Net.Mail;
 using System.Web.UI;
+using System.Windows.Forms;
 
 namespace NetworkCommunicationMonitor.Models
 {
@@ -22,6 +23,7 @@ namespace NetworkCommunicationMonitor.Models
         public double accountBalance;
         public List<Card> cards;
 
+
         public Account()
         {
 
@@ -31,7 +33,7 @@ namespace NetworkCommunicationMonitor.Models
         public static List<Account> getAccounts()
         {
             List<Account> accounts = new List<Account>();
-            
+
             var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
             using (cn)
             {
@@ -45,7 +47,7 @@ namespace NetworkCommunicationMonitor.Models
                 questionTable.Load(cmd.ExecuteReader());
                 rows = questionTable.Rows;
 
-                foreach (DataRow row in rows )
+                foreach (DataRow row in rows)
                 {
                     Account tempAccount = new Account();
                     int accountNumber = Convert.ToInt32(row["account_id"]);
@@ -100,7 +102,7 @@ namespace NetworkCommunicationMonitor.Models
             {
                 DataTable questionTable = new DataTable();
                 DataRowCollection rows;
-                string _sql = @"SELECT account_id FROM Account WHERE account_holder_firstname = '" + firstName + "' AND account_holder_lastname = '" + lastName 
+                string _sql = @"SELECT account_id FROM Account WHERE account_holder_firstname = '" + firstName + "' AND account_holder_lastname = '" + lastName
                     + "' AND account_address = '" + address + "' AND account_phone = '" + phone + "' AND account_limit = " + limit + " AND account_balance = " + balance;
                 var cmd = new SqlCommand(_sql, cn);
 
@@ -118,20 +120,41 @@ namespace NetworkCommunicationMonitor.Models
             return accountID;
         }
 
-        public static void deleteAccount(int accountID)
+        public static string deleteAccount(int accountID)
         {
-            Card.deleteCardsForAccount(accountID);
+            string result = "Account " + accountID + " successfully deleted";
 
-            var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
-            using (cn)
+            var cn1 = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
+            using (cn1)
             {
-                string _sql = @"DELETE FROM Account WHERE account_id = " + accountID;
-                var cmd = new SqlCommand(_sql, cn);
+                string _sql1 = @"SELECT account_balance FROM Account WHERE account_id = '" + accountID + "'";
+                var cmd1 = new SqlCommand(_sql1, cn1);
+                cn1.Open();
+                double accountBalance = (double)cmd1.ExecuteScalar();
 
-                cn.Open();
-                cmd.ExecuteNonQuery();
-                cn.Close();
+                if (accountBalance == 0)
+                {
+                    Card.deleteCardsForAccount(accountID);
+
+                    var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
+                    using (cn)
+                    {
+                        string _sql = @"DELETE FROM Account WHERE account_id = " + accountID;
+                        var cmd = new SqlCommand(_sql, cn);
+
+                        cn.Open();
+                        cmd.ExecuteNonQuery();
+                        cn.Close();
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("This account cannot be deleted wiht non-zero balance!");
+                    result = "Account " + accountID  + " cannot be deleted with non-zero balance!";
+                }
             }
+            return result;
+
         }
 
         public static void createAccount(string firstname, string lastname, string address, string phone, int limit, double balance)
@@ -154,7 +177,7 @@ namespace NetworkCommunicationMonitor.Models
             var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
             using (cn)
             {
-                string _sql = @"UPDATE Account SET account_holder_firstname = '" + firstname + "',  account_holder_lastname = '" + lastname 
+                string _sql = @"UPDATE Account SET account_holder_firstname = '" + firstname + "',  account_holder_lastname = '" + lastname
                     + "', account_address = '" + address + "', account_phone = '" + phone + "' WHERE account_id = " + accountID;
                 var cmd = new SqlCommand(_sql, cn);
 
@@ -191,7 +214,7 @@ namespace NetworkCommunicationMonitor.Models
             return account;
         }
 
-        public static void chargeAccount(double amount, double balance, int accountNumber)
+        public static void chargeAccount(Transaction transaction, double balance, int accountNumber)
         {
             var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
             using (cn)
@@ -200,13 +223,37 @@ namespace NetworkCommunicationMonitor.Models
                 string _sql = @"UPDATE Account SET account_balance = @AccountBalance WHERE account_id = @AccountNumber";
                 var cmd = new SqlCommand(_sql, cn);
 
-                cmd.Parameters.Add("@AccountBalance", SqlDbType.Float).Value = amount + balance;
+                if (transaction.category.Equals("Credit"))
+                {
+                    cmd.Parameters.Add("@AccountBalance", SqlDbType.Float).Value = balance + transaction.amount;
+                }
+                else
+                {
+                    cmd.Parameters.Add("@AccountBalance", SqlDbType.Float).Value = balance - transaction.amount;
+                }
+
                 cmd.Parameters.Add("@AccountNumber", SqlDbType.Int).Value = accountNumber;
 
                 cn.Open();
                 cmd.ExecuteNonQuery();
                 cn.Close();
             }
+        }
+
+        public static string formatPhoneNumber(string phoneNumber)
+        {
+            string formattedNumber = "(";
+
+            for (int i = 0; i < phoneNumber.Length; i++)
+            {
+                formattedNumber = formattedNumber + phoneNumber[i];
+                if (i == 2)
+                    formattedNumber = formattedNumber + ") ";
+                else if (i == 5)
+                    formattedNumber = formattedNumber + "-";
+            }
+
+            return formattedNumber;
         }
     }
 }

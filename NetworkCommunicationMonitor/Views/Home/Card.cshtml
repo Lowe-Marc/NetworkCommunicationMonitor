@@ -24,8 +24,6 @@
     <link rel="stylesheet" href="~/assets/css/animate.css">
     <!-- Daterange Picker -->
     <link rel="stylesheet" href="~/assets/plugins/daterangepicker/daterangepicker-bs3.css">
-    <!-- Calendar demo -->
-    <link rel="stylesheet" href="~/assets/css/clndr.css">
     <!-- Switchery -->
     <link rel="stylesheet" href="~/assets/plugins/switchery/switchery.min.css">
     <!-- Custom styles for this theme -->
@@ -208,7 +206,7 @@
                             <div class="panel-heading">
                                 <h3 class="panel-title">Card Tables</h3>
                                 <div class="actions pull-right">
-                                    <i class="fa fa-plus"  title="add" data-toggle="modal" data-target="#add-card"></i>
+                                    <i class="fa fa-plus" title="add" data-toggle="modal" data-target="#add-card"></i>
                                     <i class="fa fa-trash-o" title="delete" data-toggle="modal" data-target="#delete-card"></i>
                                     <i class="fa fa-pencil" title="edit" data-toggle="modal" data-target="#edit-card"></i>
                                     <i class="fa fa-expand"></i>
@@ -260,13 +258,13 @@
         <!--main content end-->
     </section>
     <!--delete modal start-->
-    @using (Html.BeginForm("DeleteCard", "Home", FormMethod.Post))
-    {
+    @*@using (Html.BeginForm("DeleteCard", "Home", FormMethod.Post))
+    {*@
         <div class="modal fade" id="delete-card" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <button type="button" id="close-delete-card" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h1 class="modal-title" id="myModalLabel">Delete</h1>
                     </div>
                     <div class="modal-body">
@@ -277,21 +275,24 @@
                                         <div class="panel panel-default">
                                             <div class="panel-body">
                                                 <div class="form-horizontal  col-sm-offset-2">
-                                                    <div class="form-group">
+                                                    <div class="form-group" id="card-number">
                                                         <label class="col-sm-4 control-label">Card number</label>
                                                         <div class="col-sm-7">
-                                                            <input type="text" class="form-control" name="delete_cardNumber" placeholder="Card number" maxlength="19" onkeyup="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,'')"/>
+                                                            <input type="text" class="form-control" id="delete_cardNumber" name="delete_cardNumber" placeholder="Card number" maxlength="19" onkeyup="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,'')" />
                                                         </div>
                                                     </div>
-                                                    <div class="form-group">
+                                                    <div class="form-group" id="confirm-card-number">
                                                         <label class="col-sm-4 control-label">Confirm Card Number</label>
                                                         <div class="col-sm-7">
-                                                            <input type="text" class="form-control" name="confirm_delete_cardNumber" placeholder="Confirm card number" maxlength="19" onkeyup="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,'')"/>
+                                                            <input type="text" class="form-control" id="confirm_delete_cardNumber" name="confirm_delete_cardNumber" placeholder="Confirm card number" maxlength="19" onkeyup="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,'')" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
-                                                        <input type="checkbox" class="col-sm-2" id="confirmation-checkbox" required="required" style="min-width:20px;min-height:20px;margin:20px 0 0 10%;" />
-                                                        <label class="col-sm-8" for="confirmation-checkbox">I understand I am permenently removing the card with this number from the system.</label>
+                                                        <input type="checkbox" class="col-sm-2" id="confirmation-checkDelete" required="required" style="min-width:20px;min-height:20px;margin:20px 0 0 10%;" />
+                                                        <label class="col-sm-8" for="confirmation-checkDelete">I understand I am permenently removing the card with this number from the system.</label>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div id="delete-card-check"></div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -303,12 +304,12 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                        <input type="submit" class="btn btn-danger" value="Delete" />
+                        <input type="button" class="btn btn-danger" value="Delete" onclick="deletCard()"/>
                     </div>
                 </div>
             </div>
         </div>
-    }
+    @*}*@
     <!--delete modal end-->
     <!--add modal start-->
     @using (Html.BeginForm("AddCard", "Home", FormMethod.Post))
@@ -337,25 +338,25 @@
                                                     <div class="form-group">
                                                         <label class="col-sm-4 control-label">Card number</label>
                                                         <div class="col-sm-6">
-                                                            <input type="text" class="form-control" name="number" placeholder="Card number" required=""/>
+                                                            <input type="text" class="form-control" name="number" placeholder="Card number" required="" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="col-sm-4 control-label">Full name</label>
                                                         <div class="col-sm-6">
-                                                            <input type="text" class="form-control" name="name" placeholder="Full name"  minlength="4" maxlength="30" required=""/>
+                                                            <input type="text" class="form-control" name="name" placeholder="Full name" minlength="4" maxlength="30" required="" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="col-sm-4 control-label">Expiry</label>
                                                         <div class="col-sm-6">
-                                                            <input type="text" class="form-control" name="expiry" style="margin:0;" placeholder="MM/YYYY" required=""/>
+                                                            <input type="text" class="form-control" name="expiry" style="margin:0;" placeholder="MM/YYYY" required="" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="col-sm-4 control-label">CVC</label>
                                                         <div class="col-sm-6">
-                                                            <input type="text" class="form-control" name="cvc" style="margin:0 0 0 -4px;" placeholder="CVC" maxlength="3" required=""/>
+                                                            <input type="text" class="form-control" name="cvc" style="margin:0 0 0 -4px;" placeholder="CVC" maxlength="3" required="" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
@@ -412,19 +413,19 @@
                                                     <div class="form-group">
                                                         <label class="col-sm-4 control-label">Card number</label>
                                                         <div class="col-sm-6">
-                                                            <input type="text" class="form-control" name="cardNumber" maxlength="19" placeholder="Card number" onkeyup="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,'')"/>
+                                                            <input type="text" class="form-control" name="cardNumber" maxlength="19" placeholder="Card number" onkeyup="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,'')" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="col-sm-4 control-label">Last name</label>
                                                         <div class="col-sm-6">
-                                                            <input type="text" class="form-control" id="edit-lastname" name="firstName" placeholder="First name"  minlength="2" maxlength="15"/>
+                                                            <input type="text" class="form-control" id="edit-lastname" name="firstName" placeholder="First name" minlength="2" maxlength="15" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="col-sm-4 control-label">First name</label>
                                                         <div class="col-sm-6">
-                                                            <input type="text" class="form-control" id="edit-firstname" name="lastName" placeholder="Last name"  minlength="2" maxlength="15"/>
+                                                            <input type="text" class="form-control" id="edit-firstname" name="lastName" placeholder="Last name" minlength="2" maxlength="15" />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -555,6 +556,7 @@
     <script src="~/assets/plugins/pace/pace.min.js"></script>
     <script src="~/assets/plugins/fullscreen/jquery.fullscreen-min.js"></script>
     <script src="~/assets/js/src/app.js"></script>
+    <script src="~/js/validate-input.js"></script>
     <!--Page Leve JS -->
     <script src="~/assets/plugins/dataTables/js/jquery.dataTables.js"></script>
     <script src="~/assets/plugins/dataTables/js/dataTables.bootstrap.js"></script>

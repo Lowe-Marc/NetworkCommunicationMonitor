@@ -58,6 +58,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
@@ -709,6 +710,8 @@
     <Content Include="img\monitor.ico" />
     <Content Include="img\monitoring-white.svg" />
     <Content Include="img\monitoring-black.svg" />
+    <Content Include="js\bootstrap-datepicker.min.js" />
+    <Content Include="js\validate-input.js" />
     <Content Include="js\inputmask.binding.js" />
     <Content Include="js\bg.js" />
     <Content Include="js\card.js" />

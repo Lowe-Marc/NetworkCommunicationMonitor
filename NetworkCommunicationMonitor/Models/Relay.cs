@@ -24,7 +24,7 @@ namespace NetworkCommunicationMonitor.Models
 
         public static readonly int RELAYGROUP = 2;
         public static readonly int PROCESSINGCENTERGROUP = 0;
-        public static readonly string PROCESSINGCENTERIP = "192.168.0.1";
+        public static readonly string PROCESSINGCENTERIP = "192.168.0.200";
 
         public static List<Relay> getRelays()
         {
@@ -188,6 +188,23 @@ namespace NetworkCommunicationMonitor.Models
             }
 
             return region;
+        }
+
+        public static void changeLimit(string ipAddress, int newlimit)
+        {
+            var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
+            using (cn)
+            {
+                string _sql = @"UPDATE RelayStation SET queueLimit = @QueueLimit WHERE station_id = @IpAddress";
+                var cmd = new SqlCommand(_sql, cn);
+
+                cmd.Parameters.Add("@QueueLimit", SqlDbType.Int).Value = newlimit;
+                cmd.Parameters.Add("@IpAddress", SqlDbType.VarChar).Value = ipAddress;
+
+                cn.Open();
+                cmd.ExecuteNonQuery();
+                cn.Close();
+            }
         }
     }
 }
