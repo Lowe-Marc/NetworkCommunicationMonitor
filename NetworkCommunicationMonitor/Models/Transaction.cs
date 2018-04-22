@@ -98,8 +98,10 @@ namespace NetworkCommunicationMonitor.Models
             return numTransactions;
         }
 
-        public static Boolean addTransaction(string cardNumber, string storeIP, DateTime transactionDate, double transactionAmount, string transactionCategory, bool transactionSelf)
+        public static string addTransaction(string cardNumber, string storeIP, DateTime transactionDate, double transactionAmount, string transactionCategory, bool transactionSelf)
         {
+            string result = "Transaction successfully created";
+
             var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
             var cn1 = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
             var cn2 = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
@@ -156,8 +158,6 @@ namespace NetworkCommunicationMonitor.Models
                     cn.Open();
                     cmd.ExecuteNonQuery();
                     cn.Close();
-                    MessageBox.Show("Transaction added successfully!");
-                    return true;
                 }
             }
             else if (transactionYear == year1)
@@ -193,23 +193,20 @@ namespace NetworkCommunicationMonitor.Models
                         cn.Open();
                         cmd.ExecuteNonQuery();
                         cn.Close();
-                        MessageBox.Show("Transaction added successfully!");
-                        return true;
                     }
 
                 }
                 else
                 {
-                    MessageBox.Show("Card expired!");
-                    return false;
+                    result = "Card expired!";
                 }
             }
             else
             {
-                MessageBox.Show("Card expired!");
-                return false;
+                result = "Card expired!";
             }
 
+            return result;
         }
 
         // Note, it is possible for there to be transactions with identical details in the database, but they will have different IDs.

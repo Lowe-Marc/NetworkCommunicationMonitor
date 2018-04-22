@@ -10,5 +10,6 @@ namespace NetworkCommunicationMonitor.Models
         public static int[] questionIDs = new int[3];
         public static Stack<string> questions = new Stack<string>();
         public static Stack<string> correctAnswers = new Stack<string>();
+        
     }
 }

@@ -126,8 +126,10 @@ namespace NetworkCommunicationMonitor.Models
             return numCards;
         }
 
-        public static void deleteCard(string cardID)
+        public static string deleteCard(string cardID)
         {
+            string result = "Card successfully deleted";
+
             var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
             var cn1 = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
             var cn2 = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
@@ -161,15 +163,14 @@ namespace NetworkCommunicationMonitor.Models
                         cmd.ExecuteNonQuery();
                         cn.Close();
                     }
-                    MessageBox.Show("'"+cardID+"' deleted successfully! ");
                 }
                 else
                 {
-                    MessageBox.Show("The last card of an account cannot be deleted!");
+                    result = "The last card of an account cannot be deleted!";
                     Console.WriteLine("The last card cannot be deleted!");
                 }
             }
-
+            return result;
         }
 
         public static void deleteCardsForAccount(int accountID)

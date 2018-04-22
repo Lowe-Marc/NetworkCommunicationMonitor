@@ -120,8 +120,10 @@ namespace NetworkCommunicationMonitor.Models
             return accountID;
         }
 
-        public static void deleteAccount(int accountID)
+        public static string deleteAccount(int accountID)
         {
+            string result = "Account successfully deleted";
+
             var cn1 = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
             using (cn1)
             {
@@ -144,14 +146,14 @@ namespace NetworkCommunicationMonitor.Models
                         cmd.ExecuteNonQuery();
                         cn.Close();
                     }
-                    MessageBox.Show(" Account '" + accountID + "' deleted successfully! ");
                 }
                 else
                 {
                     Console.WriteLine("This account cannot be deleted wiht non-zero balance!");
-                    MessageBox.Show("This account cannot be deleted wiht non-zero balance!");
+                    result = "This account cannot be deleted with non-zero balance!";
                 }
             }
+            return result;
 
         }
 

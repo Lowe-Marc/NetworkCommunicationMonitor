@@ -63,8 +63,10 @@ namespace NetworkCommunicationMonitor.Models
         }
 
 
-        public static void addConnection(int weight, string ipOne, string ipTwo)
+        public static string addConnection(int weight, string ipOne, string ipTwo)
         {
+            string result = "";
+
             var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
             var cn1 = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
             var cn2 = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
@@ -103,7 +105,7 @@ namespace NetworkCommunicationMonitor.Models
 
                 if(amount3 == 1 || amount4 == 1)
                 {
-                    MessageBox.Show("This connection already existed!");
+                    result = "This connection already exists";
                 }
                 else
                 {
@@ -202,7 +204,7 @@ namespace NetworkCommunicationMonitor.Models
                     if (amount1 == 1 && amount2 == 1)
                     {
                         Console.WriteLine("Store cannot be connected to store!");
-                        MessageBox.Show("Store cannot be connected to store!");
+                        result = "Store cannot be connected to store!";
                     }
                     else
                     {
@@ -218,13 +220,13 @@ namespace NetworkCommunicationMonitor.Models
                             cn.Close();
 
                         }
-                        MessageBox.Show("Connection added successfully! ");
+                        result = "Connection added successfully!";
                     }
                 }
                 else
                 {
                     Console.WriteLine("It cannot be connected to relaystation or store in other region!");
-                    MessageBox.Show("It cannot be connected to relaystation or store in other region!");
+                    result = "Only gateways may make connection across regions.";
                 }
 
                 }
@@ -232,9 +234,10 @@ namespace NetworkCommunicationMonitor.Models
             else
             {
                 Console.WriteLine("It cannot be connected to itself!");
-                MessageBox.Show("It cannot be connected to itself!");
+                result = "A store/relay cannot be connected to itself.";
             }
 
+            return result;
         }
     }
 }
