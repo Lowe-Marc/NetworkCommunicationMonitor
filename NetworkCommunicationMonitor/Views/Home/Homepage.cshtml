@@ -901,8 +901,49 @@
             }
 
             //This will make highlight all elements with a transaction in it when paused
-            function handlePauseStateDisplay(element) {
+            function handlePauseStateDisplay() {
+
+                currentAnimationSet.forEach(function (animation) {
+                    var element = animation['node'];
+
+                    if (animationsArePaused) {
+                        console.log("state: " + animation['state'])
+                        var state = animation['state']
+                        if (animation['state'] == 1) {
+                            animation.progress(0.99).apply().pause();
+                            currentAnimationSet.delete(animation)
+                        } else {
+                            animation.progress(0.0).apply().pause();
+                            currentAnimationSet.delete(animation)
+                        }
+                    }
+
+                })
+
+                if (!animationsArePaused) {
+                    setTimeout(function () {
+                        playAnimations();
+                    }, 750)
+                }
+
+            }
+
+            //Currently not being used, majorly bugged
+            function handleElementPause(animation) {
+                
+                var element = animation['node']
                 if (animationsArePaused) {
+                    console.log("pausing - state == 0: " + (animation['state'] == 0))
+                    var state = animation['state']
+                    if (animation['state'] == 1) {
+                        animation.progress(0.99).apply().pause();
+                        currentAnimationSet.delete(animation)
+                    } else {
+                        animation.progress(0.0).apply().pause();
+                        currentAnimationSet.delete(animation)
+                    }
+
+                    animationsArePaused = false;
                     element.animation({
                         style: {
                             'background-color': animationColor,
@@ -910,18 +951,22 @@
                         },
                         duration: 500
                     }).play();
+
+
                 } else {
+
                     console.log("playing back")
-                    element.animation({
-                        style: {
-                            'background-color': relayColor,
-                            'line-color': connectionColor
-                        },
-                        duration: 500
+                    console.log("element");
+                        element.animation({
+                            style: {
+                                'background-color': relayColor,
+                                'line-color': connectionColor
+                            },
+                            duration: 500
                     }).play();
+
                 }
             }
-
 
             /*=====================================================================================================
                                                         Core Functions
@@ -1107,6 +1152,7 @@
                 var firstInQueue = (elementQueue[0] == animation);
                 var nodeIsAlreadyAnimating = animation['node'].animated()
                 if (!animationsArePaused && firstInQueue && !nodeIsAlreadyAnimating) {
+                    animation['state'] = 0;
                     playAnimationWhenReady(animation);
                     currentAnimationSet.add(animation);
                 } else {
@@ -1115,6 +1161,7 @@
 
                 //Setup what happens next
                 animation.promise('completed').then(function () {
+                    animation['state'] = 1;
                     animation
                         .reverse()
                         .rewind()
@@ -1227,15 +1274,12 @@
             function pauseOrPlayAnimations(node) {
                 if (animationsArePaused) {
                     animationsArePaused = false;
-                    playAnimations();
+                    handlePauseStateDisplay();
                     $("#play").addClass('hidden');
                     $("#pause").removeClass('hidden');
                 } else {
                     animationsArePaused = true;
-                    currentAnimationSet.forEach(function (animation) {
-                        animation.progress(0.0).apply().pause();
-                    })
-                    //queueAnimationSet.forEach(function (animation) { animation.pause() })
+                    handlePauseStateDisplay();
                     $("#pause").addClass('hidden');
                     $("#play").removeClass('hidden');
                 }
