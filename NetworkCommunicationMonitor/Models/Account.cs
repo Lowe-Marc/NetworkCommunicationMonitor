@@ -33,7 +33,7 @@ namespace NetworkCommunicationMonitor.Models
         public static List<Account> getAccounts()
         {
             List<Account> accounts = new List<Account>();
-            
+
             var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
             using (cn)
             {
@@ -47,7 +47,7 @@ namespace NetworkCommunicationMonitor.Models
                 questionTable.Load(cmd.ExecuteReader());
                 rows = questionTable.Rows;
 
-                foreach (DataRow row in rows )
+                foreach (DataRow row in rows)
                 {
                     Account tempAccount = new Account();
                     int accountNumber = Convert.ToInt32(row["account_id"]);
@@ -102,7 +102,7 @@ namespace NetworkCommunicationMonitor.Models
             {
                 DataTable questionTable = new DataTable();
                 DataRowCollection rows;
-                string _sql = @"SELECT account_id FROM Account WHERE account_holder_firstname = '" + firstName + "' AND account_holder_lastname = '" + lastName 
+                string _sql = @"SELECT account_id FROM Account WHERE account_holder_firstname = '" + firstName + "' AND account_holder_lastname = '" + lastName
                     + "' AND account_address = '" + address + "' AND account_phone = '" + phone + "' AND account_limit = " + limit + " AND account_balance = " + balance;
                 var cmd = new SqlCommand(_sql, cn);
 
@@ -122,7 +122,7 @@ namespace NetworkCommunicationMonitor.Models
 
         public static string deleteAccount(int accountID)
         {
-            string result = "Account successfully deleted";
+            string result = "Account " + accountID + " successfully deleted";
 
             var cn1 = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
             using (cn1)
@@ -150,7 +150,7 @@ namespace NetworkCommunicationMonitor.Models
                 else
                 {
                     Console.WriteLine("This account cannot be deleted wiht non-zero balance!");
-                    result = "This account cannot be deleted with non-zero balance!";
+                    result = "Account " + accountID  + " cannot be deleted with non-zero balance!";
                 }
             }
             return result;
@@ -177,7 +177,7 @@ namespace NetworkCommunicationMonitor.Models
             var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
             using (cn)
             {
-                string _sql = @"UPDATE Account SET account_holder_firstname = '" + firstname + "',  account_holder_lastname = '" + lastname 
+                string _sql = @"UPDATE Account SET account_holder_firstname = '" + firstname + "',  account_holder_lastname = '" + lastname
                     + "', account_address = '" + address + "', account_phone = '" + phone + "' WHERE account_id = " + accountID;
                 var cmd = new SqlCommand(_sql, cn);
 
@@ -226,11 +226,12 @@ namespace NetworkCommunicationMonitor.Models
                 if (transaction.category.Equals("Credit"))
                 {
                     cmd.Parameters.Add("@AccountBalance", SqlDbType.Float).Value = balance + transaction.amount;
-                } else
+                }
+                else
                 {
                     cmd.Parameters.Add("@AccountBalance", SqlDbType.Float).Value = balance - transaction.amount;
                 }
-                
+
                 cmd.Parameters.Add("@AccountNumber", SqlDbType.Int).Value = accountNumber;
 
                 cn.Open();

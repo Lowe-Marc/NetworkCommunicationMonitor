@@ -157,6 +157,7 @@ INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weig
 INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.9', '192.168.0.127', 1, 5);
 INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.9', '192.168.0.128', 1, 3);
 INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.9', '192.168.0.129', 1, 4);
+INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.9', '192.168.0.130', 1, 3);
 INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.10', '192.168.0.128', 1, 3);
 INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.10', '192.168.0.130', 1, 3);
 INSERT INTO Connection(station_one_id, station_two_id, connection_isActive, weight) VALUES ('192.168.0.10', '192.168.0.131', 1, 5);

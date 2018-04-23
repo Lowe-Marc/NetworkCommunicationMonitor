@@ -710,6 +710,8 @@
     <Content Include="img\monitor.ico" />
     <Content Include="img\monitoring-white.svg" />
     <Content Include="img\monitoring-black.svg" />
+    <Content Include="js\bootstrap-datepicker.min.js" />
+    <Content Include="js\validate-input.js" />
     <Content Include="js\inputmask.binding.js" />
     <Content Include="js\bg.js" />
     <Content Include="js\card.js" />

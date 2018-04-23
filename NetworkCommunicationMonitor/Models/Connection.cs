@@ -90,7 +90,7 @@ namespace NetworkCommunicationMonitor.Models
             {
                 using (cn9)
                 {
-                    string _sql9 = @"SELECT Count(station_one_id) From Connection WHERE station_one_id = '"+ipOne+"' AND station_two_id = '"+ipTwo+"'";
+                    string _sql9 = @"SELECT Count(station_one_id) From Connection WHERE station_one_id = '" + ipOne + "' AND station_two_id = '" + ipTwo + "'";
                     var cmd9 = new SqlCommand(_sql9, cn9);
                     cn9.Open();
                     amount3 = (int)cmd9.ExecuteScalar();
@@ -103,131 +103,131 @@ namespace NetworkCommunicationMonitor.Models
                     amount4 = (int)cmd10.ExecuteScalar();
                 }
 
-                if(amount3 == 1 || amount4 == 1)
+                if (amount3 == 1 || amount4 == 1)
                 {
                     result = "This connection already exists";
                 }
                 else
                 {
 
-                using (cn1)
-                {
-                    string _sql1 = @"SELECT Count(store_id) FROM Store WHERE store_id = '" + ipOne + "'";
-                    var cmd1 = new SqlCommand(_sql1, cn1);
-                    cn1.Open();
-                    amount1 = (int)cmd1.ExecuteScalar();
-                    if (amount1 == 1)
+                    using (cn1)
                     {
-                        using (cn2)
+                        string _sql1 = @"SELECT Count(store_id) FROM Store WHERE store_id = '" + ipOne + "'";
+                        var cmd1 = new SqlCommand(_sql1, cn1);
+                        cn1.Open();
+                        amount1 = (int)cmd1.ExecuteScalar();
+                        if (amount1 == 1)
                         {
-                            string _sql2 = @"SELECT region FROM Store WHERE store_id = '" + ipOne + "'";
-                            var cmd2 = new SqlCommand(_sql2, cn2);
-                            cn2.Open();
-                            region1 = (string)cmd2.ExecuteScalar();
+                            using (cn2)
+                            {
+                                string _sql2 = @"SELECT region FROM Store WHERE store_id = '" + ipOne + "'";
+                                var cmd2 = new SqlCommand(_sql2, cn2);
+                                cn2.Open();
+                                region1 = (string)cmd2.ExecuteScalar();
+                            }
+                        }
+                        else
+                        {
+                            using (cn3)
+                            {
+                                string _sql3 = @"SELECT region FROM RelayStation WHERE station_id = '" + ipOne + "'";
+                                var cmd3 = new SqlCommand(_sql3, cn3);
+                                cn3.Open();
+                                region1 = (string)cmd3.ExecuteScalar();
+                            }
+                        }
+                    }
+
+                    using (cn4)
+                    {
+                        string _sql4 = @"SELECT Count(store_id) FROM Store WHERE store_id = '" + ipTwo + "'";
+                        var cmd4 = new SqlCommand(_sql4, cn4);
+                        cn4.Open();
+                        amount2 = (int)cmd4.ExecuteScalar();
+                        if (amount2 == 1)
+                        {
+                            using (cn5)
+                            {
+                                string _sql5 = @"SELECT region FROM Store WHERE store_id = '" + ipTwo + "'";
+                                var cmd5 = new SqlCommand(_sql5, cn5);
+                                cn5.Open();
+                                region2 = (string)cmd5.ExecuteScalar();
+                            }
+                        }
+
+                        else
+                        {
+                            using (cn6)
+                            {
+                                string _sql6 = @"SELECT region FROM RelayStation WHERE station_id = '" + ipTwo + "'";
+                                var cmd6 = new SqlCommand(_sql6, cn6);
+                                cn6.Open();
+                                region2 = (string)cmd6.ExecuteScalar();
+                            }
+
+                        }
+                    }
+
+                    if (amount1 != 1)
+                    {
+                        using (cn7)
+                        {
+                            string _sql7 = @"SELECT isGateway FROM RelayStation WHERE station_id = '" + ipOne + "'";
+                            var cmd7 = new SqlCommand(_sql7, cn7);
+                            cn7.Open();
+                            isGateway1 = (bool)cmd7.ExecuteScalar();
                         }
                     }
                     else
                     {
-                        using (cn3)
+                        isGateway1 = false;
+                    }
+
+                    if (amount2 != 1)
+                    {
+                        using (cn8)
                         {
-                            string _sql3 = @"SELECT region FROM RelayStation WHERE station_id = '" + ipOne + "'";
-                            var cmd3 = new SqlCommand(_sql3, cn3);
-                            cn3.Open();
-                            region1 = (string)cmd3.ExecuteScalar();
+                            string _sql8 = @"SELECT isGateway FROM RelayStation WHERE station_id = '" + ipTwo + "'";
+                            var cmd8 = new SqlCommand(_sql8, cn8);
+                            cn8.Open();
+                            isGateway2 = (bool)cmd8.ExecuteScalar();
                         }
-                    }
-                }
-
-                using (cn4)
-                {
-                    string _sql4 = @"SELECT Count(store_id) FROM Store WHERE store_id = '" + ipTwo + "'";
-                    var cmd4 = new SqlCommand(_sql4, cn4);
-                    cn4.Open();
-                    amount2 = (int)cmd4.ExecuteScalar();
-                    if (amount2 == 1)
-                    {
-                        using (cn5)
-                        {
-                            string _sql5 = @"SELECT region FROM Store WHERE store_id = '" + ipTwo + "'";
-                            var cmd5 = new SqlCommand(_sql5, cn5);
-                            cn5.Open();
-                            region2 = (string)cmd5.ExecuteScalar();
-                        }
-                    }
-
-                    else
-                    {
-                        using (cn6)
-                        {
-                            string _sql6 = @"SELECT region FROM RelayStation WHERE station_id = '" + ipTwo + "'";
-                            var cmd6 = new SqlCommand(_sql6, cn6);
-                            cn6.Open();
-                            region2 = (string)cmd6.ExecuteScalar();
-                        }
-
-                    }
-                }
-
-                if (amount1 != 1)
-                {
-                    using (cn7)
-                    {
-                        string _sql7 = @"SELECT isGateway FROM RelayStation WHERE station_id = '" + ipOne + "'";
-                        var cmd7 = new SqlCommand(_sql7, cn7);
-                        cn7.Open();
-                        isGateway1 = (bool)cmd7.ExecuteScalar();
-                    }
-                }
-                else
-                {
-                    isGateway1 = false;
-                }
-
-                if (amount2 != 1)
-                {
-                    using (cn8)
-                    {
-                        string _sql8 = @"SELECT isGateway FROM RelayStation WHERE station_id = '" + ipTwo + "'";
-                        var cmd8 = new SqlCommand(_sql8, cn8);
-                        cn8.Open();
-                        isGateway2 = (bool)cmd8.ExecuteScalar();
-                    }
-                }
-                else
-                {
-                    isGateway2 = false;
-                }
-
-
-                if (region1 == region2 || (isGateway1 == true && isGateway2 == true))
-                {
-                    if (amount1 == 1 && amount2 == 1)
-                    {
-                        Console.WriteLine("Store cannot be connected to store!");
-                        result = "Store cannot be connected to store!";
                     }
                     else
                     {
-
-                        using (cn)
-                        {
-                            string _sql = @"INSERT INTO Connection (station_one_id, station_two_id, connection_isActive, weight) VALUES('" + ipOne + "', '" + ipTwo + "', '" + 1 + "', '" + weight + "')";
-                            var cmd = new SqlCommand(_sql, cn);
-
-
-                            cn.Open();
-                            cmd.ExecuteNonQuery();
-                            cn.Close();
-
-                        }
-                        result = "Connection added successfully!";
+                        isGateway2 = false;
                     }
-                }
-                else
-                {
-                    Console.WriteLine("It cannot be connected to relaystation or store in other region!");
-                    result = "Only gateways may make connection across regions.";
-                }
+
+
+                    if (region1 == region2 || (isGateway1 == true && isGateway2 == true))
+                    {
+                        if (amount1 == 1 && amount2 == 1)
+                        {
+                            Console.WriteLine("Store cannot be connected to store!");
+                            result = "Store cannot be connected to store!";
+                        }
+                        else
+                        {
+
+                            using (cn)
+                            {
+                                string _sql = @"INSERT INTO Connection (station_one_id, station_two_id, connection_isActive, weight) VALUES('" + ipOne + "', '" + ipTwo + "', '" + 1 + "', '" + weight + "')";
+                                var cmd = new SqlCommand(_sql, cn);
+
+
+                                cn.Open();
+                                cmd.ExecuteNonQuery();
+                                cn.Close();
+
+                            }
+                            result = "Connection added successfully!";
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("It cannot be connected to relaystation or store in other region!");
+                        result = "Only gateways may make connection across regions.";
+                    }
 
                 }
             }

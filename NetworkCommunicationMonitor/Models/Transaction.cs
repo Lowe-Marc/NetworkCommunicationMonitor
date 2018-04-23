@@ -198,12 +198,12 @@ namespace NetworkCommunicationMonitor.Models
                 }
                 else
                 {
-                    result = "Card expired!";
+                    result = "Card expired, please select another card";
                 }
             }
             else
             {
-                result = "Card expired!";
+                result = "Card expired, please select another card";
             }
 
             return result;
@@ -231,11 +231,12 @@ namespace NetworkCommunicationMonitor.Models
                 if (transactionSelf)
                 {
                     cmd.Parameters.Add("@TransactionSelf", SqlDbType.Bit).Value = 1;
-                } else
+                }
+                else
                 {
                     cmd.Parameters.Add("@TransactionSelf", SqlDbType.Bit).Value = 0;
                 }
-                
+
 
                 cn.Open();
 

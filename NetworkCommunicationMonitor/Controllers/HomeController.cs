@@ -28,7 +28,7 @@ namespace NetworkCommunicationMonitor.Controllers
         public ActionResult Homepage()
         {
             if (Session["username"] == null)
-                return RedirectToAction("Index","Home");
+                return RedirectToAction("Index", "Home");
             else
                 Session["username"] = Session["username"];
             setViewDataDefaults();
@@ -165,8 +165,9 @@ namespace NetworkCommunicationMonitor.Controllers
         {
             setViewDataDefaults();
 
-            return NetworkCommunicationMonitor.Models.Account.deleteAccount(Convert.ToInt32(collection["accountID"]));
+            int accountId = Convert.ToInt32(collection["accountID"]);
 
+            return NetworkCommunicationMonitor.Models.Account.deleteAccount(accountId);
             //return RedirectToAction("Account", "Home");
         }
 
@@ -215,8 +216,9 @@ namespace NetworkCommunicationMonitor.Controllers
         {
             setViewDataDefaults();
 
-            return NetworkCommunicationMonitor.Models.Card.deleteCard(Convert.ToString(collection["delete_cardNumber"]));
+            string cardNumber = Convert.ToString(collection["cardNumber"]);
 
+            return NetworkCommunicationMonitor.Models.Card.deleteCard(cardNumber);
             //return RedirectToAction("Card", "Home");
         }
 
@@ -268,7 +270,7 @@ namespace NetworkCommunicationMonitor.Controllers
         public ActionResult AddStore(FormCollection collection)
         {
             setViewDataDefaults();
-            
+
             int weight = Convert.ToInt32(collection["storeWeight"]);
             string storeName = Convert.ToString(collection["storeName"]);
             string ipAddress = Convert.ToString(collection["storeIpAddress"]);
@@ -283,7 +285,6 @@ namespace NetworkCommunicationMonitor.Controllers
         {
             setViewDataDefaults();
 
-            
             int weight = Convert.ToInt32(collection["connectionWeight"]);
             string ipOne = Convert.ToString(collection["ipOne"]);
             string ipTwo = Convert.ToString(collection["ipTwo"]);
@@ -331,7 +332,7 @@ namespace NetworkCommunicationMonitor.Controllers
         {
             Transaction transaction = new Transaction();
             transaction.transactionID = Convert.ToInt32(collection["transactionID"]);
-            transaction.cardID = Convert.ToString(collection["cardNumber"]).Replace(" ","");
+            transaction.cardID = Convert.ToString(collection["cardNumber"]).Replace(" ", "");
             transaction.storeID = Convert.ToString(collection["storeIP"]);
             transaction.transactionDate = Convert.ToDateTime(collection["transactionDate"]);
             transaction.amount = Convert.ToDouble(collection["amount"]);
