@@ -22,6 +22,7 @@ namespace NetworkCommunicationMonitor.Models
         public int distance;
         public int value;
         public int weight;
+        public static readonly string PROCESSINGCENTERIP = "192.168.0.200";
 
         public Connection()
         {
@@ -85,7 +86,7 @@ namespace NetworkCommunicationMonitor.Models
             bool isGateway1, isGateway2;
             int amount3, amount4;
 
-            if (ipOne != ipTwo)
+            if (ipOne != ipTwo && !ipOne.Equals(PROCESSINGCENTERIP) && !ipTwo.Equals(PROCESSINGCENTERIP))
             {
                 using (cn9)
                 {
@@ -108,7 +109,6 @@ namespace NetworkCommunicationMonitor.Models
                 }
                 else
                 {
-
                     using (cn1)
                     {
                         string _sql1 = @"SELECT Count(store_id) FROM Store WHERE store_id = '" + ipOne + "'";
@@ -223,14 +223,29 @@ namespace NetworkCommunicationMonitor.Models
                     }
                     else
                     {
-                        result = "Only gateways may make connection across regions.";
+                        result = "Only gateways can make connection across regions.";
                     }
 
                 }
             }
+            else if (ipOne.Equals(PROCESSINGCENTERIP) || ipTwo.Equals(PROCESSINGCENTERIP))
+            {
+                using (cn)
+                {
+                    string _sql = @"INSERT INTO Connection (station_one_id, station_two_id, connection_isActive, weight) VALUES('" + ipOne + "', '" + ipTwo + "', '" + 1 + "', '" + weight + "')";
+                    var cmd = new SqlCommand(_sql, cn);
+
+
+                    cn.Open();
+                    cmd.ExecuteNonQuery();
+                    cn.Close();
+
+                }
+                result = "Connection added successfully!";
+            }
             else
             {
-                result = "A store/relay cannot be connected to itself.";
+                result = "A node cannot be connected to itself.";
             }
 
             return result;

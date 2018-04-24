@@ -26,7 +26,7 @@ function submitStore() {
             data: store,
             success: (result) => {
                 alert(result);
-                if (result === "Store added successfully!") {
+                if (result == "Store added successfully!") {
                     $('#close-store').click();
                     window.location.reload();
                 }
@@ -59,7 +59,7 @@ function submitConnection() {
             data: connection,
             success: (result) => {
                 alert(result);
-                if (result === "Connection added successfully!") {
+                if (result == "Connection added successfully!") {
                     $('#close-connection').click();
                     window.location.reload();
                 }
@@ -92,8 +92,6 @@ function addRegion() {
     region.storeIP = storeIP;
     region.storeName = storeName;
 
-    console.log("region:", region)
-
     if (!regionName) {
         addRegionErrorhandler($('#regionName-form'));
     } else if (!gatewayIP) {
@@ -113,18 +111,20 @@ function addRegion() {
     } else if (!storeWeight) {
         addRegionErrorhandler($('#srWeight-form'));
     } else {
+        addRegionErrorhandler();
         //Database insertion
         $.ajax({
             method: "POST",
             url: "/Home/AddRegion",
             data: region,
             success: (result) => {
-                if (result.includes("successfully")) {
+                if (result.includes('successfully')) {
+                    alert(result);
                     $('#close-region').click();
                     window.location.reload();
-                    result = "Region " + regionName + " successfully added";
+                } else {
+                    alert(result);
                 }
-                alert(result);
             },
             error: (result) => {
                 alert("Error on ajax request");
@@ -169,7 +169,7 @@ function deleteAccount() {
             data: { accountID: accountID },
             success: (result) => {
                 alert(result);
-                if (result === "Account " + accountID + " successfully deleted") {
+                if (result == "Account " + accountID + " successfully deleted") {
                     $('#close-delete-card').click();
                     window.location.reload();
                 }
@@ -219,7 +219,7 @@ function deletCard() {
             data: { cardNumber: cardNumber },
             success: (result) => {
                 alert(result);
-                if (result === "Card " + cardNumber + " successfully deleted") {
+                if (result == "Card " + cardNumber + " successfully deleted") {
                     $('#close-delete-card').click();
                     window.location.reload();
                 }

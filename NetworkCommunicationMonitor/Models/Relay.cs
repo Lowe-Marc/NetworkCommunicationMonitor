@@ -134,7 +134,7 @@ namespace NetworkCommunicationMonitor.Models
             return numRelays-1;
         }
 
-        public static string addRelay(int weight, string ipAddress, string ipConnectedTo, bool isGateway, string region, int queueLimit)
+        public static void addRelay(int weight, string ipAddress, string ipConnectedTo, bool isGateway, string region, int queueLimit)
         {
             var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
             using (cn)
@@ -154,18 +154,36 @@ namespace NetworkCommunicationMonitor.Models
                 cn.Close();
             }
 
-            return Connection.addConnection(weight, ipAddress, ipConnectedTo);
+            Connection.addConnection(weight, ipAddress, ipConnectedTo);
         }
 
         public static string addRegion(int PCweight, int GRweight, int SRweight, string regionName, string gatewayIP, string relayIP, string storeIP, string storeName)
         {
-            Store.addStore(SRweight, storeIP, relayIP, storeName);
-            Console.WriteLine("PCweight:" + PCweight);
-            if (PCweight != 0)
+            string result = "Region " + regionName + " successfully added";
+            if (gatewayIP.Equals(relayIP))
             {
-                addRelay(PCweight, gatewayIP, PROCESSINGCENTERIP, true, regionName, 10);
+                result = "gaetway IP address can not be equal to relay IP address";
+            }else if (gatewayIP.Equals(storeIP))
+            {
+                result = "gaetway IP address can not be equal to store IP address";
             }
-            return addRelay(GRweight, relayIP, gatewayIP, false, regionName, 10);
+            else if (relayIP.Equals(storeIP))
+            {
+                result = "relay IP address can not be equal to store IP address";
+            }
+            else
+            {
+                if (PCweight != 0)
+                {
+                    addRelay(PCweight, gatewayIP, PROCESSINGCENTERIP, true, regionName, 10);
+                }
+
+                //here is the problem
+                addRelay(GRweight, relayIP, gatewayIP, false, regionName, 10);
+                Store.addStore(SRweight, storeIP, relayIP, storeName);
+            }
+
+            return result;
         }
 
         public static string getRegion(string ipAddress)

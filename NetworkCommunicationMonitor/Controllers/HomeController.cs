@@ -289,8 +289,7 @@ namespace NetworkCommunicationMonitor.Controllers
             string ipOne = Convert.ToString(collection["ipOne"]);
             string ipTwo = Convert.ToString(collection["ipTwo"]);
 
-            string result = NetworkCommunicationMonitor.Models.Connection.addConnection(weight, ipOne, ipTwo);
-            return result;
+            return NetworkCommunicationMonitor.Models.Connection.addConnection(weight, ipOne, ipTwo);
             //return RedirectToAction("Homepage", "Home");
         }
 

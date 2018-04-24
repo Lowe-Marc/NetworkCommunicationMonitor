@@ -804,6 +804,7 @@
             var connectionIds = [];
             var storeList = [];
             var relayList = [];
+            var pcList = [];
             var gatewayList = [];
             var ipSet = []; // from 192.168.0.1 to 192.168.0.254
             var existIpSet = []; // ip addresses include both stores, relays
@@ -1081,6 +1082,7 @@
                     let tempId = nodes[i].id.slice(10);
 
                     if (nodes[i].group == 0) {  // Processing center
+                        pcList.push(tempId);
                         data.push({ group: 'nodes', data: { id: tempId, color: 'Orange', shape: 'barrel', width: '50', height: '50', category: '1', queue: [], isActive: true, limit: nodes[i].queueLimit, name: 'Processing Center' } });
                     } else if (nodes[i].group == 1) {   // Store
                         storeIds.push(tempId);
@@ -1571,6 +1573,13 @@
                     }
                     for (var j = relayList.length - 1; j >= 0; j--) {
                         b = relayList[j];
+                        if (a == b) {
+                            remainIpSet.splice(i, 1);
+                            break;
+                        }
+                    }
+                    for (var j = pcList.length - 1; j >= 0; j--) {
+                        b = pcList[j];
                         if (a == b) {
                             remainIpSet.splice(i, 1);
                             break;
