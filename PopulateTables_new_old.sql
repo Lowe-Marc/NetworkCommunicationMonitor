@@ -8,35 +8,6 @@ INSERT INTO Administrator (admin_id, admin_username, admin_password, question_on
 INSERT INTO Question (question_id, question_question, answer) VALUES(4, 'What is the mascot of your undergraduate university?', 'Answer');
 INSERT INTO Question (question_id, question_question, answer) VALUES(5, 'What year did you graduate high school?', 'Answer');
 INSERT INTO Question (question_id, question_question, answer) VALUES(6, 'What year were you born?', 'Answer');
-INSERT INTO Administrator (admin_id, admin_username, admin_password, question_one_id, question_two_id, question_three_id, admin_isBlocked) VALUES (3,'Redflower', 'Amaryllis', 7, 8, 9, 0);
-INSERT INTO Question (question_id, question_question, answer) VALUES(7, 'What is your favourite city?', 'Rome');
-INSERT INTO Question (question_id, question_question, answer) VALUES(8, 'What is the name of your first pet?', 'Haine Chu');
-INSERT INTO Question (question_id, question_question, answer) VALUES(9, 'What is your mothers birth year?', '1952');
-
-INSERT INTO Administrator (admin_id, admin_username, admin_password, question_one_id, question_two_id, question_three_id, admin_isBlocked) VALUES (4,'Pinkflower', 'Orchids', 10, 11, 12, 0);
-INSERT INTO Question (question_id, question_question, answer) VALUES(10, 'Where is your high school located?', 'Kansas MO');
-INSERT INTO Question (question_id, question_question, answer) VALUES(11, 'What is the age of your oldest brother in 2018?', 'Zero');
-INSERT INTO Question (question_id, question_question, answer) VALUES(12, 'What is the name of your birth city?', 'Vienna');
-
-INSERT INTO Administrator (admin_id, admin_username, admin_password, question_one_id, question_two_id, question_three_id, admin_isBlocked) VALUES (5,'Yellowflower', 'Daffodil', 13, 14, 15, 0);
-INSERT INTO Question (question_id, question_question, answer) VALUES(13, 'Who is your favorite singer?', 'Myself');
-INSERT INTO Question (question_id, question_question, answer) VALUES(14, 'When did you graduate from high school?', '2010');
-INSERT INTO Question (question_id, question_question, answer) VALUES(15, 'What is the favorite fruit of your father?', 'None');
-
-INSERT INTO Administrator (admin_id, admin_username, admin_password, question_one_id, question_two_id, question_three_id, admin_isBlocked) VALUES (6,'Purpleflower', 'Carnation', 16, 17, 18, 0);
-INSERT INTO Question (question_id, question_question, answer) VALUES(16, 'When did you start higher studies?', 'Not sure');
-INSERT INTO Question (question_id, question_question, answer) VALUES(17, 'What is the nickname of your elder sister?', 'Jasmine');
-INSERT INTO Question (question_id, question_question, answer) VALUES(18, 'What color do you like the most?', 'Dark red');
-
-INSERT INTO Administrator (admin_id, admin_username, admin_password, question_one_id, question_two_id, question_three_id, admin_isBlocked) VALUES (7,'Orangeflower', 'Begonia', 19, 20, 21, 0);
-INSERT INTO Question (question_id, question_question, answer) VALUES(19, 'What is the name of your county?', 'Jackson');
-INSERT INTO Question (question_id, question_question, answer) VALUES(20, 'WWhen did you first start working?', '2003');
-INSERT INTO Question (question_id, question_question, answer) VALUES(21, 'What is your favorite movie?', 'Cars');
-
-INSERT INTO Administrator (admin_id, admin_username, admin_password, question_one_id, question_two_id, question_three_id, admin_isBlocked) VALUES (8,'Whiteflower', 'Camellia', 22, 23, 24, 0);
-INSERT INTO Question (question_id, question_question, answer) VALUES(22, 'Which country were you born?', 'Mexico');
-INSERT INTO Question (question_id, question_question, answer) VALUES(23, 'What is your dream city to work?', 'La Crosse');
-INSERT INTO Question (question_id, question_question, answer) VALUES(24, 'What is the name of your first grade teacher?', 'Ms Laura');
 
 -- Credit cards and accounts
 INSERT INTO Account (account_holder_firstname, account_holder_lastname, account_address, account_phone, account_limit, account_balance) VALUES('Shirley', 'Allison', '13975 Branford Street, Newark, NJ 07103', '7326190982', 10000, 5430.0);

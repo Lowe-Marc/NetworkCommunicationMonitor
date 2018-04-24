@@ -222,7 +222,7 @@ namespace NetworkCommunicationMonitor.Models
 
             if (amount == 1)
             {
-                result = "This card already exists!";
+                result = "card "  + cardID + " already exists!";
             }
             else
             {
@@ -237,7 +237,7 @@ namespace NetworkCommunicationMonitor.Models
                     cmd.ExecuteNonQuery();
                     cn.Close();
                 }
-                result = "Card added successfully";
+                result = "Card " + cardID + " has been successfully added to the Account " + accountID;
             }
             return result;
         }

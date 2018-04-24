@@ -12,9 +12,7 @@ function submitStore() {
     store.ipTwo = ipTwo;
     store.name = name;
     store.weight = weight;
-    console.log("name: ", store.name);
     if (!store.name) {
-        console.log("no name");
         $('#store-name-form').addClass('has-error');
     } else if (!store.weight) {
         $('#store-name-form').removeClass('has-error');
@@ -28,7 +26,7 @@ function submitStore() {
             data: store,
             success: (result) => {
                 alert(result);
-                if (result === "Store added successfully!") {
+                if (result == "Store added successfully!") {
                     $('#close-store').click();
                     window.location.reload();
                 }
@@ -61,7 +59,7 @@ function submitConnection() {
             data: connection,
             success: (result) => {
                 alert(result);
-                if (result === "Connection added successfully!") {
+                if (result == "Connection added successfully!") {
                     $('#close-connection').click();
                     window.location.reload();
                 }
@@ -73,6 +71,89 @@ function submitConnection() {
     }
 }
 
+function addRegion() {
+    let regionName = $("#region-name").val();
+    let gatewayIP = $("#gateway-ipAddress").val();
+    let gatewayConnectedIP = $("#gateway-connected-ipAddress").val();
+    let gatewayConnectedWeight = $("#gateway-connected-weight").val();
+    //let check = $("#conncet-pc").is(":checked");
+    let relayIP = $("#relay-ipAddress").val();
+    //let pcWeight = $("#pc-gateway").val();
+    let relayWeight = $("#gateway-relay").val();
+    let storeName = $("#store-name").val();
+    let storeIP = $("#store-ipAddress").val();
+    let storeWeight = $("#store-relay").val();
+
+    let region = new Object();
+    //region.pcWeight = pcWeight;
+    region.gatewayConnectedIP = gatewayConnectedIP;
+    region.gatewayConnectedWeight = gatewayConnectedWeight;
+    region.relayWeight = relayWeight;
+    region.storeWeight = storeWeight;
+    region.regionName = regionName;
+    region.gatewayIP = gatewayIP;
+    region.relayIP = relayIP;
+    region.storeIP = storeIP;
+    region.storeName = storeName;
+
+    if (!regionName) {
+        addRegionErrorhandler($('#regionName-form'));
+    } else if (!gatewayIP) {
+        addRegionErrorhandler($('#gatewayIP-form'));
+    } else if (!gatewayConnectedIP) {
+        addRegionErrorhandler($('#gatewayConnectedIP-form'));
+    } else if (!gatewayConnectedWeight) {
+        addRegionErrorhandler($('#gatewayConnectedWeight-form'));
+    } else if (!relayIP) {
+        addRegionErrorhandler($('#relayIP-form'));
+    } else if (!relayWeight) {
+        addRegionErrorhandler($('#grWeight-form'));
+    } else if (!storeName) {
+        addRegionErrorhandler($('#storeName-form'));
+    } else if (!storeIP) {
+        addRegionErrorhandler($('#storeIP-form'));
+    } else if (!storeWeight) {
+        addRegionErrorhandler($('#srWeight-form'));
+    } else {
+        addRegionErrorhandler();
+        //Database insertion
+        $.ajax({
+            method: "POST",
+            url: "/Home/AddRegion",
+            data: region,
+            success: (result) => {
+                if (result.includes('successfully')) {
+                    alert(result);
+                    $('#close-region').click();
+                    window.location.reload();
+                } else {
+                    alert(result);
+                }
+            },
+            error: (result) => {
+                alert("Error on ajax request");
+            }
+        });
+    }
+}
+
+function addRegionErrorhandler(element) {
+    $('#regionName-form').removeClass('has-error');
+    $('#gatewayIP-form').removeClass('has-error');
+    //$('#pcWeight-form').removeClass('has-error');
+    $('#gatewayConnectedIP-form').removeClass('has-error');
+    $('#gatewayConnectedWeight-form').removeClass('has-error');
+    $('#relayIP-form').removeClass('has-error');
+    $('#grWeight-form').removeClass('has-error');
+    $('#storeName-form').removeClass('has-error');
+    $('#storeIP-form').removeClass('has-error');
+    $('#srWeight-form').removeClass('has-error');
+    if (element) {
+        element.addClass('has-error');
+    }
+
+}
+
 function deleteAccount() {
     let accountID = parseInt($("#delete-accountID").val());
     let check = $("#confirmation-checkbox").is(":checked");
@@ -82,19 +163,19 @@ function deleteAccount() {
     } else if (!check) {
         $('#delete-accountId').removeClass('has-error');
         $('#delete-check').empty();
-        $('#delete-check').append('<h4 class="text-danger text-center">you should select the checkbox</h4>');
+        $('#delete-check').append('<h3 class="text-danger text-center">you should select the checkbox</h3>');
         setTimeout(function () {
-            $('#delete-check h4').fadeOut();
+            $('#delete-check h3').fadeOut();
         }, 5000);
     } else {
         //Database insertion
         $.ajax({
             method: 'POST',
             url: `/Home/DeleteAccount`,
-            data: { accountID: accountID } ,
+            data: { accountID: accountID },
             success: (result) => {
                 alert(result);
-                if (result === "Account " + accountID + " successfully deleted") {
+                if (result == "Account " + accountID + " successfully deleted") {
                     $('#close-delete-card').click();
                     window.location.reload();
                 }
@@ -111,10 +192,6 @@ function deletCard() {
     let confirmNum = parseInt($("#confirm_delete_cardNumber").val());
     let check = $("#confirmation-checkDelete").is(":checked");
 
-    console.log("num:", cardNumber);
-    console.log("confirm: ", confirmNum);
-    console.log("check: ", check);
-
     if (!cardNumber) {
         $('#card-number').addClass('has-error');
 
@@ -126,17 +203,17 @@ function deletCard() {
         $('#confirm-card-number').removeClass('has-error');
         $('#confirm-card-number').addClass('has-error');
         $('#delete-card-check').empty();
-        $('#delete-card-check').append('<h4 class="text-danger text-center">two card numbers are not the same, please input again</h4>');
+        $('#delete-card-check').append('<h3 class="text-danger text-center">two card numbers are not the same, please input again</h3>');
         setTimeout(function () {
-            $('#delete-card-check h4').fadeOut();
+            $('#delete-card-check h3').fadeOut();
         }, 5000);
 
     } else if (!check) {
         $('#confirm-card-number').removeClass('has-error');
         $('#delete-card-check').empty();
-        $('#delete-card-check').append('<h4 class="text-danger text-center">you should select the checkbox</h4>');
+        $('#delete-card-check').append('<h3 class="text-danger text-center">you should select the checkbox</h3>');
         setTimeout(function () {
-            $('#delete-card-check h4').fadeOut();
+            $('#delete-card-check h3').fadeOut();
         }, 5000);
 
     } else {
@@ -148,7 +225,7 @@ function deletCard() {
             data: { cardNumber: cardNumber },
             success: (result) => {
                 alert(result);
-                if (result === "Card " + cardNumber + " successfully deleted") {
+                if (result == "Card " + cardNumber + " successfully deleted") {
                     $('#close-delete-card').click();
                     window.location.reload();
                 }

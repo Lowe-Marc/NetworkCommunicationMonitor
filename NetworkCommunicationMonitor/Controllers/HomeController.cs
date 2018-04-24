@@ -127,7 +127,7 @@ namespace NetworkCommunicationMonitor.Controllers
             return View();
         }
 
-        public ActionResult AddAccount(FormCollection collection)
+        public string AddAccount(FormCollection collection)
         {
             setViewDataDefaults();
 
@@ -156,9 +156,9 @@ namespace NetworkCommunicationMonitor.Controllers
             int month = expiry.Month;
             int year = expiry.Year;
             string cvc = Convert.ToString(collection["cvc"]);
-            NetworkCommunicationMonitor.Models.Card.createCard(cardNumber, cardFirstName, cardLastName, month, year, accountID, cvc);
-
-            return RedirectToAction("Account", "Home");
+            string result= NetworkCommunicationMonitor.Models.Card.createCard(cardNumber, cardFirstName, cardLastName, month, year, accountID, cvc);
+            return result;
+            //return RedirectToAction("Account", "Home");
         }
 
         public string DeleteAccount(FormCollection collection)
@@ -185,7 +185,7 @@ namespace NetworkCommunicationMonitor.Controllers
             return RedirectToAction("Account", "Home");
         }
 
-        public ActionResult AddCard(FormCollection collection)
+        public string AddCard(FormCollection collection)
         {
             setViewDataDefaults();
 
@@ -207,9 +207,9 @@ namespace NetworkCommunicationMonitor.Controllers
             int year = Convert.ToInt32(exp.Substring(3, 4));
             string cvc = Convert.ToString(collection["cvc"]);
             int accountID = Convert.ToInt32(collection["accountID"]);
-            NetworkCommunicationMonitor.Models.Card.createCard(cardNumber, cardFirstName, cardLastName, month, year, accountID, cvc);
+            return NetworkCommunicationMonitor.Models.Card.createCard(cardNumber, cardFirstName, cardLastName, month, year, accountID, cvc);
 
-            return RedirectToAction("Card", "Home");
+            //return RedirectToAction("Card", "Home");
         }
 
         public string DeleteCard(FormCollection collection)
@@ -250,21 +250,23 @@ namespace NetworkCommunicationMonitor.Controllers
             return RedirectToAction("Homepage", "Home");
         }
 
-        public ActionResult AddRegion(FormCollection collection)
+        public string AddRegion(FormCollection collection)
         {
             setViewDataDefaults();
 
-            int GRweight = Convert.ToInt32(collection["gateway-relay"]);
-            int SRweight = Convert.ToInt32(collection["store-relay"]);
-            string regionName = Convert.ToString(collection["region-name"]);
-            string gatewayIPAddress = Convert.ToString(collection["gateway-ipAddress"]);
-            string relayIPAddress = Convert.ToString(collection["relay-ipAddress"]);
-            string storeIPAddress = Convert.ToString(collection["store-ipAddress"]);
-            string storeName = Convert.ToString(collection["store-name"]);
+            //int PCweight = Convert.ToInt32(collection["pcWeight"]);
+            int gatewayConnectedWeight = Convert.ToInt32(collection["gatewayConnectedWeight"]);
+            int GRweight = Convert.ToInt32(collection["relayWeight"]);
+            int SRweight = Convert.ToInt32(collection["storeWeight"]);
+            string regionName = Convert.ToString(collection["regionName"]);
+            string gatewayIPAddress = Convert.ToString(collection["gatewayIP"]);
+            string gatewayConnectedIPAddress = Convert.ToString(collection["gatewayConnectedIP"]);
+            string relayIPAddress = Convert.ToString(collection["relayIP"]);
+            string storeIPAddress = Convert.ToString(collection["storeIP"]);
+            string storeName = Convert.ToString(collection["storeName"]);
 
-            NetworkCommunicationMonitor.Models.Relay.addRegion(GRweight, SRweight, regionName, gatewayIPAddress, relayIPAddress, storeIPAddress, storeName);
-
-            return RedirectToAction("Homepage", "Home");
+            return NetworkCommunicationMonitor.Models.Relay.addRegion(gatewayConnectedWeight, GRweight, SRweight, regionName, gatewayConnectedIPAddress, gatewayIPAddress, relayIPAddress, storeIPAddress, storeName);
+            //return RedirectToAction("Homepage", "Home");
         }
 
         public ActionResult AddStore(FormCollection collection)
@@ -289,8 +291,7 @@ namespace NetworkCommunicationMonitor.Controllers
             string ipOne = Convert.ToString(collection["ipOne"]);
             string ipTwo = Convert.ToString(collection["ipTwo"]);
 
-            string result = NetworkCommunicationMonitor.Models.Connection.addConnection(weight, ipOne, ipTwo);
-            return result;
+            return NetworkCommunicationMonitor.Models.Connection.addConnection(weight, ipOne, ipTwo);
             //return RedirectToAction("Homepage", "Home");
         }
 

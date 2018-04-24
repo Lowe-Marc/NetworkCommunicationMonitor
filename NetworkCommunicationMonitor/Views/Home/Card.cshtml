@@ -5,7 +5,6 @@
 <!--[if gt IE 8]><!-->
 <html class="no-js">
 <!--<![endif]-->
-
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -40,7 +39,6 @@
     <script src="assets/js/vendor/respond.min.js"></script>
     <![endif]-->
 </head>
-
 <body>
     <section id="main-wrapper" class="theme-default">
         <header id="header">
@@ -312,8 +310,8 @@
     @*}*@
     <!--delete modal end-->
     <!--add modal start-->
-    @using (Html.BeginForm("AddCard", "Home", FormMethod.Post,new {id = "addCard" }))
-    {
+    @*@using (Html.BeginForm("AddCard", "Home", FormMethod.Post, new { id = "addCard" }))
+    {*@
         <div class="modal fade" id="add-card" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -324,7 +322,7 @@
                     <div class="modal-body">
                         <!--main content start-->
                         <div class="alert alert-warning alert-dismissable" style="margin:0">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                            <button type="button" id="close-add-card" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                             <p class="my-font"><strong><i class="fa fa-exclamation-triangle"></i> Tips:</strong> If you want to a card, you must link it to an account.</p>
                         </div>
                         <section class="main-content-wrapper" style="padding:0">
@@ -332,28 +330,31 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="panel panel-default">
+                                            <div class="row">
+                                                <div id="error-msg" style="margin:5px 0 5px 0; padding:5px;"></div>
+                                            </div>
                                             <div class="panel-body">
                                                 <div class="card-wrapper"></div>
                                                 <div class="card-form form-horizontal col-sm-offset-2">
-                                                    <div class="form-group">
+                                                    <div class="form-group" id="card-form">
                                                         <label class="col-sm-4 control-label">Card number</label>
                                                         <div class="col-sm-6">
                                                             <input type="text" class="form-control" id="cardID" name="number" placeholder="Card number" required="" />
                                                         </div>
                                                     </div>
-                                                    <div class="form-group">
+                                                    <div class="form-group" id="name-form">
                                                         <label class="col-sm-4 control-label">Full name</label>
                                                         <div class="col-sm-6">
-                                                            <input type="text" class="form-control" id ="name" name="name" placeholder="Full name" minlength="4" maxlength="30" required="" />
+                                                            <input type="text" class="form-control" id="name" name="name" placeholder="Full name" minlength="4" maxlength="30" required="" />
                                                         </div>
                                                     </div>
-                                                    <div class="form-group">
+                                                    <div class="form-group" id="date-form">
                                                         <label class="col-sm-4 control-label">Expiry</label>
                                                         <div class="col-sm-6">
                                                             <input type="text" class="form-control" id="date2" name="expiry" style="margin:0;" placeholder="MM/YYYY" required="" />
                                                         </div>
                                                     </div>
-                                                    <div class="form-group">
+                                                    <div class="form-group" id="cvc-form">
                                                         <label class="col-sm-4 control-label">CVC</label>
                                                         <div class="col-sm-6">
                                                             <input type="text" class="form-control" id="cvc" name="cvc" style="margin:0 0 0 -4px;" placeholder="CVC" maxlength="3" required="" />
@@ -375,7 +376,7 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="col-sm-10">
-                                                            <input type="button" class="btn btn-success btn-block" value="Submit" onclick="isValid()"/>
+                                                            <input type="button" class="btn btn-success btn-block" value="Submit" onclick="isValidCard()" />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -390,7 +391,7 @@
                 </div>
             </div>
         </div>
-    }
+    @*}*@
     <!--add modal end-->
     <!--edit card start-->
     @using (Html.BeginForm("EditCard", "Home", FormMethod.Post))
@@ -565,12 +566,9 @@
     <script>
         $(document).ready(function () {
             $('#example').dataTable();
-        });
-        $(document).ready(function () {
             app.formMask();
         });
-    </script>
-    <script>
+
         //card.js
         var card = new Card({
             form: '.card-form',
@@ -584,49 +582,91 @@
             }
         });
 
-
-    </script>
-    <script>
-        var isValid = function () {
-            var addAccount = document.getElementById('addCard');
-            var date1 = document.getElementById("date2").value;
-            var name1 = document.getElementById("name").value;
-            var cardID = document.getElementById("cardID").value;
-            var cvc = document.getElementById("cvc").value;
-            var datetime = /^(?:(?:0[1-9])|(?:1[0-2]))\ \/\ (?:19|20)[0-9][0-9]$/; //validate date
+        function isValidCard() {
+            var addAccount = $('#addCard');
+            var date1 = $('#date2');
+            var name1 = $('#name');
+            var cardID = $('#cardID');
+            var cvc = $('#cvc');
+            var accountID = $('#accountID');
+            var datetime = /^(?:(?:0[1-9])|(?:1[0-2]))\ \/\ (?:19|2\d{1})[0-9][0-9]$/; //validate date
             var name = /^[a-zA-Z]*\ [a-zA-Z]*$/;; // validate name
-            var cardNumber = /^\d{4}\ \d{4}\ \d{4}\ \d{2,4}$/;; // validate name
-            var cardNumber2 = /^\d{4}\ \d{4}\ \d{4}\ \d{4}\ \d{1,3}$/;; // validate name
-            var cvc1 = /^\d{3}$/;; // validate name
-            var result = datetime.test(date1);
-            var result2 = name.test(name1);
-            var result3 = cardNumber.test(cardID);
-            var result4 = cardNumber2.test(cardID);
-            var result5 = cvc1.test(cvc);
+            var cardNumber = /^\d{4}\ \d{4}\ \d{4}\ \d{2,4}$/; // validate card number
+            var cardNumber2 = /^\d{4}\ \d{4}\ \d{4}\ \d{4}\ \d{1,3}$/; // validate card number
+            var cardNumber3 = /^\d{4}\ \d{6}\ \d{4,6}$/; // validate card number
+            var cvc1 = /^\d{3}$/;; // validate cvc
+            var isDate = datetime.test(date1.val());
+            var isName = name.test(name1.val());
+            var isCard1 = cardNumber.test(cardID.val());
+            var isCard2 = cardNumber2.test(cardID.val());
+            var isCard3 = cardNumber3.test(cardID.val());
+            var isCVC = cvc1.test(cvc.val());
 
-            if (result3 == true || result4 == true) {
-                if (result2 == true) {
-                    if (result == true) {
-                        if (result5 == true) {
-                            alert('Account added succeddfully!');
-                            addAccount.submit();
+            if (isCard1 || isCard2 || isCard3) {
+                if (isName) {
+                    if (isDate) {
+                        if (isCVC) {
+                            errHandler();
+                            $.ajax({
+                                method: 'POST',
+                                url: `/Home/AddCard`,
+                                data: {
+                                    number: cardID.val(),
+                                    name: name1.val(),
+                                    expiry: date1.val(),
+                                    cvc: cvc.val(),
+                                    accountID: accountID.val()
+                                },
+                                success: (result) => {
+                                    alert(result);
+                                    if (result.includes('successfully')) {
+                                        $('#close-add-card').click();
+                                        window.location.reload();
+                                    }
+                                },
+                                error: (result) => {
+                                    console.log(result);
+                                }
+                            });
                         }
                         else {
-                            alert('CVC Error!');
+                            errHandler('Invalid CVC', $('#cvc-form'));
                         }
                     }
                     else {
-                        alert('Invalid time!');
+                        errHandler('Invalid expiry time', $('#date-form'));
                     }
                 }
                 else {
-                    alert('Invalid name!');
+                    errHandler('Invalid full name, e.g. "Dwayne Johnson"', $('#name-form'))
                 }
             }
             else {
-                alert('Invalid card number!');
+                errHandler('card number should be 14-19 digits', $('#card-form'))
             }
+        }
 
+        function errHandler(err, element) {
+            $('#first-form').removeClass('has-error');
+            $('#last-form').removeClass('has-error');
+            $('#address-form').removeClass('has-error');
+            $('#phone-form').removeClass('has-error');
+            $('#limit-form').removeClass('has-error');
+            $('#balance-form').removeClass('has-error');
+            $('#card-form').removeClass('has-error');
+            $('#name-form').removeClass('has-error');
+            $('#date-form').removeClass('has-error');
+            $('#cvc-form').removeClass('has-error')
+            if (element) {
+                element.addClass('has-error');
+            }
+            if (err) {
+                $('#error-msg').empty();
+                $('#error-msg').append('<h3 class="text-center text-danger" >' + err + '</h3>');
+                setTimeout(function () {
+                    $('#error-msg h3').fadeOut();
+                }, 6000);
+            }
         }
     </script>
 </body>

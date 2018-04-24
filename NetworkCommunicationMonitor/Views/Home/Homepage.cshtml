@@ -279,6 +279,7 @@
                             <li><span class="relay-label"></span>Relay Station</li>
                             <li><span class="store-label"></span>Store</li>
                             <li><span class="inactive-label"></span>Inactive</li>
+                            <li><span class="animated-label"></span>Animated</li>
                         </ul>
                     </div>
                 </div>
@@ -343,13 +344,13 @@
                 }
                 <!--add relay end-->
                 <!--add region start-->
-                @using (Html.BeginForm("AddRegion", "Home", FormMethod.Post))
-                {
+                @*@using (Html.BeginForm("AddRegion", "Home", FormMethod.Post))
+                {*@
                     <div class="modal fade" id="add-region" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <button type="button" id="close-region" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                                     <h1 class="modal-title" id="myModalLabel"><strong> Add a Region</strong></h1>
                                 </div>
                                 <div class="modal-body">
@@ -366,50 +367,74 @@
                                                                 </div>
                                                             </div>
                                                             <div class="form-horizontal">
-                                                                <div class="form-group">
-                                                                    <label for="region-name" class="col-sm-4 control-label">Region Name</label>
-                                                                    <div class="col-sm-6">
-                                                                        <input type="text" class="form-control" id-="region-name" name="region-name" required minlength="1" maxlength="15" placeholder="Region Name">
+                                                                <div class="form-group" id="regionName-form">
+                                                                    <label for="region-name" class="col-sm-5 control-label">Region Name</label>
+                                                                    <div class="col-sm-5">
+                                                                        <input type="text" class="form-control" id="region-name" name="region-name" required minlength="1" maxlength="15" placeholder="Region Name">
                                                                     </div>
                                                                 </div>
-                                                                <div class="form-group">
-                                                                    <label for="gateway-ipAddress" class="col-sm-4 control-label">Gateway IP Address</label>
-                                                                    <div class="col-sm-6">
+                                                                <div class="form-group" id="gatewayIP-form">
+                                                                    <label for="gateway-ipAddress" class="col-sm-5 control-label">Gateway IP Address</label>
+                                                                    <div class="col-sm-5">
                                                                         <select class="form-control" id="gateway-ipAddress" name="gateway-ipAddress" style="padding:0;"></select>
                                                                     </div>
                                                                 </div>
-                                                                <div class="form-group">
-                                                                    <label for="gateway-relay" class="col-sm-4 control-label">Gateway - Relay</label>
-                                                                    <div class="col-sm-6">
-                                                                        <input type="number" class="form-control" id="gateway-relay" name="gateway-relay" required min="1" max="100" onkeyup="if( value > 100){ value = 100; } else if (value < 1){ value =1 }" />
+                                                                <div class="form-group" id="gatewayConnectedIP-form">
+                                                                    <label for="gateway-connected-ipaddress" class="col-sm-5 control-label">Gateway connected IP Address</label>
+                                                                    <div class="col-sm-5">
+                                                                        <select class="form-control" id="gateway-connected-ipAddress" name="relay-ipAddress" style="padding:0;"></select>
                                                                     </div>
                                                                 </div>
-                                                                <div class="form-group">
-                                                                    <label for="relay-ipaddress" class="col-sm-4 control-label">Relay IP Address</label>
-                                                                    <div class="col-sm-6">
+                                                                <div class="form-group" id="gatewayConnectedWeight-form">
+                                                                    <label for="gateway-connected-weight" class="col-sm-5 control-label">Gateway connected weight</label>
+                                                                    <div class="col-sm-5">
+                                                                        <input type="number" class="form-control" id="gateway-connected-weight" name="gateway-relay" required min="1" max="100" onkeyup="if( value > 100){ value = 100; } else if (value < 1){ value =1 }" />
+                                                                    </div>
+                                                                </div>
+                                                                @*<div class="form-group">
+                                                                    <label for="conncet-pc" class="col-sm-5 control-label">Connected to PC</label>
+                                                                    <div class="col-sm-5">
+                                                                        <input type="checkbox" class="center-block" id="conncet-pc" style="min-width:20px;min-height:20px;margin:9px 10px 0px 0%;" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group" id="pcWeight-form">
+                                                                    <label for="pc-gateway" class="col-sm-5 control-label">PC - Gateway</label>
+                                                                    <div class="col-sm-5">
+                                                                        <input type="number" class="form-control" id="pc-gateway" name="pc-gateway" required min="1" max="100" onkeyup="if( value > 100){ value = 100; } else if (value < 1){ value =1 }" />
+                                                                    </div>
+                                                                </div>*@
+                                                                <div class="form-group" id="relayIP-form">
+                                                                    <label for="relay-ipaddress" class="col-sm-5 control-label">Relay IP Address</label>
+                                                                    <div class="col-sm-5">
                                                                         <select class="form-control" id="relay-ipAddress" name="relay-ipAddress" style="padding:0;"></select>
                                                                     </div>
                                                                 </div>
-                                                                <div class="form-group">
-                                                                    <label for="store-name" class="col-sm-4 control-label">Store Name</label>
-                                                                    <div class="col-sm-6">
+                                                                <div class="form-group" id="grWeight-form">
+                                                                    <label for="gateway-relay" class="col-sm-5 control-label">Gateway - Relay</label>
+                                                                    <div class="col-sm-5">
+                                                                        <input type="number" class="form-control" id="gateway-relay" name="gateway-relay" required min="1" max="100" onkeyup="if( value > 100){ value = 100; } else if (value < 1){ value =1 }" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group" id="storeName-form">
+                                                                    <label for="store-name" class="col-sm-5 control-label">Store Name</label>
+                                                                    <div class="col-sm-5">
                                                                         <input type="text" class="form-control" id="store-name" name="store-name" required minlength="1" maxlength="15" placeholder="Store Name">
                                                                     </div>
                                                                 </div>
-                                                                <div class="form-group">
-                                                                    <label for="store-relay" class="col-sm-4 control-label">Store-Relay</label>
-                                                                    <div class="col-sm-6">
-                                                                        <input type="number" class="form-control" id="store-relay" name="store-relay" required min="1" max="100" onkeyup="if( value > 100){ value = 100; } else if (value < 1){ value =1 }" />
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label for="store-ipaddress" class="col-sm-4 control-label">Store IP Address</label>
-                                                                    <div class="col-sm-6">
+                                                                <div class="form-group" id="storeIP-form">
+                                                                    <label for="store-ipaddress" class="col-sm-5 control-label">Store IP Address</label>
+                                                                    <div class="col-sm-5">
                                                                         <select class="form-control" id="store-ipAddress" name="store-ipAddress" style="padding:0;"></select>
                                                                     </div>
                                                                 </div>
+                                                                <div class="form-group" id="srWeight-form">
+                                                                    <label for="store-relay" class="col-sm-5 control-label">Store-Relay</label>
+                                                                    <div class="col-sm-5">
+                                                                        <input type="number" class="form-control" id="store-relay" name="store-relay" required min="1" max="100" onkeyup="if( value > 100){ value = 100; } else if (value < 1){ value =1 }" />
+                                                                    </div>
+                                                                </div>
                                                                 <div class="modal-footer">
-                                                                    <input type="submit" class="btn btn-success btn-block" value="Add To Network" />
+                                                                    <input type="submit" class="btn btn-success btn-block" value="Add To Network" onclick="addRegion()"/>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -423,7 +448,7 @@
                             </div>
                         </div>
                     </div>
-                }
+                @*}*@
                 <!--add region end-->
                 <!--add store start-->
                 @using (Html.BeginForm("AddStore", "Home", FormMethod.Post))
@@ -602,7 +627,7 @@
                                                                 <label for="transactionAmount" class="col-sm-4 control-label">Transaction Amount</label>
                                                                 <div class="col-sm-6">
                                                                     @*<input type="text" class="form-control" id="transactionAmount" name="transactionAmount" required minlength="1" maxlength="6" placeholder="$0.00" onkeyup="value = value.replace(/[^\d]/g, ''); if ( value > 25000) { value = 25000; }" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,'')">*@
-                                                                    <input type="text" class="form-control" id="transactionAmount" name="transactionAmount" required minlength="1" maxlength="6" placeholder="$0.00" onkeyup="if ( value > 25000) { value = 25000; }" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))">
+                                                                    <input type="number" class="form-control" id="transactionAmount" name="transactionAmount" required minlength="1" maxlength="6" placeholder="$00.00" onkeyup="if (value > 25000) { value = 25000; } else if (value < 0) { value = 0; }" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group">
@@ -791,10 +816,12 @@
             var connectionIds = [];
             var storeList = [];
             var relayList = [];
+            var pcList = [];
             var gatewayList = [];
             var ipSet = []; // from 192.168.0.1 to 192.168.0.254
-            var existIpSet = []; // ip addresses include both stores and relays
+            var existIpSet = []; // ip addresses include both stores, relays
             var remainIpSet = []; // ip addresses not include stores and relays
+            var currentGateways = [];
             var currentAnimations = [];
             var currentAnimationSet = new Set();
             var queueAnimationSet = new Set();
@@ -802,6 +829,7 @@
 
             convertElements();
             getRemainingIp();
+            getCurrentGatewayIps();
             validateInput();
 
             var cy = cytoscape({
@@ -1068,6 +1096,7 @@
                     let tempId = nodes[i].id.slice(10);
 
                     if (nodes[i].group == 0) {  // Processing center
+                        pcList.push(tempId);
                         data.push({ group: 'nodes', data: { id: tempId, color: 'Orange', shape: 'barrel', width: '50', height: '50', category: '1', queue: [], isActive: true, limit: nodes[i].queueLimit, name: 'Processing Center' } });
                     } else if (nodes[i].group == 1) {   // Store
                         storeIds.push(tempId);
@@ -1518,14 +1547,12 @@
             // The aStar cytoscape function returns a strange object, this extracts the path of nodes
             function truncatePath(aStarPath) {
                 var truncated = [];
-
                 for (var i = 0; i < aStarPath.length; i++) {
                     if (typeof (aStarPath[i]) == "number")
                         return truncated;
                     else
                         truncated.push(aStarPath[i]);
                 }
-
                 return truncated;
             }
 
@@ -1558,9 +1585,6 @@
                             break;
                         }
                     }
-                }
-                for (var i = remainIpSet.length - 1; i >= 0; i--) {
-                    a = remainIpSet[i];
                     for (var j = relayList.length - 1; j >= 0; j--) {
                         b = relayList[j];
                         if (a == b) {
@@ -1568,11 +1592,8 @@
                             break;
                         }
                     }
-                }
-                for (var i = remainIpSet.length - 1; i >= 0; i--) {
-                    a = remainIpSet[i];
-                    for (var j = relayList.length - 1; j >= 0; j--) {
-                        b = relayList[j];
+                    for (var j = pcList.length - 1; j >= 0; j--) {
+                        b = pcList[j];
                         if (a == b) {
                             remainIpSet.splice(i, 1);
                             break;
@@ -1585,6 +1606,20 @@
                 sortByLength(ipSet);
                 sortByLength(existIpSet);
                 sortByLength(remainIpSet);
+            }
+
+            function getCurrentGatewayIps() {
+                tempGateways = [];
+                for (var i = 0; i < nodes.length; i++) {
+                    if (nodes[i]['isGateway'] || nodes[i]['region'] == "") {
+                        tempGateways.push(nodes[i]['ipAddress']);
+                    }
+                }
+                console.log("current gateways:")
+                console.log(currentGateways)
+                currentGateways = sortByFinalDigit(tempGateways);
+                //tempGateways.sort(ipSort);
+                //currentGateways = tempGateways
             }
 
             function validateInput() {
@@ -1601,6 +1636,9 @@
                     $('#gateway-ipAddress').append('<option>' + remainIpSet[i] + '</option>');
                     $('#relay-ipAddress').append('<option>' + remainIpSet[i] + '</option>');
                     $('#store-ipAddress').append('<option>' + remainIpSet[i] + '</option>');
+                }
+                for (var i = 0; i < currentGateways.length; i++) {
+                    $('#gateway-connected-ipAddress').append('<option>' + currentGateways[i] + '</option>');
                 }
                 for (var i = 0; i < existIpSet.length; i++) {
                     $('#ipOne').append('<option>' + existIpSet[i] + '</option>');
@@ -1627,7 +1665,18 @@
                     toggleActive: true,
                     container: $('#network-view')
                 });
-
+                
+                $('#conncet-pc')
+                    .change(function () {
+                        let check = $("#conncet-pc").is(":checked");
+                        if (!check) {
+                            $("#pc-gateway").val(0);
+                            $("#pcWeight-form").stop().slideUp(200);
+                        } else {
+                            $("#pcWeight-form").stop().slideDown(200);
+                        }
+                    })
+                    .trigger("change");
             }
 
             function errorText(err) {
@@ -1645,6 +1694,35 @@
                 for (var i = 0; i < arr.length; i++) {
                     arr[i] = "192.168.0." + arr[i];
                 }
+            }
+
+            //Iterate through a set of IPs and use a regex to get the final digits, then sort by them
+            function sortByFinalDigit(arr) {
+                var finalDigits = []
+                var ipRegex = /192.168.0./
+                var match, result, finalDigitValue;
+                for (var i = 0; i < arr.length; i++) {
+                    result = arr[i].match(ipRegex);
+                    finalDigitValue = parseInt(result['input'].replace("192.168.0.", ""));
+                    finalDigits.push(finalDigitValue);
+                }
+                finalDigits.sort(sortNumber);
+                for (var i = 0; i < finalDigits.length; i++) {
+                    finalDigits[i] = "192.168.0." + finalDigits[i];
+                }
+                return finalDigits
+            }
+
+            function sortNumber(a, b) {
+                return a - b;
+            }
+
+            function ipSort(a, b) {
+                var aResult = a.match(/192.168.0./);
+                var aFinalDigits = parseInt(aResult['input'].replace("192.168.0.", ""));
+                var bResult = a.match(/192.168.0./);
+                var bFinalDigits = parseInt(bResult['input'].replace("192.168.0.", ""));
+                return a - b;
             }
 
         }); // on dom ready
