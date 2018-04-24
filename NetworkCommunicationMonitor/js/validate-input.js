@@ -82,16 +82,16 @@ function deleteAccount() {
     } else if (!check) {
         $('#delete-accountId').removeClass('has-error');
         $('#delete-check').empty();
-        $('#delete-check').append('<h4 class="text-danger text-center">you should select the checkbox</h4>');
+        $('#delete-check').append('<h3 class="text-danger text-center">you should select the checkbox</h3>');
         setTimeout(function () {
-            $('#delete-check h4').fadeOut();
+            $('#delete-check h3').fadeOut();
         }, 5000);
     } else {
         //Database insertion
         $.ajax({
             method: 'POST',
             url: `/Home/DeleteAccount`,
-            data: { accountID: accountID } ,
+            data: { accountID: accountID },
             success: (result) => {
                 alert(result);
                 if (result === "Account " + accountID + " successfully deleted") {
@@ -111,10 +111,6 @@ function deletCard() {
     let confirmNum = parseInt($("#confirm_delete_cardNumber").val());
     let check = $("#confirmation-checkDelete").is(":checked");
 
-    console.log("num:", cardNumber);
-    console.log("confirm: ", confirmNum);
-    console.log("check: ", check);
-
     if (!cardNumber) {
         $('#card-number').addClass('has-error');
 
@@ -126,17 +122,17 @@ function deletCard() {
         $('#confirm-card-number').removeClass('has-error');
         $('#confirm-card-number').addClass('has-error');
         $('#delete-card-check').empty();
-        $('#delete-card-check').append('<h4 class="text-danger text-center">two card numbers are not the same, please input again</h4>');
+        $('#delete-card-check').append('<h3 class="text-danger text-center">two card numbers are not the same, please input again</h3>');
         setTimeout(function () {
-            $('#delete-card-check h4').fadeOut();
+            $('#delete-card-check h3').fadeOut();
         }, 5000);
 
     } else if (!check) {
         $('#confirm-card-number').removeClass('has-error');
         $('#delete-card-check').empty();
-        $('#delete-card-check').append('<h4 class="text-danger text-center">you should select the checkbox</h4>');
+        $('#delete-card-check').append('<h3 class="text-danger text-center">you should select the checkbox</h3>');
         setTimeout(function () {
-            $('#delete-card-check h4').fadeOut();
+            $('#delete-card-check h3').fadeOut();
         }, 5000);
 
     } else {

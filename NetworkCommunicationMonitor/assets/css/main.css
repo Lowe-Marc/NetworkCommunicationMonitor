@@ -804,7 +804,6 @@ canvas {
   position: relative;
 }
 .main-content-wrapper #main-content {
-  padding: 15px 15px 0 15px;
   width: 100%;
 }
 .main-content-wrapper #main-content .h1 {
@@ -2602,7 +2601,6 @@ label.valid {
 }
 .step-content {
   border: 1px solid #D4D4D4;
-  border-top: 0;
   -webkit-border-radius: 0 0 4px 4px;
   -moz-border-radius: 0 0 4px 4px;
   -ms-border-radius: 0 0 4px 4px;

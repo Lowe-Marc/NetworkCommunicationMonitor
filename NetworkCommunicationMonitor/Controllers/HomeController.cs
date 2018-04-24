@@ -127,7 +127,7 @@ namespace NetworkCommunicationMonitor.Controllers
             return View();
         }
 
-        public ActionResult AddAccount(FormCollection collection)
+        public string AddAccount(FormCollection collection)
         {
             setViewDataDefaults();
 
@@ -156,9 +156,9 @@ namespace NetworkCommunicationMonitor.Controllers
             int month = expiry.Month;
             int year = expiry.Year;
             string cvc = Convert.ToString(collection["cvc"]);
-            NetworkCommunicationMonitor.Models.Card.createCard(cardNumber, cardFirstName, cardLastName, month, year, accountID, cvc);
-
-            return RedirectToAction("Account", "Home");
+            string result= NetworkCommunicationMonitor.Models.Card.createCard(cardNumber, cardFirstName, cardLastName, month, year, accountID, cvc);
+            return result;
+            //return RedirectToAction("Account", "Home");
         }
 
         public string DeleteAccount(FormCollection collection)
@@ -185,7 +185,7 @@ namespace NetworkCommunicationMonitor.Controllers
             return RedirectToAction("Account", "Home");
         }
 
-        public ActionResult AddCard(FormCollection collection)
+        public string AddCard(FormCollection collection)
         {
             setViewDataDefaults();
 
@@ -207,9 +207,9 @@ namespace NetworkCommunicationMonitor.Controllers
             int year = Convert.ToInt32(exp.Substring(3, 4));
             string cvc = Convert.ToString(collection["cvc"]);
             int accountID = Convert.ToInt32(collection["accountID"]);
-            NetworkCommunicationMonitor.Models.Card.createCard(cardNumber, cardFirstName, cardLastName, month, year, accountID, cvc);
+            return NetworkCommunicationMonitor.Models.Card.createCard(cardNumber, cardFirstName, cardLastName, month, year, accountID, cvc);
 
-            return RedirectToAction("Card", "Home");
+            //return RedirectToAction("Card", "Home");
         }
 
         public string DeleteCard(FormCollection collection)

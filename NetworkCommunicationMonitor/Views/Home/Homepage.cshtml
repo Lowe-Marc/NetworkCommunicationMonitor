@@ -279,6 +279,7 @@
                             <li><span class="relay-label"></span>Relay Station</li>
                             <li><span class="store-label"></span>Store</li>
                             <li><span class="inactive-label"></span>Inactive</li>
+                            <li><span class="animated-label"></span>Animated</li>
                         </ul>
                     </div>
                 </div>
@@ -376,6 +377,12 @@
                                                                     <label for="gateway-ipAddress" class="col-sm-4 control-label">Gateway IP Address</label>
                                                                     <div class="col-sm-6">
                                                                         <select class="form-control" id="gateway-ipAddress" name="gateway-ipAddress" style="padding:0;"></select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="conncet-pc" class="col-sm-4 control-label">Connected to PC</label>
+                                                                    <div class="col-sm-6">
+                                                                        <input type="checkbox" class="center-block" id="conncet-pc" style="min-width:20px;min-height:20px;margin:9px 10px 0px 0%;" />
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
@@ -602,7 +609,7 @@
                                                                 <label for="transactionAmount" class="col-sm-4 control-label">Transaction Amount</label>
                                                                 <div class="col-sm-6">
                                                                     @*<input type="text" class="form-control" id="transactionAmount" name="transactionAmount" required minlength="1" maxlength="6" placeholder="$0.00" onkeyup="value = value.replace(/[^\d]/g, ''); if ( value > 25000) { value = 25000; }" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,'')">*@
-                                                                    <input type="text" class="form-control" id="transactionAmount" name="transactionAmount" required minlength="1" maxlength="6" placeholder="$0.00" onkeyup="if ( value > 25000) { value = 25000; }" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,'')">
+                                                                    <input type="number" class="form-control" id="transactionAmount" name="transactionAmount" required minlength="1" maxlength="6" placeholder="$00.00" onkeyup="if (value > 25000) { value = 25000; } else if (value < 0) { value = 0; }" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group">
@@ -779,6 +786,9 @@
             const edges = @Html.Raw(Json.Encode(ViewData["Links"]));
             const data = [];
             const relayColor = 'green';
+            const animationColor = 'purple';
+            const inactiveColor = 'red';
+            const connectionColor = 'gray';
             const PROCESSINGCENTERID = 200;
             const WEIGHTOFFSET = 100000000; // This is used to inactivate relays/connections and to prevent a path from routing through a store
             const animationLength = 1200; // Time the animations take in milliseconds
@@ -867,8 +877,8 @@
                         element.data('status', 'inactive');
                         element.animation({
                             style: {
-                                'background-color': 'red',
-                                'line-color': 'red'
+                                'background-color': inactiveColor,
+                                'line-color': inactiveColor
                             },
                             duration: 500
                         }).play();
@@ -895,6 +905,74 @@
                         }
                         element.data('isActive', true);
                     }
+            }
+
+            //This will make highlight all elements with a transaction in it when paused
+            function handlePauseStateDisplay() {
+
+                currentAnimationSet.forEach(function (animation) {
+                    var element = animation['node'];
+
+                    if (animationsArePaused) {
+                        console.log("state: " + animation['state'])
+                        var state = animation['state']
+                        if (animation['state'] == 1) {
+                            animation.progress(0.99).apply().pause();
+                            currentAnimationSet.delete(animation)
+                        } else {
+                            animation.progress(0.0).apply().pause();
+                            currentAnimationSet.delete(animation)
+                        }
+                    }
+
+                })
+
+                if (!animationsArePaused) {
+                    setTimeout(function () {
+                        playAnimations();
+                    }, 750)
+                }
+
+            }
+
+            //Currently not being used, majorly bugged
+            function handleElementPause(animation) {
+                
+                var element = animation['node']
+                if (animationsArePaused) {
+                    console.log("pausing - state == 0: " + (animation['state'] == 0))
+                    var state = animation['state']
+                    if (animation['state'] == 1) {
+                        animation.progress(0.99).apply().pause();
+                        currentAnimationSet.delete(animation)
+                    } else {
+                        animation.progress(0.0).apply().pause();
+                        currentAnimationSet.delete(animation)
+                    }
+
+                    animationsArePaused = false;
+                    element.animation({
+                        style: {
+                            'background-color': animationColor,
+                            'line-color': animationColor
+                        },
+                        duration: 500
+                    }).play();
+
+
+                } else {
+
+                    console.log("playing back")
+                    console.log("element");
+                        element.animation({
+                            style: {
+                                'background-color': relayColor,
+                                'line-color': connectionColor
+                            },
+                            duration: 500
+                    }).play();
+
+                }
             }
 
             /*=====================================================================================================
@@ -968,8 +1046,8 @@
                     } else {
                         var animation = path[i].animation({
                             style: {
-                                'background-color': 'purple',
-                                'line-color': 'purple',
+                                'background-color': animationColor,
+                                'line-color': animationColor,
                                 'width': '10px',
                                 'height': '10px'
                             },
@@ -1080,11 +1158,9 @@
                 //Check to see if the animation should play
                 var firstInQueue = (elementQueue[0] == animation);
                 var nodeIsAlreadyAnimating = animation['node'].animated()
-                if (nodeIsAlreadyAnimating) {
-
-                }
                 if (!animationsArePaused && firstInQueue && !nodeIsAlreadyAnimating) {
-                    animation.play();
+                    animation['state'] = 0;
+                    playAnimationWhenReady(animation);
                     currentAnimationSet.add(animation);
                 } else {
                     queueAnimationSet.add(animation);
@@ -1092,24 +1168,33 @@
 
                 //Setup what happens next
                 animation.promise('completed').then(function () {
+                    animation['state'] = 1;
                     animation
                         .reverse()
                         .rewind()
                         .play();
-                    //Kick off the next animation in the queue
-                    setTimeout(function () { playNecessaryQueuedAnimations(); }, animationLength*2);
+                    animation.promise('completed').then(function () {
+                        //Kick off the next animation in the queue
+                        setTimeout(function () {
+                            if (!animationsArePaused) {
+                                playNecessaryQueuedAnimations();
+                            }
+                        }, animationLength);
 
-                    currentAnimationSet.delete(animation);
-                    if (currentAnimationPlayingIndex < animationList.length - 1) {
-                        elementQueue.shift();
-                        animation['node'].data('queue', elementQueue);
+                        currentAnimationSet.delete(animation);
+                        if (currentAnimationPlayingIndex < animationList.length - 1) {
+                            elementQueue.shift();
+                            animation['node'].data('queue', elementQueue);
 
-                        currentAnimationPlayingIndex += 1;
-                        newAnim(animationList, currentAnimationPlayingIndex);
-                    } else {
-                        elementQueue.shift();
-                        animation['node'].data('queue', elementQueue);
-                    }
+                            currentAnimationPlayingIndex += 1;
+                            newAnim(animationList, currentAnimationPlayingIndex);
+                        } else {
+                            elementQueue.shift();
+                            animation['node'].data('queue', elementQueue);
+                        }
+
+                    });
+                    
                 });
             }
 
@@ -1123,19 +1208,14 @@
                 queueAnimationSet.forEach(function (animation) {
                     if (animationIsFirstInQueue(animation)) {
                         currentAnimationSet.add(animation);
-                        animation.play();
+                        playAnimationWhenReady(animation);
+                        queueAnimationSet.delete(animation);
                     }
                 });
             }
 
             function reassemblePaths() {
                 console.log("Reassembling animation paths")
-                //currentAnimationSet.forEach(function (animation) {
-                //    animation.reverse().play().promise('completed').then(function () {
-                //        animation
-                //            .stop();
-                //    });
-                //});
 
                 // Get all transactions and empty the queues of all nodes
                 var existingTransactions = [];
@@ -1148,6 +1228,9 @@
                         element['data']['queue'] = []
                     }
                 });
+
+                currentAnimationSet = new Set();
+                queueAnimationSet = new Set();
 
                 // Assemble all the new animations
                 for (var i = 0; i < existingTransactions.length; i++) {
@@ -1162,6 +1245,22 @@
 
                 playNecessaryQueuedAnimations()
             }
+
+            function playAnimationWhenReady(animation) {
+                var nodeIsAlreadyAnimating = animation['node'].animated();
+                var nodeAnimation = animation['node'].animation('current')
+
+                console.log("playing animation on node: " + animation['node'].data('id'))
+
+                if (nodeAnimation.playing()) {
+                    setTimeout(function () {
+                        playAnimationWhenReady(animation)
+                    }, animationLength * 2);
+                } else {
+                    animation.play();
+                }
+            }
+
 
             /*=====================================================================================================
                                                         Click Events
@@ -1182,23 +1281,12 @@
             function pauseOrPlayAnimations(node) {
                 if (animationsArePaused) {
                     animationsArePaused = false;
-                    playAnimations();
+                    handlePauseStateDisplay();
                     $("#play").addClass('hidden');
                     $("#pause").removeClass('hidden');
                 } else {
                     animationsArePaused = true;
-                    currentAnimationSet.forEach(function (animation) {
-                        //animation
-                        //    .pause()
-                        //    .reverse()
-                        //    .play()
-                        //    .promise('completed').then(function () {
-                        //        animation
-                        //            .stop();
-                        //    });
-                        animation.progress(0.0).apply().pause();
-                    })
-                    //queueAnimationSet.forEach(function (animation) { animation.pause() })
+                    handlePauseStateDisplay();
                     $("#pause").addClass('hidden');
                     $("#play").removeClass('hidden');
                 }

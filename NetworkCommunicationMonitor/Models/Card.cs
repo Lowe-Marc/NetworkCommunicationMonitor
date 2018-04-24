@@ -206,22 +206,42 @@ namespace NetworkCommunicationMonitor.Models
             }
         }
 
-        public static void createCard(string cardID, string firstname, string lastname, int card_expirationMonth, int card_expirationYear, int accountID, string cvc)
+        public static string createCard(string cardID, string firstname, string lastname, int card_expirationMonth, int card_expirationYear, int accountID, string cvc)
         {
+            string result = "";
             var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
-            using (cn)
+            var cn1 = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
+            int amount;
+            using (cn1)
             {
-                string _sql = @"INSERT INTO Card (card_id, card_firstname, card_lastname, card_expirationMonth, "
-                + "card_expirationYear, card_securityCode, account_id) VALUES('" + cardID + "', '" + firstname + "', '" + lastname + "', "
-                + card_expirationMonth + ", " + card_expirationYear + ", " + cvc + ", " + accountID + ")";
-                var cmd = new SqlCommand(_sql, cn);
-
-                cn.Open();
-                cmd.ExecuteNonQuery();
-                cn.Close();
-
+                string _sql1 = @"SELECT COUNT(card_id) FROM Card WHERE card_id = '" + cardID + "'";
+                var cmd1 = new SqlCommand(_sql1, cn1);
+                cn1.Open();
+                amount = (int)cmd1.ExecuteScalar();
             }
+
+            if (amount == 1)
+            {
+                result = "card "  + cardID + " already exists!";
+            }
+            else
+            {
+                using (cn)
+                {
+                    string _sql = @"INSERT INTO Card (card_id, card_firstname, card_lastname, card_expirationMonth, "
+                    + "card_expirationYear, card_securityCode, account_id) VALUES('" + cardID + "', '" + firstname + "', '" + lastname + "', "
+                    + card_expirationMonth + ", " + card_expirationYear + ", " + cvc + ", " + accountID + ")";
+                    var cmd = new SqlCommand(_sql, cn);
+
+                    cn.Open();
+                    cmd.ExecuteNonQuery();
+                    cn.Close();
+                }
+                result = "Card " + cardID + " has been successfully added to the Account " + accountID;
+            }
+            return result;
         }
+
 
         public static void editCard(string firstname, string lastname, string cardID)
         {
