@@ -52,7 +52,7 @@ namespace NetworkCommunicationMonitor.Models
                     tempRelay.isActive = Convert.ToBoolean(row["station_isActive"]);
                     tempRelay.isGateway = Convert.ToBoolean(row["isGateway"]);
                     tempRelay.queueLimit = Convert.ToInt32(row["queueLimit"]);
-                    if (tempRelay.id.Equals("192.168.0.1", StringComparison.Ordinal))
+                    if (tempRelay.id.Equals(PROCESSINGCENTERIP, StringComparison.Ordinal))
                     {
                         tempRelay.group = PROCESSINGCENTERGROUP;
                     }
@@ -134,7 +134,7 @@ namespace NetworkCommunicationMonitor.Models
             return numRelays-1;
         }
 
-        public static void addRelay(int weight, string ipAddress, string ipConnectedTo, bool isGateway, string region, int queueLimit)
+        public static string addRelay(int weight, string ipAddress, string ipConnectedTo, bool isGateway, string region, int queueLimit)
         {
             var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
             using (cn)
@@ -154,14 +154,18 @@ namespace NetworkCommunicationMonitor.Models
                 cn.Close();
             }
 
-            Connection.addConnection(weight, ipAddress, ipConnectedTo);
+            return Connection.addConnection(weight, ipAddress, ipConnectedTo);
         }
 
-        public static void addRegion(int GRweight, int SRweight, string regionName, string gatewayIP, string relayIP, string storeIP, string storeName)
+        public static string addRegion(int PCweight, int GRweight, int SRweight, string regionName, string gatewayIP, string relayIP, string storeIP, string storeName)
         {
-            addRelay(GRweight, gatewayIP, PROCESSINGCENTERIP, true, regionName, 10);
-            addRelay(GRweight, relayIP, gatewayIP, false, regionName, 10);
-            Store.addStore(SRweight,storeIP, relayIP, storeName);
+            Store.addStore(SRweight, storeIP, relayIP, storeName);
+            Console.WriteLine("PCweight:" + PCweight);
+            if (PCweight != 0)
+            {
+                addRelay(PCweight, gatewayIP, PROCESSINGCENTERIP, true, regionName, 10);
+            }
+            return addRelay(GRweight, relayIP, gatewayIP, false, regionName, 10);
         }
 
         public static string getRegion(string ipAddress)

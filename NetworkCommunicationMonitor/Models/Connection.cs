@@ -76,7 +76,6 @@ namespace NetworkCommunicationMonitor.Models
             var cn6 = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
             var cn7 = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
             var cn8 = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
-
             var cn9 = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
             var cn10 = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
 
@@ -203,8 +202,7 @@ namespace NetworkCommunicationMonitor.Models
                     {
                         if (amount1 == 1 && amount2 == 1)
                         {
-                            Console.WriteLine("Store cannot be connected to store!");
-                            result = "Store cannot be connected to store!";
+                            result = "Store cannot be connected to store.";
                         }
                         else
                         {
@@ -225,7 +223,6 @@ namespace NetworkCommunicationMonitor.Models
                     }
                     else
                     {
-                        Console.WriteLine("It cannot be connected to relaystation or store in other region!");
                         result = "Only gateways may make connection across regions.";
                     }
 
@@ -233,7 +230,6 @@ namespace NetworkCommunicationMonitor.Models
             }
             else
             {
-                Console.WriteLine("It cannot be connected to itself!");
                 result = "A store/relay cannot be connected to itself.";
             }
 

@@ -250,21 +250,21 @@ namespace NetworkCommunicationMonitor.Controllers
             return RedirectToAction("Homepage", "Home");
         }
 
-        public ActionResult AddRegion(FormCollection collection)
+        public string AddRegion(FormCollection collection)
         {
             setViewDataDefaults();
 
-            int GRweight = Convert.ToInt32(collection["gateway-relay"]);
-            int SRweight = Convert.ToInt32(collection["store-relay"]);
-            string regionName = Convert.ToString(collection["region-name"]);
-            string gatewayIPAddress = Convert.ToString(collection["gateway-ipAddress"]);
-            string relayIPAddress = Convert.ToString(collection["relay-ipAddress"]);
-            string storeIPAddress = Convert.ToString(collection["store-ipAddress"]);
-            string storeName = Convert.ToString(collection["store-name"]);
+            int PCweight = Convert.ToInt32(collection["pcWeight"]);
+            int GRweight = Convert.ToInt32(collection["relayWeight"]);
+            int SRweight = Convert.ToInt32(collection["storeWeight"]);
+            string regionName = Convert.ToString(collection["regionName"]);
+            string gatewayIPAddress = Convert.ToString(collection["gatewayIP"]);
+            string relayIPAddress = Convert.ToString(collection["relayIP"]);
+            string storeIPAddress = Convert.ToString(collection["storeIP"]);
+            string storeName = Convert.ToString(collection["storeName"]);
 
-            NetworkCommunicationMonitor.Models.Relay.addRegion(GRweight, SRweight, regionName, gatewayIPAddress, relayIPAddress, storeIPAddress, storeName);
-
-            return RedirectToAction("Homepage", "Home");
+            return NetworkCommunicationMonitor.Models.Relay.addRegion(PCweight, GRweight, SRweight, regionName, gatewayIPAddress, relayIPAddress, storeIPAddress, storeName);
+            //return RedirectToAction("Homepage", "Home");
         }
 
         public ActionResult AddStore(FormCollection collection)
